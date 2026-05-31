@@ -18,5 +18,12 @@ export const booksApis = {
 
     console.log(response);
     return response.data;
+  },
+
+  getSuggestions: async (userSearchPhrase) => {
+    const response = await axiosInstance.get(`/books/getSuggestions`, {
+      params: { userSearchPhrase },
+    });
+    return response.data;
   }
 };

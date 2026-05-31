@@ -6,10 +6,12 @@ const {
   deleteBook,
   updateBook,
   postBooks,
+  getBooksSuggestionsController,
 } = require("../Controllers/booksController");
 const optionalVerifyToken = require("../Middleware/optionalVerifyToken");
 
 router.get("/", optionalVerifyToken, getBooks);
+router.get("/getSuggestions", getBooksSuggestionsController);
 router.get("/:id", getBookById);
 router.post("/", postBooks);
 router.delete("/:id", deleteBook);

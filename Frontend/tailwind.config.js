@@ -15,16 +15,15 @@ export default {
           heart: "#f21717ff",
         },
         success: "#22c55e",
-        orange: "#FB923C",
+        orange: "#CD6D18",
         warning: "#f5ab0bff",
         info: "#3b82f6",
         purple: "#7e22ce",
-
       },
       screens: {
         "xl-custom": "1560px",
       },
     },
     plugins: [],
-  }
-}
+  },
+};

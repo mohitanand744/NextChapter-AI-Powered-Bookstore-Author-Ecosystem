@@ -19,14 +19,17 @@ const Layout = () => {
   }, [pathName]);
 
   return (
-    <div className="bg-tan min-h-screen flex flex-col">
+    <div className="flex flex-col min-h-screen bg-tan">
       <DiscountHeader />
       <Navbar isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen} />
       <div className="search">
         <Search
           styling="w-full block md:hidden bg-sepia"
-          inputStylrs="py-4 !text-tan bg-sepia"
+          inputStyles="py-4 -mb-1 !text-tan bg-sepia"
           iconStyles="top-3 right-3 bg-sepia"
+          suggestionsStyles={"mt-0"}
+          enableSuggestions={true}
+          nav={true}
         />
       </div>
       <div className="flex-1">
@@ -40,5 +43,3 @@ const Layout = () => {
 };
 
 export default Layout;
-
-

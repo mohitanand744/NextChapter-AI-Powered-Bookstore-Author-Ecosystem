@@ -57,6 +57,30 @@ exports.getBooks = async (req, res, next) => {
 };
 
 // ==========================
+// 📖 Get Books Suggestions
+// ==========================
+
+exports.getBooksSuggestionsController = async (req, res) => {
+  try {
+    const userSearchPhrase = req.body.userSearchPhrase || req.query.userSearchPhrase;
+
+    console.log("gg", req.body, req.query);
+
+    if (!userSearchPhrase)
+      return errorResponse(res, 400, "Please provide a search phrase");
+
+    const result =
+      await BookService.getBooksSuggestionsServices(userSearchPhrase);
+
+    if (result.length === 0) return notFound(res);
+
+    successResponse(res, 200, "", result);
+  } catch (err) {
+    handleError(res, err);
+  }
+};
+
+// ==========================
 // 📖 Get a book by ID
 // ==========================
 exports.getBookById = async (req, res) => {

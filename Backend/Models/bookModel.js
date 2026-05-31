@@ -128,7 +128,8 @@ const findAllBooks = async ({
 
 const getBooksSuggestions = async ({ limit = 8, search }) => {
   try {
-    const query = `SELECT id, title, cover_image, book_price FROM books WHERE title LIKE ? LIMIT ?`;
+    const query = `SELECT id, title, cover_image, book_price,  DISCOUNT,
+  ROUND(BOOK_PRICE - (BOOK_PRICE * DISCOUNT / 100), 2) AS discounted_price  FROM books WHERE title LIKE ? LIMIT ?`;
 
     const [rows] = await db.query(query, [`%${search}%`, limit]);
 
@@ -185,4 +186,5 @@ module.exports = {
   updateBookImages,
   insertBook,
   insertImages,
+  getBooksSuggestions,
 };

@@ -40,7 +40,21 @@ const getBookById = (id) => {
   return BookModel.findBookById(id);
 };
 
-const getBooksSuggestionsServices = async (limit, cursor) => {};
+const getBooksSuggestionsServices = async (userSearchPhrase = "") => {
+  try {
+    const result = await BookModel.getBooksSuggestions({
+      search: userSearchPhrase.trim(),
+    });
+
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw {
+      status: 500,
+      message: "Error fetching book suggestions [services error]",
+    };
+  }
+};
 
 const createBookWithImages = async (bookData, images) => {
   const { title, description, author, price, category } = bookData;
@@ -112,4 +126,5 @@ module.exports = {
   createBookWithImages,
   deleteBook,
   updateBookWithImages,
+  getBooksSuggestionsServices,
 };
