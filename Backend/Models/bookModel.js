@@ -43,7 +43,7 @@ const findAllBooks = async ({
   userId = null,
   limit = 8,
   cursor,
-  category,
+  categories = [],
   minPrice,
   maxPrice,
   discount,
@@ -62,9 +62,10 @@ const findAllBooks = async ({
     params.push(cursor);
   }
 
-  if (category) {
-    where.push("C.name = ?");
-    params.push(category);
+  if (categories.length > 0) {
+    const placeholders = categories.map(() => "?").join(",");
+    where.push(`c.name IN (${placeholders})`);
+    params.push(...categories);
   }
 
   if (minPrice) {
@@ -104,12 +105,16 @@ const findAllBooks = async ({
     query += " WHERE " + where.join(" AND ");
   }
 
+  console.log("Query", query);
+
   query += `
     ORDER BY B.ID DESC
     LIMIT ?
   `;
 
   params.push(limit);
+
+  console.log("params :", params);
 
   const [rows] = await db.query(query, params);
 

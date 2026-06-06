@@ -21,17 +21,15 @@ const Checkbox = (
         />
         <label
           htmlFor={id}
-          className="ml-2 text-sm font-semibold text-tan cursor-pointer"
+          className="ml-2 text-sm font-semibold cursor-pointer text-tan"
         >
           {label}
         </label>
       </div>
 
-      {error && <p className="ml-2 text-sm text-red-500">{error}</p>}
+      {error && <p className="ml-2 text-sm text-red-error">{error}</p>}
     </div>
   );
 };
 
 export default React.forwardRef(Checkbox);
-
-

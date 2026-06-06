@@ -108,11 +108,8 @@ const Search = ({
 
   const handleHighlightedChar = (word, searchTerm) => {
     return word?.split("")?.map((l, i) =>
-      searchTerm?.toLowerCase()?.includes(l?.toLowerCase()) ? (
-        <span
-          key={i}
-          className="text-coffee bg-tan/20 px-0.5 rounded-[2px] font-bold"
-        >
+      searchTerm?.toLowerCase()?.trim().includes(l?.toLowerCase()) ? (
+        <span key={i} className="text-coffee bg-tan/20 px-0.5 font-bold">
           {l}
         </span>
       ) : (

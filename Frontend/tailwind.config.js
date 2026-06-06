@@ -12,7 +12,7 @@ export default {
         // Semantic Colors
         red: {
           error: "#ef4444",
-          heart: "#f21717ff",
+          heart: "#D10000",
         },
         success: "#22c55e",
         orange: "#CD6D18",

@@ -92,7 +92,7 @@ const SignUp = () => {
       console.error("Error signing up:", error);
       toast.error(
         error.response?.data?.message ||
-        "Something went wrong. Please try again later.",
+          "Something went wrong. Please try again later.",
       );
       reset();
     }
@@ -100,9 +100,7 @@ const SignUp = () => {
 
   return (
     <div className="relative flex items-center justify-center min-h-screen gap-3 p-4 bg-[url('/images/authBG.png')] bg-center bg-no-repeat bg-cover overflow-hidden">
-      <div
-        className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
-      />
+      <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
       <div className="flex gap-4">
         <motion.div
           initial={{ scale: 0, y: 20 }}
@@ -116,11 +114,9 @@ const SignUp = () => {
             transition={{ duration: 0.2 }}
             className="overflow-hidden bg-coffee/80 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-4 rounded-3xl border border-tan/10 relative"
           >
-            <div
-              className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
-            />
+            <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
             <div className="relative z-10 p-3">
-              <div className="mb-8 border bg-black/20 p-3 pt-1 rounded-3xl border-tan/20 text-cream text-center">
+              <div className="p-3 pt-1 mb-8 text-center border bg-black/20 rounded-3xl border-tan/20 text-cream">
                 <motion.img
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -133,7 +129,7 @@ const SignUp = () => {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="mb-2 text-4xl font-serif font-bold text-tan tracking-tight"
+                  className="mb-2 font-serif text-4xl font-bold tracking-tight text-tan"
                 >
                   Open Your NextChapter
                 </motion.h1>
@@ -141,7 +137,7 @@ const SignUp = () => {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="text-sm font-medium text-tan/70 italic"
+                  className="text-sm italic font-medium text-tan/70"
                 >
                   `` Every story begins with a single choice. ``
                 </motion.p>
@@ -156,88 +152,118 @@ const SignUp = () => {
                 >
                   <button
                     type="button"
-                    onClick={() => setValue("role", "user", { shouldValidate: true })}
-                    className={`relative overflow-hidden group p-5 rounded-2xl border-t-2 border-b-2 transition-all duration-500 ${watch("role") === "user"
-                      ? "bg-tan/10 border-tan shadow-[0_0_25px_rgba(210,180,140,0.15)]"
-                      : "bg-black/20 border-tan/10 hover:border-tan/30"
-                      }`}
+                    onClick={() =>
+                      setValue("role", "user", { shouldValidate: true })
+                    }
+                    className={`relative overflow-hidden group p-5 rounded-2xl border-t-2 border-b-2 transition-all duration-500 ${
+                      watch("role") === "user"
+                        ? "bg-tan/10 border-tan shadow-[0_0_25px_rgba(210,180,140,0.15)]"
+                        : "bg-black/20 border-tan/10 hover:border-tan/30"
+                    }`}
                   >
-                    <div className="flex flex-col items-center gap-2  z-10">
-                      <div className={` p-0.5 rounded-2xl border-t-2 border-b-2 transition-all duration-500 ${watch("role") === "user" ? "border-tan scale-110 shadow-lg" : "border-transparent opacity-50"}`}>
+                    <div className="z-10 flex flex-col items-center gap-2">
+                      <div
+                        className={` p-0.5 rounded-2xl border-t-2 border-b-2 transition-all duration-500 ${watch("role") === "user" ? "border-tan scale-110 shadow-lg" : "border-transparent opacity-50"}`}
+                      >
                         <img
                           src="/images/patron-avatar.png"
                           alt="Patron"
-                          className="w-28 h-28 rounded-2xl object-cover bg-tan/10"
+                          className="object-cover w-28 h-28 rounded-2xl bg-tan/10"
                         />
                       </div>
 
                       <div className="absolute top-2 -right-1">
                         <Radio
-                          {...register("role", { required: "Role is required please select your role" })}
+                          {...register("role", {
+                            required:
+                              "Role is required please select your role",
+                          })}
                           value="user"
                           checked={watch("role") === "user"}
-                          onChange={() => setValue("role", "user", { shouldValidate: true })}
+                          onChange={() =>
+                            setValue("role", "user", { shouldValidate: true })
+                          }
                           label=""
                           className="scale-110"
-                        /></div>
-                      <span className={`font-bold text-sm uppercase tracking-[0.2em] transition-colors duration-500 ${watch("role") === "user" ? "text-tan" : "text-tan/50"}`}>
+                        />
+                      </div>
+                      <span
+                        className={`font-bold text-sm uppercase tracking-[0.2em] transition-colors duration-500 ${watch("role") === "user" ? "text-tan" : "text-tan/50"}`}
+                      >
                         Patron
                       </span>
-                      <p className={`text-[14px] text-center -mt-2 transition-opacity duration-500 ${watch("role") === "user" ? "text-cream/60" : "text-cream/30"}`}>
+                      <p
+                        className={`text-[14px] text-center -mt-2 transition-opacity duration-500 ${watch("role") === "user" ? "text-cream/60" : "text-cream/30"}`}
+                      >
                         Read, Engage & Support
                       </p>
                     </div>
                     {watch("role") === "user" && (
                       <motion.div
                         layoutId="role-glow"
-                        className="absolute inset-0 bg-gradient-to-br from-tan/10 to-transparent pointer-events-none"
+                        className="absolute inset-0 pointer-events-none bg-gradient-to-br from-tan/10 to-transparent"
                       />
                     )}
                   </button>
 
                   <button
                     type="button"
-                    onClick={() => setValue("role", "author", { shouldValidate: true })}
-                    className={`relative overflow-hidden group p-5 rounded-2xl border-t-2 border-b-2 transition-all duration-500 ${watch("role") === "author"
-                      ? "bg-tan/10 border-tan shadow-[0_0_25px_rgba(210,180,140,0.15)]"
-                      : "bg-black/20 border-tan/10 hover:border-tan/30"
-                      }`}
+                    onClick={() =>
+                      setValue("role", "author", { shouldValidate: true })
+                    }
+                    className={`relative overflow-hidden group p-5 rounded-2xl border-t-2 border-b-2 transition-all duration-500 ${
+                      watch("role") === "author"
+                        ? "bg-tan/10 border-tan shadow-[0_0_25px_rgba(210,180,140,0.15)]"
+                        : "bg-black/20 border-tan/10 hover:border-tan/30"
+                    }`}
                   >
-                    <div className="flex flex-col items-center gap-2  z-10">
-                      <div className={` p-0.5 rounded-2xl border-t-2  border-b-2 transition-all duration-500 ${watch("role") === "author" ? "border-tan scale-110 shadow-lg" : "border-transparent opacity-50"}`}>
+                    <div className="z-10 flex flex-col items-center gap-2">
+                      <div
+                        className={` p-0.5 rounded-2xl border-t-2  border-b-2 transition-all duration-500 ${watch("role") === "author" ? "border-tan scale-110 shadow-lg" : "border-transparent opacity-50"}`}
+                      >
                         <img
                           src="/images/author-avatar.jpeg"
                           alt="Author"
-                          className="w-28  h-28 rounded-2xl object-cover bg-tan/10"
+                          className="object-cover w-28 h-28 rounded-2xl bg-tan/10"
                         />
                       </div>
 
                       <div className="absolute top-2 -right-1">
                         <Radio
-                          {...register("role", { required: "Role is required please select your role" })}
+                          {...register("role", {
+                            required:
+                              "Role is required please select your role",
+                          })}
                           value="author"
                           checked={watch("role") === "author"}
-                          onChange={() => setValue("role", "author", { shouldValidate: true })}
+                          onChange={() =>
+                            setValue("role", "author", { shouldValidate: true })
+                          }
                           label=""
                           className="scale-110 "
-                        /></div>
-                      <span className={`font-bold text-sm uppercase mt-1 tracking-[0.2em] transition-colors duration-500 ${watch("role") === "author" ? "text-tan" : "text-tan/50"}`}>
+                        />
+                      </div>
+                      <span
+                        className={`font-bold text-sm uppercase mt-1 tracking-[0.2em] transition-colors duration-500 ${watch("role") === "author" ? "text-tan" : "text-tan/50"}`}
+                      >
                         Author
                       </span>
-                      <p className={`text-[14px] text-center transition-opacity duration-500 -mt-2 ${watch("role") === "author" ? "text-cream/60" : "text-cream/30"}`}>
+                      <p
+                        className={`text-[14px] text-center transition-opacity duration-500 -mt-2 ${watch("role") === "author" ? "text-cream/60" : "text-cream/30"}`}
+                      >
                         Write, Sell & Share
                       </p>
                     </div>
                     {watch("role") === "author" && (
                       <motion.div
                         layoutId="role-glow"
-                        className="absolute inset-0 bg-gradient-to-br from-tan/10 to-transparent pointer-events-none"
+                        className="absolute inset-0 pointer-events-none bg-gradient-to-br from-tan/10 to-transparent"
                       />
                     )}
                   </button>
                 </motion.div>
                 {errors.role && (
-                  <p className="text-red-500 text-xs mt-[-1rem] mb-4 text-center">
+                  <p className="text-red-error text-sm mt-[-1rem] mb-4 text-center">
                     {errors.role.message}
                   </p>
                 )}
@@ -253,7 +279,6 @@ const SignUp = () => {
                       type="text"
                       placeholder="First Name"
                       icon={<UserIcon className="w-5 h-5 text-cream/60" />}
-
                       error={errors.firstName?.message}
                       {...register("firstName", firstNameValidationRules)}
                       maxLength={firstNameValidationRules.maxLength.value}
@@ -290,7 +315,6 @@ const SignUp = () => {
                       type="text"
                       placeholder="Last Name"
                       icon={<UserIcon className="w-5 h-5 text-cream/60" />}
-
                       error={errors.lastName?.message}
                       {...register("lastName", lastNameValidationRules)}
                       maxLength={lastNameValidationRules.maxLength.value}
@@ -365,10 +389,7 @@ const SignUp = () => {
                     labelclassname="text-cream/90"
                     type="password"
                     placeholder="Enter password"
-                    icon={
-                      <LockClosedIcon className="w-5 h-5 text-cream/60" />
-                    }
-
+                    icon={<LockClosedIcon className="w-5 h-5 text-cream/60" />}
                     error={errors.password?.message}
                     {...register("password", passwordValidationRules)}
                     maxLength={passwordValidationRules.maxLength.value}
@@ -405,10 +426,7 @@ const SignUp = () => {
                     labelclassname="text-cream/90"
                     type="password"
                     placeholder="Repeat password"
-                    icon={
-                      <LockClosedIcon className="w-5 h-5 text-cream/60" />
-                    }
-
+                    icon={<LockClosedIcon className="w-5 h-5 text-cream/60" />}
                     error={errors.confirmPassword?.message}
                     {...register(
                       "confirmPassword",
@@ -454,14 +472,14 @@ const SignUp = () => {
                         I agree to the{" "}
                         <a
                           href="#"
-                          className=" font-semibold hover:underline text-cream"
+                          className="font-semibold hover:underline text-cream"
                         >
                           Terms of Service
                         </a>{" "}
                         and{" "}
                         <a
                           href="#"
-                          className=" font-semibold hover:underline text-cream"
+                          className="font-semibold hover:underline text-cream"
                         >
                           Privacy Policy
                         </a>
@@ -548,7 +566,7 @@ const SignUp = () => {
                         alt="Facebook"
                         className="w-5 h-5 rounded-full"
                       />{" "}
-                      <span className="ms-1 text-xs">Facebook</span>
+                      <span className="text-xs ms-1">Facebook</span>
                     </Button>
                   </motion.div>
                   <motion.div
@@ -567,7 +585,7 @@ const SignUp = () => {
                         alt="LinkedIn"
                         className="w-5 h-5 rounded-full"
                       />{" "}
-                      <span className="ms-1 text-xs">LinkedIn</span>
+                      <span className="text-xs ms-1">LinkedIn</span>
                     </Button>
                   </motion.div>
                 </div>
@@ -583,7 +601,7 @@ const SignUp = () => {
                   Already have an account?{" "}
                   <Link
                     to="/"
-                    className="flex gap-1 items-center font-medium transition-transform text-cream "
+                    className="flex items-center gap-1 font-medium transition-transform text-cream "
                   >
                     Sign in <span className="text-xl">&rarr;</span>
                   </Link>
@@ -591,7 +609,7 @@ const SignUp = () => {
                 <div className="text-xs px-3 rounded-[12px] text-cream/80">
                   <Link
                     to="/nextChapter"
-                    className="flex gap-1 items-center font-medium transition-transform text-cream "
+                    className="flex items-center gap-1 font-medium transition-transform text-cream "
                   >
                     Explore without account{" "}
                     <span className="text-xl">&rarr;</span>
@@ -604,7 +622,7 @@ const SignUp = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 1.1 }}
-              className="px-2 py-4 bg-black/20 backdrop-blur-sm text-center text-tan rounded-xl relative z-10"
+              className="relative z-10 px-2 py-4 text-center bg-black/20 backdrop-blur-sm text-tan rounded-xl"
             >
               <p className="text-[11px] ">
                 By creating an account, you agree to our{" "}
@@ -632,7 +650,7 @@ const SignUp = () => {
             transition={{ delay: 1.2 }}
             className="mt-4 text-center"
           >
-            <p className="text-xs text-tan bg-cream/20  px-3 py-1 rounded-full ">
+            <p className="px-3 py-1 text-xs rounded-full text-tan bg-cream/20 ">
               <b>&copy; {new Date().getFullYear()} NextChapter.</b> All rights
               reserved.
             </p>
@@ -644,5 +662,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
-

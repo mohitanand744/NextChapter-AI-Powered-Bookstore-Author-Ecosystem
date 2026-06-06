@@ -20,10 +20,10 @@ const notFound = (res, msg = "Book not found") => errorResponse(res, 404, msg);
 // ==========================
 exports.getBooks = async (req, res, next) => {
   try {
-    const {
+    let {
       limit,
       cursor,
-      category,
+      categories,
       minPrice,
       maxPrice,
       discount,
@@ -31,11 +31,17 @@ exports.getBooks = async (req, res, next) => {
       search,
     } = req.query;
 
+    categories = Array.isArray(categories)
+      ? categories
+      : categories
+        ? [categories]
+        : [];
+
     const result = await BookService.getAllBooks(
       req?.userId,
       limit,
       cursor,
-      category,
+      categories,
       minPrice,
       maxPrice,
       discount,
@@ -62,7 +68,8 @@ exports.getBooks = async (req, res, next) => {
 
 exports.getBooksSuggestionsController = async (req, res) => {
   try {
-    const userSearchPhrase = req.body.userSearchPhrase || req.query.userSearchPhrase;
+    const userSearchPhrase =
+      req.body.userSearchPhrase || req.query.userSearchPhrase;
 
     console.log("gg", req.body, req.query);
 

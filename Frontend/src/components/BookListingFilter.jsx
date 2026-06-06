@@ -3,12 +3,15 @@ import DualRangeSlider from "../components/Inputs/DualRangeSlider";
 import Radio from "../components/Inputs/Radio";
 import { motion } from "framer-motion";
 import { defaultFilters } from "../Pages/AllBooks";
+import { FaArrowLeft } from "react-icons/fa";
 
 const BookListingFilter = ({
   openCategory,
   setOpenCategory,
   filters,
   setFilters,
+  appliedFiltersCount,
+  setShowFilters,
 }) => {
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
@@ -40,36 +43,61 @@ const BookListingFilter = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: 150 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 40 }}
+      transition={{ duration: 0.15 }}
       onClick={(e) => e.stopPropagation()}
-      className={`hideScroll max-h-[calc(100vh-14rem)] overflow-y-scroll border border-tan/30 bg-coffee/95 backdrop-blur-3xl text-cream z-[9999] sm:w-[24rem] overflow-hidden duration-300 mt-20 ease-in-out shadow-[0_30px_60px_rgba(0,0,0,0.5)] rounded-[3rem]`}
+      className={`hideScroll relative h-screen md:max-h-[calc(100vh-14rem)] md:h-auto overflow-y-scroll border border-tan/30 ml-4 md:ml-0 bg-coffee/95 backdrop-blur-3xl text-cream z-[9999] sm:w-[24.5rem] overflow-hidden duration-300 mt-20 ease-in-out shadow-lg rounded-l-[3rem] md:rounded-[2.7rem]`}
     >
+      <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
       {/* Panel Header */}
-      <div className="px-8 pt-10 pb-6 flex items-center justify-between border-b border-tan/10">
+      <div className="relative flex items-center justify-between px-8 pt-10 pb-6 border-b border-tan/10">
         <div>
-          <h2 className="text-3xl font-serif tracking-tight text-cream">Curation Filters</h2>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-tan/60 mt-1 font-bold">Tailor Your Discovery</p>
+          <h2 className="pt-3 font-serif text-2xl tracking-tight md:text-3xl text-cream">
+            Curation Filters
+          </h2>
+          <p className="text-sm uppercase tracking-[0.3em] text-tan/60 mt-1 font-bold">
+            Tailor Your Discovery
+          </p>
         </div>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowFilters(false);
+          }}
+          className="absolute top-0 md:left-4 rounded-b-[0.7rem] px-3 py-2 h-[35px] text-sm font-bold tracking-widest uppercase transition-all duration-300 border left-[1.6rem]  sm:text-sm border-tan/20 hover:bg-tan hover:text-coffee bg-tan/5"
+        >
+          <FaArrowLeft />
+        </button>
+
         <button
           onClick={resetFilters}
-          className="text-[10px] uppercase tracking-widest font-bold px-5 py-2.5 rounded-full border border-tan/20 hover:bg-tan hover:text-coffee transition-all duration-300 bg-tan/5"
+          className="absolute top-0 right-0 px-3 py-2 text-xs font-bold tracking-widest uppercase transition-all duration-300 border md:right-3.5 rounded-b-[1rem] sm:text-sm border-tan/20 hover:bg-tan hover:text-coffee bg-tan/5"
         >
           Reset All
         </button>
+
+        {appliedFiltersCount ? (
+          <div className="absolute top-0 right-[6.5rem] md:right-[8.2rem] px-3 py-2 text-xs font-bold tracking-widest uppercase transition-all duration-300 border  rounded-b-[1rem] sm:text-sm border-tan/20 bg-tan text-coffee">
+            {appliedFiltersCount} - Filters Applied
+          </div>
+        ) : null}
       </div>
 
       <div className="px-4 py-6 space-y-3">
         {/* Price Filter Section */}
-        <div className="bg-tan/5 rounded-[2.5rem] border border-tan/10 overflow-hidden transition-all duration-500">
+        <div
+          className={`bg-black/20 rounded-[2.5rem] ${openCategory.PriceFilter ? "border-b shadow-lg border-black/5" : ""} `}
+        >
           <DualRangeSlider
             PriceFilter={openCategory.PriceFilter}
-            setOpenCategory={setOpenCategory}
+            toggleCategory={() => toggleCategory("PriceFilter")}
             filters={filters}
             setFilters={setFilters}
           />
         </div>
-
         {/* Dynamic Filter Sections */}
         {[
           {
@@ -81,9 +109,13 @@ const BookListingFilter = ({
               { id: "under10", label: "Seasonal (Up to 10%)", value: "0-10" },
               { id: "under20", label: "Limited (10-20%)", value: "10-20" },
               { id: "under30", label: "Exclusive (20-30%)", value: "20-30" },
-              { id: "over30", label: "Premium Savings (30%+)", value: "30-100" },
+              {
+                id: "over30",
+                label: "Premium Savings (30%+)",
+                value: "30-100",
+              },
             ],
-            key: "discount"
+            key: "discount",
           },
           {
             id: "RatingFilter",
@@ -95,7 +127,7 @@ const BookListingFilter = ({
               { id: "4only", label: "Highly Rated (4.0+)", value: 4 },
               { id: "3plus", label: "Recommended (3.5+)", value: 3.5 },
             ],
-            key: "rating"
+            key: "rating",
           },
           {
             id: "LanguageFilter",
@@ -105,51 +137,80 @@ const BookListingFilter = ({
               { id: "Hindi", label: "Hindi Editions", value: "Hindi" },
               { id: "English", label: "English Editions", value: "English" },
             ],
-            key: "language"
+            key: "language",
           },
           {
             id: "BindingFilter",
             title: "Format & Feel",
             subtitle: "Physical Binding",
             options: [
-              { id: "hardcover", label: "Hardcover (Classic)", value: "Hardcover" },
-              { id: "paperback", label: "Paperback (Standard)", value: "Paperback" },
+              {
+                id: "hardcover",
+                label: "Hardcover (Classic)",
+                value: "Hardcover",
+              },
+              {
+                id: "paperback",
+                label: "Paperback (Standard)",
+                value: "Paperback",
+              },
               { id: "ebook", label: "Digital (E-Book)", value: "E-Book" },
             ],
-            key: "binding"
-          }
+            key: "binding",
+          },
         ].map((section) => (
-          <div key={section.id} className="bg-tan/5 rounded-[2.5rem] border border-tan/10 overflow-hidden transition-all duration-500">
+          <div
+            key={section.id}
+            className={` ${openCategory[section.id] ? "border-b shadow-lg border-black/5" : ""} bg-black/20 rounded-[2.5rem]`}
+          >
             <div
               onClick={() => toggleCategory(section.id)}
-              className="flex items-center justify-between p-6 cursor-pointer group hover:bg-tan/5 transition-colors"
+              className={` transition-all cursor-pointer group`}
             >
-              <div className="flex flex-col">
-                <span className="text-[10px] uppercase tracking-widest text-tan/40 font-bold">{section.subtitle}</span>
-                <h3 className="text-xl font-serif text-cream mt-1 group-hover:text-tan transition-colors">{section.title}</h3>
-              </div>
-              <motion.div
-                animate={{ rotate: openCategory[section.id] ? 180 : 0 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-tan/10 group-hover:bg-tan/20 transition-colors"
+              <div
+                className={`flex items-center justify-between w-full p-[1.28rem] ${openCategory[section.id] ? "border-b shadow-lg border-tan/10" : ""}  rounded-full  hover:bg-tan/5 `}
               >
-                <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </motion.div>
-            </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold tracking-widest uppercase text-tan/40">
+                    {section.subtitle}
+                  </span>
+                  <h3 className="mt-1 font-serif text-xl transition-colors text-cream group-hover:text-tan">
+                    {section.title}
+                  </h3>
+                </div>
 
-            <motion.ul
-              initial={false}
-              animate={{
-                height: openCategory[section.id] ? "10rem" : 0,
-                opacity: openCategory[section.id] ? 1 : 0
-              }}
-              transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
-              className={`px-8 overflow-y-auto flex flex-col gap-y-2 overflow-hidden  ${openCategory[section.id] ? "py-4" : ""}`}
+                <motion.div
+                  animate={{ rotate: openCategory[section.id] ? 180 : 0 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  className="flex items-center justify-center w-10 h-10 transition-colors rounded-full bg-tan/10 group-hover:bg-tan/20"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M2.5 4.5L6 8L9.5 4.5"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </motion.div>
+              </div>
+            </div>
+            <ul
+              className={`px-8 overflow-y-auto hideScroll flex flex-col gap-y-2  transition-all duration-300 ${openCategory[section.id] ? "max-h-[10rem] pt-4 pb-3" : "max-h-[0rem]"}`}
             >
               {section.options.map((opt) => (
-                <motion.li key={opt.id} whileHover={{ x: 6 }} className="flex items-center">
+                <motion.li
+                  key={opt.id}
+                  whileHover={{ x: 6 }}
+                  className="flex items-center"
+                >
                   <Radio
                     id={opt.id}
                     label={opt.label}
@@ -158,7 +219,7 @@ const BookListingFilter = ({
                   />
                 </motion.li>
               ))}
-            </motion.ul>
+            </ul>
           </div>
         ))}
       </div>
@@ -167,5 +228,3 @@ const BookListingFilter = ({
 };
 
 export default BookListingFilter;
-
-

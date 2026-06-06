@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const NoData = ({
@@ -115,7 +115,7 @@ const NoData = ({
       <button
         type="button"
         onClick={onActionClick}
-        className="font-medium flex items-center gap-1 text-tan  transition-colors duration-200"
+        className="flex items-center gap-1 font-medium transition-colors duration-200 text-tan"
       >
         <span> {actionText}</span>
         <span aria-hidden="true" className="text-xl ">
@@ -134,73 +134,72 @@ const NoData = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className={`flex flex-col bg-sepia mx-auto border border-tan/20 shadow-xl items-center justify-center max-w-md p-5 rounded-xl ${className} relative overflow-hidden`}
-    >
-      <div
-        className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
-      />
-      <div className="relative z-10 flex flex-col items-center">
-        <motion.div
-          className="flex items-center mb-3 justify-center p-0.5 w-12 h-12 border-[2.8px] border-tan/70 text-tan/70  rounded-full bg-tan/10"
-          animate={
-            animateIcon
-              ? {
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0],
-              }
-              : {}
-          }
-          transition={{
-            duration: 2,
-            ease: "easeInOut",
-            repeat: animateIcon ? Infinity : 0,
-            repeatDelay: 0.5,
-          }}
-        >
-          {getIcon()}
-        </motion.div>
-
-        <motion.h3
-          className={`mb-1 text-center font-semibold text-tan ${titleClassName}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          {title}
-        </motion.h3>
-
-        <motion.p
-          className={`mb-3 text-center text-tan/75 ${messageClassName}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          {message}
-        </motion.p>
-
-        {/* Additional custom content */}
-        {children}
-
-        {/* Action button */}
-        {showAction && (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className={`flex flex-col bg-sepia mx-auto border border-tan/20 shadow-xl items-center justify-center max-w-md p-5 rounded-xl ${className} relative overflow-hidden`}
+      >
+        <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
+        <div className="relative z-10 flex flex-col items-center">
           <motion.div
-            className="flex justify-center mt-2 text-sm text-center text-gray-500"
+            className="flex items-center mb-3 justify-center p-0.5 w-12 h-12 border-[2.8px] border-tan/70 text-tan/70  rounded-full bg-tan/10"
+            animate={
+              animateIcon
+                ? {
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 5, -5, 0],
+                  }
+                : {}
+            }
+            transition={{
+              duration: 2,
+              ease: "easeInOut",
+              repeat: animateIcon ? Infinity : 0,
+              repeatDelay: 0.5,
+            }}
+          >
+            {getIcon()}
+          </motion.div>
+
+          <motion.h3
+            className={`mb-1 text-center font-semibold text-tan ${titleClassName}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.2 }}
           >
-            {renderActionButton()}
-          </motion.div>
-        )}
-      </div>
-    </motion.div>
+            {title}
+          </motion.h3>
+
+          <motion.p
+            className={`mb-3 text-center text-tan/75 ${messageClassName}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            {message}
+          </motion.p>
+
+          {/* Additional custom content */}
+          {children}
+
+          {/* Action button */}
+          {showAction && (
+            <motion.div
+              className="flex justify-center mt-2 text-sm text-center text-gray-500"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              {renderActionButton()}
+            </motion.div>
+          )}
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
 export default NoData;
-
-

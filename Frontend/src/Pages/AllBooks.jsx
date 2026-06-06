@@ -1,23 +1,21 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+
 import BookCard from "../components/Cards/BookCard";
 import { fetchAllBooks } from "../store/Redux/Slices/BooksSlice";
 import BooksLoader from "../components/Loaders/BooksLoader";
-import ShowErrors from "../components/Errors/ShowErrors";
-import { AnimatePresence, motion } from "framer-motion";
 import BookListingFilter from "../components/BookListingFilter";
 import CategorySlider from "../components/ScrollingContainer/CategorySlider";
 import NoData from "../components/EmptyData/noData";
-import Breadcrumb from "../components/Common/Breadcrumb";
 import Banners from "../components/Banners/Banners";
-
-import { useLocation, useNavigate } from "react-router-dom";
 import useDebounce from "../Hooks/useDebounce";
 
 export const defaultFilters = {
-  limit: 10,
+  limit: 8,
   cursor: "",
-  category: "",
+  categories: [],
   minPrice: 0,
   maxPrice: 10000,
   discount: "",
@@ -26,34 +24,23 @@ export const defaultFilters = {
   rating: 0,
   binding: "",
 };
-import { useMemo } from "react";
-import { TrashIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 const AllBooks = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const { books, error, loading, hasMore, nextCursor } = useSelector(
+
+  const { books, loading, fetchingMore, hasMore, nextCursor } = useSelector(
     (state) => state.books,
   );
 
   const sentinelRef = useRef();
 
-  const searchParams = new URLSearchParams(location.search);
-  const initialSearch = searchParams.get("search") || "";
-
   const [showFilters, setShowFilters] = useState(false);
+
   const [filters, setFilters] = useState({
-    limit: 8,
-    cursor: "",
-    category: "",
-    minPrice: 0,
-    maxPrice: 10000,
-    discount: "",
-    language: "",
-    search: initialSearch,
-    rating: 0,
-    binding: "",
+    ...defaultFilters,
+    search: "",
   });
 
   const [openCategory, setOpenCategory] = useState({
@@ -67,13 +54,40 @@ const AllBooks = () => {
 
   useEffect(() => {
     const urlSearch = new URLSearchParams(location.search).get("search") || "";
-    setFilters((prev) => ({ ...prev, search: urlSearch, cursor: "" }));
+
+    setFilters((prev) => ({
+      ...prev,
+      search: urlSearch,
+      cursor: "",
+    }));
   }, [location.search]);
 
-  const { category, minPrice, maxPrice, discount, language, search, rating, binding } = filters;
+  const {
+    categories,
+    minPrice,
+    maxPrice,
+    discount,
+    language,
+    search,
+    rating,
+    binding,
+  } = filters;
+
   useEffect(() => {
-    setFilters((prev) => ({ ...prev, cursor: "" }));
-  }, [category, minPrice, maxPrice, discount, language, search, rating, binding]);
+    setFilters((prev) => ({
+      ...prev,
+      cursor: "",
+    }));
+  }, [
+    categories,
+    minPrice,
+    maxPrice,
+    discount,
+    language,
+    search,
+    rating,
+    binding,
+  ]);
 
   const debouncedSearch = useDebounce(filters.search, 500);
   const debouncedMinPrice = useDebounce(filters.minPrice, 500);
@@ -93,7 +107,7 @@ const AllBooks = () => {
     debouncedSearch,
     debouncedMinPrice,
     debouncedMaxPrice,
-    filters.category,
+    filters.categories,
     filters.discount,
     filters.language,
     filters.rating,
@@ -107,27 +121,42 @@ const AllBooks = () => {
 
     const obs = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
-          setFilters((prev) => ({ ...prev, cursor: nextCursor }));
+        if (entries[0].isIntersecting && hasMore && !loading && !fetchingMore) {
+          setFilters((prev) => ({
+            ...prev,
+            cursor: nextCursor,
+          }));
         }
       },
       { threshold: 0.1 },
     );
 
     obs.observe(sentinelRef.current);
+
     return () => obs.disconnect();
-  }, [hasMore, nextCursor, loading]);
+  }, [hasMore, nextCursor, loading, fetchingMore]);
 
   const appliedFiltersCount = useMemo(() => {
     const ignoreKeys = ["limit", "cursor"];
 
+    const isFilterValueEqual = (userValue, defaultValue) => {
+      if (Array.isArray(userValue)) {
+        return userValue.length === 0;
+      }
+
+      if (typeof userValue === "object" && userValue !== null) {
+        return Object.keys(userValue).length === 0;
+      }
+
+      return userValue === defaultValue;
+    };
+
     return Object.keys(filters).filter(
       (key) =>
-        !ignoreKeys.includes(key) && filters[key] !== defaultFilters[key],
+        !ignoreKeys.includes(key) &&
+        !isFilterValueEqual(filters[key], defaultFilters[key]),
     ).length;
   }, [filters]);
-
-  console.log(books);
 
   return (
     <div
@@ -143,48 +172,32 @@ const AllBooks = () => {
         description="Find your next favorite read among our extensive collection."
         items={[
           { label: "Home", path: "/nextChapter" },
-          { label: "Books", path: null }
+          { label: "Books", path: null },
         ]}
       />
-      <div className="bg-sepia/80 backdrop-blur-xl py-4 sm:py-6 px-6 sticky top-[4.5rem] z-[100] shadow-md border-b border-tan/10">
 
+      <div className="bg-sepia/80 backdrop-blur-xl py-3 px-6 sticky top-[4.5rem] z-[100] shadow-md border-b rounded-b-[1.5rem] border-tan/10">
         <div className="container flex items-center justify-between gap-5 md:px-4">
-          <h1 className="text-xl font-semibold text-start sm:text-center text-cream md:text-2xl uppercase">
-            We have various types of books
+          <h1 className="text-xl font-semibold uppercase text-start sm:text-center text-tan md:text-2xl">
+            Browse by Category
           </h1>
 
           <div className="flex items-center gap-2">
-            {appliedFiltersCount > 0 && (
-              <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-tan/50 border border-coffee/20 w-fit">
-                <span className="text-coffee font-medium">Filters:</span>
-
-                <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-coffee text-tan">
-                  {appliedFiltersCount}
-                </span>
-
-                <span className="bg-red-heart/10 rounded-xl p-0.5">
-                  <XCircleIcon
-                    onClick={() => setFilters(defaultFilters)}
-                    className="bottom-0 right-0 w-5 h-5 text-red-heart transition-all duration-200 ease-linear cursor-pointer active:scale-75 hover:scale-105"
-                  />
-                </span>
-              </div>
-            )}
             <motion.button
               onClick={(e) => {
                 e.stopPropagation();
                 setShowFilters(!showFilters);
               }}
               whileTap={{ scale: 0.9 }}
-              className="w-11 h-11 flex items-center justify-center rounded-2xl bg-tan/10 border border-tan/20 text-cream shadow-sm hover:bg-tan/20 transition-all duration-300"
+              className="relative flex items-center justify-center transition-all duration-300 border shadow-sm w-11 h-11 rounded-2xl bg-tan/10 border-tan/20 text-cream hover:bg-tan/20"
             >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              {appliedFiltersCount > 0 && (
+                <span className="px-2 absolute -top-1 -right-1 bg-opacity-50 backdrop-blur-sm py-0.5 text-sm font-semibold rounded-full bg-sepia text-tan">
+                  {appliedFiltersCount}
+                </span>
+              )}
+
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <AnimatePresence mode="wait">
                   {showFilters ? (
                     <motion.path
@@ -218,10 +231,13 @@ const AllBooks = () => {
         </div>
       </div>
 
-
       <CategorySlider filters={filters} setFilters={setFilters} />
 
-      {books?.length === 0 ? (
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[40vh] py-20">
+          <BooksLoader />
+        </div>
+      ) : books?.length === 0 ? (
         <div className="my-20">
           <NoData
             title="No Books Found"
@@ -231,52 +247,32 @@ const AllBooks = () => {
             actionText="Clear All Filters"
             onActionClick={() => {
               navigate("/nextChapter/books");
-              setFilters({
-                limit: 10,
-                cursor: "",
-                category: "",
-                minPrice: 0,
-                maxPrice: 10000,
-                discount: "",
-                language: "",
-                search: "",
-              });
+              setFilters(defaultFilters);
             }}
           />
         </div>
       ) : (
-        <div className="my-10">
-          <div className="flex-1">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className={`grid container mx-auto grid-cols-12 gap-3 px-6`}
-            >
-              {books?.map((book, i) => (
-                <motion.div
-                  key={book.book_id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={`col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3`}
-                >
-                  <BookCard book={book} index={i} />
-                </motion.div>
-              ))}
-            </motion.div>
+        <div>
+          <div className="container grid flex-1 grid-cols-12 gap-3 px-6 mx-auto my-10">
+            {books?.map((book) => (
+              <motion.div
+                key={book.book_id}
+                className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
+              >
+                <BookCard book={book} />
+              </motion.div>
+            ))}
+          </div>
 
-            {/* Pagination Sentinel */}
-            <div
-              ref={sentinelRef}
-              className="flex items-center justify-center w-full h-10 mt-5"
-            >
-              {loading && (
-                <div className="flex items-center justify-center">
-                  <BooksLoader />
-                </div>
-              )}
-            </div>
+          <div
+            ref={sentinelRef}
+            className="flex items-center justify-center w-full h-10 my-14"
+          >
+            {fetchingMore && (
+              <div className="flex items-center justify-center">
+                <BooksLoader />
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -284,15 +280,17 @@ const AllBooks = () => {
       <AnimatePresence>
         {showFilters && (
           <motion.div
-            initial={{ x: 200, scale: 0.5 }}
-            animate={{ x: 0, scale: 1 }}
-            exit={{ x: 300, scale: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 40 }}
-            className="fixed top-[7rem] right-[1.6rem] z-[9999]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bg-black/70 md:bg-transparent inset-0 md:inset-auto -top-[5rem] md:top-[7rem] right-0 md:right-[1.6rem] z-[9999]"
           >
             <BookListingFilter
               filters={filters}
               setFilters={setFilters}
+              appliedFiltersCount={appliedFiltersCount}
+              setShowFilters={setShowFilters}
               openCategory={openCategory}
               setOpenCategory={setOpenCategory}
             />
@@ -304,5 +302,3 @@ const AllBooks = () => {
 };
 
 export default AllBooks;
-
-

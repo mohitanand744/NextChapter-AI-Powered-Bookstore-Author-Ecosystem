@@ -14,6 +14,9 @@ export const booksApis = {
   getAllBooks: async (params) => {
     const response = await axiosInstance.get(`/books`, {
       params,
+      paramsSerializer: {
+        indexes: null,
+      },
     });
 
     console.log(response);
@@ -25,5 +28,5 @@ export const booksApis = {
       params: { userSearchPhrase },
     });
     return response.data;
-  }
+  },
 };

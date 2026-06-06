@@ -78,7 +78,7 @@ const Input = (
         ) : Component === "textarea" ? (
           <textarea
             ref={ref}
-            className={`w-full block bg-tan/10 text-tan/90 truncate px-4 py-2 rounded-lg border ${error
+            className={`w-full block bg-tan/10 text-tan/90 pr-[44px] pl-4 py-2 rounded-lg border ${error
               ? "border-red-error placeholder:text-red-error focus:ring-red-error focus:border-red-error"
               : "border-sepia placeholder:text-tan/60 focus:ring-coffee focus:border-coffee"
               }  focus:outline-none focus:ring-2 ${className}`}

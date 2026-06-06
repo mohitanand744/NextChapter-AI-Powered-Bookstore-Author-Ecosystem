@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import { categoryApis } from "../../utils/apis/categoryApis";
+import { FaCheckCircle } from "react-icons/fa";
 
 const categories = [
   {
@@ -14,7 +15,7 @@ const categories = [
   {
     name: "Non-Fiction",
     image:
-      "https://wizdomapp.com/wp-content/uploads/2024/10/product-jpeg-500x500-1-500x490.webp",
+      "https://observer.com/wp-content/uploads/sites/2/2025/01/Best-New-Nonfiction-Books-Coming-Out-in-2025.png?quality=80",
   },
   {
     name: "Mystery",
@@ -103,12 +104,23 @@ const CategorySlider = ({ filters, setFilters }) => {
     getAllCategoriesLists();
   }, []);
 
+  const handleRemoveCategory = (categoryName) => {
+    setFilters((prev) => ({
+      ...prev,
+      categories: prev.categories.filter((c) => c !== categoryName),
+    }));
+  };
+
   const handleCategoryClick = (categoryName) => {
-    if (filters.category === categoryName) {
-      setFilters((prev) => ({ ...prev, category: "" }));
-    } else {
-      setFilters((prev) => ({ ...prev, category: categoryName }));
+    if (filters?.categories?.includes(categoryName)) {
+      handleRemoveCategory(categoryName);
+      return;
     }
+
+    setFilters((prev) => ({
+      ...prev,
+      categories: [...prev.categories, categoryName],
+    }));
   };
 
   console.log(categoriesList);
@@ -117,196 +129,148 @@ const CategorySlider = ({ filters, setFilters }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
       className="px-4 py-6 md:px-6"
     >
       <div className="container relative px-4 mx-auto">
-        <h2 className="text-lg font-semibold text-coffee mb-4 md:text-xl">
-          Browse by Category
-        </h2>
-
         <Swiper
           slidesPerView="auto"
           spaceBetween={16}
-          freeMode={true}
+          freeMode
           autoplay={{
-            delay: 3000,
+            delay: 2000,
             disableOnInteraction: false,
           }}
           modules={[FreeMode, Autoplay]}
-          className="!py-2"
+          className="!py-2 mt-5 rounded-2xl bg-cream/5"
         >
-          {categoriesList.map((category, index) => (
-            <SwiperSlide key={index} className="!w-auto">
-              <motion.div
-                whileHover={{ y: -5 }}
-                onClick={() => handleCategoryClick(category.name)}
-                className={`relative w-32 h-40 overflow-hidden rounded-xl cursor-pointer group md:w-36 md:h-44 transition-all duration-300 ${filters.category === category.name
-                    ? "border-2 border-tan  shadow-[0_0_30px_rgba(92,76,73,1)]"
-                    : ""
-                  }`}
-                style={{
-                  transformStyle: "preserve-3d",
-                }}
-              >
-                {/* Modern selection indicator - animated border */}
-                {filters.category === category.name && (
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none rounded-xl"
-                    style={{
-                      boxShadow: "inset 0 0 0 2px tan",
-                      zIndex: 10,
-                    }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
-                {/* Glow effect */}
-                {filters.category === category.name && (
-                  <motion.div
-                    className="absolute inset-0 bg-coffee opacity-20 blur-md rounded-xl"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.2 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
+          {categoriesList.map((category) => {
+            const isSelected = filters?.categories?.some(
+              (cat) => cat === category.name,
+            );
 
-                <img
-                  src={
-                    categories?.some((cat) => cat.name === category.name)
-                      ? categories.find((cat) => cat.name === category.name)
-                        ?.image
-                      : ""
-                  }
-                  alt={category.name}
-                  className={`object-cover w-full h-full transition-all duration-300 ${filters.category === category.name
-                      ? "scale-105 brightness-100"
-                      : "brightness-90 group-hover:brightness-75"
+            const categoryImage = categories?.find(
+              (cat) => cat.name === category.name,
+            )?.image;
+
+            return (
+              <SwiperSlide key={category.name} className="!w-auto">
+                <motion.div
+                  whileHover={{ y: -5 }}
+                  onClick={() => handleCategoryClick(category.name)}
+                  className={`relative w-32 h-40 overflow-hidden cursor-pointer rounded-2xl group md:w-36 md:h-44 transition-all duration-300 ${isSelected
+                      ? "border-[3px] border-tan shadow-[0_0_20px_rgba(210,180,140,0.5)]"
+                      : "border-[3px] border-transparent"
                     }`}
                   style={{
-                    transform:
-                      filters.category === category.name
-                        ? "translateZ(10px)"
-                        : "translateZ(0)",
+                    transformStyle: "preserve-3d",
                   }}
-                />
-
-                <div
-                  className={`absolute inset-0 flex items-end p-3 transition-all duration-300 ${filters.category === category.name
-                      ? "bg-gradient-to-t from-black/90 via-transparent to-transparent"
-                      : "bg-gradient-to-t from-black/70 via-transparent to-transparent"
-                    }`}
                 >
-                  <motion.span
-                    className={`text-sm font-medium ${filters.category === category.name
-                        ? "text-tan font-bold tracking-wide"
-                        : "text-tan"
-                      } md:text-base`}
-                    initial={{ opacity: 0.9 }}
-                    whileHover={{ opacity: 1 }}
+                  {isSelected && (
+                    <motion.div
+                      className="absolute inset-0 pointer-events-none rounded-xl"
+                      style={{
+                        boxShadow: "inset 0 0 0 1px rgba(210,180,140,0.3)",
+                        zIndex: 10,
+                      }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+
+                  {isSelected && (
+                    <motion.div
+                      className="absolute inset-0 bg-coffee/40 backdrop-blur-[1px] rounded-xl z-[1]"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+
+                  <img
+                    src={categoryImage || ""}
+                    alt={category.name}
+                    className={`object-cover w-full h-full transition-all duration-500 ${isSelected
+                        ? "scale-110 brightness-75"
+                        : "brightness-90 group-hover:brightness-75 group-hover:scale-105"
+                      }`}
+                    style={{
+                      transform: isSelected
+                        ? "translateZ(10px) scale(1.1)"
+                        : "translateZ(0)",
+                    }}
+                  />
+
+                  <div
+                    className={`absolute inset-0 flex items-end p-3 transition-all duration-300 z-10 ${isSelected
+                        ? "bg-gradient-to-t from-black/95 via-black/40 to-transparent"
+                        : "bg-gradient-to-t from-black/70 via-transparent to-transparent"
+                      }`}
                   >
-                    {category.name}
-                  </motion.span>
-                </div>
+                    <div className="w-full">
+                      <motion.span
+                        className={`block text-sm font-medium ${isSelected
+                            ? "text-tan font-bold tracking-wide"
+                            : "text-tan"
+                          } md:text-base`}
+                        initial={{ opacity: 0.9 }}
+                        whileHover={{ opacity: 1 }}
+                      >
+                        {category.name}
+                      </motion.span>
+                      {isSelected && (
+                        <motion.span
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="block text-[10px] text-cream/90 uppercase tracking-widest mt-0.5"
+                        >
+                          Selected
+                        </motion.span>
+                      )}
+                    </div>
+                  </div>
 
-                {/* Modern selection indicator - corner accents */}
-                {filters.category === category.name && (
-                  <>
+                  {isSelected && (
                     <motion.div
-                      className="absolute w-3 h-3 border-t-2 border-l-2 border-tan top-2 left-2"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.1 }}
-                    />
-                    <motion.div
-                      className="absolute w-3 h-3 border-t-2 border-r-2 border-tan top-2 right-2"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.1 }}
-                    />
-                    <motion.div
-                      className="absolute w-3 h-3 border-b-2 border-l-2 border-tan bottom-2 left-2"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.1 }}
-                    />
-                    <motion.div
-                      className="absolute w-3 h-3 border-b-2 border-r-2 border-tan bottom-2 right-2"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.1 }}
-                    />
-                  </>
-                )}
-              </motion.div>
-            </SwiperSlide>
-          ))}
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", bounce: 0.5, delay: 0.1 }}
+                      className="absolute top-3 right-3 z-20 flex items-center justify-center w-6 h-6 bg-tan rounded-full shadow-[0_0_10px_rgba(210,180,140,0.8)]"
+                    >
+                      <FaCheckCircle className="text-coffee w-5 h-5" />
+                    </motion.div>
+                  )}
+
+                  {isSelected && (
+                    <>
+                      <motion.div
+                        className="absolute w-3 h-3 border-t-2 border-l-2 border-tan top-2 left-2 z-10"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                      />
+                      <motion.div
+                        className="absolute w-3 h-3 border-b-2 border-l-2 border-tan bottom-2 left-2 z-10"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                      />
+                      <motion.div
+                        className="absolute w-3 h-3 border-b-2 border-r-2 border-tan bottom-2 right-2 z-10"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                      />
+                    </>
+                  )}
+                </motion.div>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
-
-        {/* Selected category indicator (optional) */}
-        {filters.category && (
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              transition: {
-                type: "spring",
-                stiffness: 300,
-                damping: 20,
-              },
-            }}
-            exit={{ opacity: 0, y: -10, scale: 0.9 }}
-            className="md:absolute top-[-20px] left-[14rem] flex justify-center mt-4"
-          >
-            <motion.div
-              className="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-tan-subtle border border-tan-border shadow-sm"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{
-                  scale: 1,
-                  transition: { delay: 0.2 },
-                }}
-                className="w-2 h-2 bg-coffee rounded-full"
-              />
-
-              <motion.p className="text-xs font-medium text-coffee">
-                Viewing:{" "}
-                <span className="ml-1 font-bold">{filters.category}</span>
-              </motion.p>
-
-              <motion.button
-                onClick={() =>
-                  setFilters((prev) => ({ ...prev, category: "" }))
-                }
-                whileHover={{ backgroundColor: "#ffe6c1" }}
-                className="p-1 rounded-full"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="text-coffee"
-                >
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        )}
       </div>
     </motion.div>
   );
 };
 
 export default CategorySlider;
-
-

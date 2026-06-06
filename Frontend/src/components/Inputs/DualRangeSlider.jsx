@@ -3,8 +3,11 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { motion } from "framer-motion";
 
-function DualRangeSlider({ setOpenCategory, PriceFilter, filters, setFilters }) {
-  const [value, setValue] = React.useState([filters.minPrice, filters.maxPrice]); // Initial range values
+function DualRangeSlider({ toggleCategory, PriceFilter, filters, setFilters }) {
+  const [value, setValue] = React.useState([
+    filters.minPrice,
+    filters.maxPrice,
+  ]); // Initial range values
   const min = 0; // Minimum value for price filter
   const max = 10000; // Maximum value for price filter
 
@@ -32,29 +35,49 @@ function DualRangeSlider({ setOpenCategory, PriceFilter, filters, setFilters }) 
       <div
         onClick={(e) => {
           e.stopPropagation();
-          setOpenCategory((prev) => ({ ...prev, PriceFilter: !PriceFilter }));
+          toggleCategory();
         }}
-        className="flex items-center justify-between p-5 cursor-pointer group hover:bg-tan/5 transition-colors"
+        className="transition-all cursor-pointer group"
       >
-        <div className="flex flex-col text-cream">
-          <span className="text-sm font-serif text-cream/90 text-start">Investment Range</span>
-          <h1 className="text-lg font-medium leading-none mt-1">Price Filter</h1>
-        </div>
-        <motion.div
-          animate={{ rotate: PriceFilter ? 180 : 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-tan/10 group-hover:bg-tan/20 transition-colors text-cream"
+        <div
+          className={`flex items-center justify-between w-full p-[1.28rem] ${PriceFilter ? "border-b shadow-lg border-tan/10" : ""} rounded-full hover:bg-tan/5`}
         >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </motion.div>
+          <div className="flex flex-col">
+            <span className="text-sm font-bold tracking-widest uppercase text-tan/40">
+              Investment Range
+            </span>
+            <h3 className="mt-1 font-serif text-xl transition-colors text-cream group-hover:text-tan">
+              Price Filter
+            </h3>
+          </div>
+          <motion.div
+            animate={{ rotate: PriceFilter ? 180 : 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            className="flex items-center justify-center w-10 h-10 transition-colors rounded-full bg-tan/10 group-hover:bg-tan/20"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2.5 4.5L6 8L9.5 4.5"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </motion.div>
+        </div>
       </div>
-
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`${PriceFilter ? "h-[7rem]" : "h-[0rem]"
-          } overflow-hidden flex justify-center items-center flex-col transition-all duration-300 ease-in-out w-full  rounded-lg `}
+        className={`${
+          PriceFilter ? "h-[7rem]" : "h-[0rem]"
+        } overflow-hidden flex justify-center items-center flex-col transition-all duration-300 ease-in-out w-full  rounded-lg `}
       >
         <div className="w-full p-8 pt-0">
           {/* Display Min and Max Prices */}
@@ -103,5 +126,3 @@ function DualRangeSlider({ setOpenCategory, PriceFilter, filters, setFilters }) 
 }
 
 export default DualRangeSlider;
-
-
