@@ -18,6 +18,8 @@ const {
 const { OAUTH_EXCHANGE_EXPIRY_MS } = require("../Config/constants");
 const google = require("../Config/oAuth/google");
 
+const isProduction = process.env.NODE_ENV === "production";
+
 // SIGNUP
 const signup = async (req, res, next) => {
   try {
@@ -66,13 +68,14 @@ const login = async (req, res, next) => {
       return errorResponse(res, 400, result?.message, result);
     }
     console.log("setting cookie");
+
     res.cookie("token", result.token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
-
     delete result.token;
 
     successResponse(res, 200, "Login successful", result);
@@ -87,8 +90,8 @@ const logout = (_, res) => {
 
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     path: "/",
   });
 
