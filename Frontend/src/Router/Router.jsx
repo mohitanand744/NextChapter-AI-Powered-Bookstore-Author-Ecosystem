@@ -46,7 +46,7 @@ const Router = () => {
 
   return (
     <BrowserRouter>
-      <DevelopmentBanner />
+      {/*  <DevelopmentBanner /> */}
       <Toaster
         position="bottom-right"
         expand={true}
@@ -59,7 +59,8 @@ const Router = () => {
             WebkitBackdropFilter: "blur(24px) saturate(150%)",
             color: "#ffe6c1",
             border: "1px solid rgba(255, 255, 255, 0.08)",
-            boxShadow: "0px 10px 40px -10px rgba(0,0,0,0.5), inset 0px 1px 0px rgba(255, 255, 255, 0.05)",
+            boxShadow:
+              "0px 10px 40px -10px rgba(0,0,0,0.5), inset 0px 1px 0px rgba(255, 255, 255, 0.05)",
             borderRadius: "24px",
             padding: "10px 20px",
             fontSize: "14px",
@@ -136,5 +137,3 @@ const Router = () => {
 };
 
 export default Router;
-
-
