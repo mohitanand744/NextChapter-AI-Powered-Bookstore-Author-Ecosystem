@@ -257,6 +257,11 @@ const AllBooks = () => {
             {books?.map((book) => (
               <motion.div
                 key={book.book_id}
+                layout
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.3 }}
                 className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
               >
                 <BookCard book={book} />

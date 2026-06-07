@@ -109,7 +109,7 @@ const BookCard = ({ book, index }) => {
           />
         </div>
 
-        <div className="absolute border-2 border-tan shadow-lg left-[-4rem] w-[20rem] text-sm z-[11111] transition-all duration-300 scale-0 group-hover:translate-y-0 group-hover:scale-100 group-hover:translate-x-0 rotate-90 group-hover:rotate-0 translate-x-[-5rem] translate-y-[-11.7rem] font-medium bg-coffee/50 backdrop-blur-md p-4 rounded-3xl">
+        <div className="absolute border-2 border-tan shadow-lg left-[1rem] w-[20rem] text-sm z-[11111] transition-all duration-300 scale-0 group-hover:translate-y-0 group-hover:scale-100 group-hover:translate-x-0 rotate-90 group-hover:rotate-0 translate-x-[-9.6rem] translate-y-[-13rem] font-medium bg-coffee/50 backdrop-blur-md p-4 rounded-3xl">
           <div className="relative mx-auto mb-2 border-[4px] border-tan h-44 w-44 rounded-3xl">
             <img
               src={

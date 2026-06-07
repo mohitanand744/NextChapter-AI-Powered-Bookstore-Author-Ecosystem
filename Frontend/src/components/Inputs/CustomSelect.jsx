@@ -44,10 +44,11 @@ const CustomSelect = (
       <motion.button
         ref={ref}
         type="button"
-        className={`w-full h-[42px] px-4 py-3 relative rounded-lg border bg-tan text-sepia flex items-center justify-between ${error
-          ? "border-red-error focus:ring-error"
-          : "border-sepia focus:ring-coffee focus:border-coffee"
-          } shadow-sm focus:outline-none focus:ring-2 ${className}`}
+        className={`w-full h-[42px] px-4 py-3 relative rounded-lg border bg-tan text-sepia flex items-center justify-between ${
+          error
+            ? "border-red-error focus:ring-error"
+            : "border-sepia focus:ring-coffee focus:border-coffee"
+        } shadow-sm focus:outline-none focus:ring-2 ${className}`}
         onClick={() => setIsOpen(!isOpen)}
         whileTap={{ scale: 0.98 }}
         aria-haspopup="listbox"
@@ -58,16 +59,14 @@ const CustomSelect = (
         >
           {multiple
             ? `${selectedOption?.length} selected`
-            : selectedOption?.label || (
-              <span className="">{placeholder}</span>
-            )}
+            : selectedOption?.label || <span className="">{placeholder}</span>}
         </span>
 
         {!error && (
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.3 }}
-            className="text-cream mt-1"
+            className="mt-1 text-cream"
           >
             <svg
               width="16"
@@ -88,7 +87,7 @@ const CustomSelect = (
       <AnimatePresence>
         {isOpen && (
           <motion.ul
-            className={`absolute  z-[999] ${error && "border-error border-t-[3px] border-b-[3px]"} w-full p-2 mt-1 overflow-auto bg-sepia/50 backdrop-blur-xl text-tan  mt-2 rounded-lg  max-h-60`}
+            className={`absolute  z-[999] w-full p-2 mt-1 overflow-auto bg-sepia/50 backdrop-blur-xl text-tan rounded-lg  max-h-60`}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -134,14 +133,15 @@ const CustomSelect = (
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   transition={{ duration: 0.1, delay: 0.1 * idx }}
                   //whileHover={{ scale: 1.03}}
-                  className={`px-4 py-1 border-b-2 hover:!scale-[1.03]  transition-all duration-500 rounded-2xl relative cursor-pointer shadow-lg ${multiple
-                    ? value?.includes(option.value)
-                      ? "border-b-[3px] border-tan/50 bg-tan/10"
-                      : "hover:bg-tan/5 border-tan/30"
-                    : value === option.value
-                      ? "border-b-[3px] border-tan/50 bg-tan/10"
-                      : "hover:bg-tan/5 border-tan/30"
-                    }`}
+                  className={`px-4 py-1 border-b-2 hover:!scale-[1.03]  transition-all duration-500 rounded-2xl relative cursor-pointer shadow-lg ${
+                    multiple
+                      ? value?.includes(option.value)
+                        ? "border-b-[3px] border-tan/50 bg-tan/10"
+                        : "hover:bg-tan/5 border-tan/30"
+                      : value === option.value
+                        ? "border-b-[3px] border-tan/50 bg-tan/10"
+                        : "hover:bg-tan/5 border-tan/30"
+                  }`}
                   onClick={() => {
                     if (multiple) {
                       const currentValue = Array.isArray(value) ? value : [];
@@ -160,15 +160,17 @@ const CustomSelect = (
                   role="option"
                   aria-selected={value === option.value}
                 >
-                  <span className="text-nowrap text-[13px]">{option.label}</span>
+                  <span className="text-nowrap text-[13px]">
+                    {option.label}
+                  </span>
 
                   {(multiple
                     ? value?.includes(option.value)
                     : value === option.value) && (
-                      <span className="w-4 text-[12.4px] text-tan h-4 absolute top-2.5 right-1 bg-coffee/80 flex justify-center items-center rounded-full">
-                        ✓
-                      </span>
-                    )}
+                    <span className="w-4 text-[12.4px] text-tan h-4 absolute top-2.5 right-1 bg-coffee/80 flex justify-center items-center rounded-full">
+                      ✓
+                    </span>
+                  )}
                 </motion.li>
               ));
             })()}
@@ -180,5 +182,3 @@ const CustomSelect = (
 };
 
 export default React.forwardRef(CustomSelect);
-
-

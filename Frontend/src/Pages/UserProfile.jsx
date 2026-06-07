@@ -41,8 +41,6 @@ import SwiperNavButtons from "../components/Buttons/SwiperNavButtons";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import SectionHeading from "../components/Headings/SectionHeading";
 
-
-
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("activity");
   const navigate = useNavigate();
@@ -181,7 +179,7 @@ const UserProfile = () => {
   console.log("UserData", userData);
 
   return (
-    <div className="min-h-screen relative  px-4 py-8">
+    <div className="relative min-h-screen px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -193,7 +191,7 @@ const UserProfile = () => {
           <motion.h1
             initial={{ x: -20 }}
             animate={{ x: 0 }}
-            className="text-3xl font-bold text-coffee mb-4 md:mb-0"
+            className="mb-4 text-3xl font-bold text-coffee md:mb-0"
           >
             My Profile
           </motion.h1>
@@ -203,7 +201,7 @@ const UserProfile = () => {
               whileTap={{ scale: 0.95 }}
               onClick={navigateToOrders}
             >
-              <Button className="flex items-center gap-1 text-nowrap px-4 py-2 bg-coffee  rounded-lg shadow-md">
+              <Button className="flex items-center gap-1 px-4 py-2 rounded-lg shadow-md text-nowrap bg-coffee">
                 <BagSvg />
                 My Orders
               </Button>
@@ -213,7 +211,7 @@ const UserProfile = () => {
               whileTap={{ scale: 0.95 }}
               onClick={navigateToWishlist}
             >
-              <Button className="flex items-center gap-1 text-nowrap px-4 py-2 bg-coffee text-tan border border-tan/20 rounded-lg shadow-md">
+              <Button className="flex items-center gap-1 px-4 py-2 border rounded-lg shadow-md text-nowrap bg-coffee text-tan border-tan/20">
                 <HearthSvg />
                 My Wishlist
               </Button>
@@ -228,11 +226,9 @@ const UserProfile = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
-            className="w-full lg:w-1/3 bg-coffee text-tan rounded-2xl shadow-xl overflow-hidden h-fit border border-tan/20 relative"
+            className="relative w-full overflow-hidden border shadow-xl lg:w-1/3 bg-coffee text-tan rounded-2xl h-fit border-tan/20"
           >
-            <div
-              className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
-            />
+            <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
             {/* Profile Header with Decorative Elements */}
             <div className="relative z-10">
               <DecorativeHeader />
@@ -248,7 +244,7 @@ const UserProfile = () => {
                 <img
                   src={preview || "/images/loading.gif"}
                   alt="Profile"
-                  className="object-cover w-full h-full border-4 border-tan rounded-full shadow-lg cursor-pointer"
+                  className="object-cover w-full h-full border-4 rounded-full shadow-lg cursor-pointer border-tan"
                   onClick={() => openPreview(preview, "Profile Image")}
                 />
 
@@ -261,11 +257,7 @@ const UserProfile = () => {
 
                 {isUploading ? (
                   <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40">
-                    <BooksLoader
-                      imgHeight="16"
-                      imgWidth="16"
-                      marginTop="0"
-                    />
+                    <BooksLoader imgHeight="16" imgWidth="16" marginTop="0" />
                   </div>
                 ) : (
                   <input
@@ -279,17 +271,17 @@ const UserProfile = () => {
               </motion.div>
             </div>
             {/* Profile Content */}
-            <div className="px-6 pt-2 pb-6 relative z-10">
+            <div className="relative z-10 px-6 pt-2 pb-6">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
                 className="mb-6 text-center"
               >
-                <h2 className="text-2xl capitalize  font-bold text-cream">
+                <h2 className="text-2xl font-bold capitalize text-cream">
                   {user?.name}
                 </h2>
-                <p className="text-cream/90 flex items-center justify-center gap-1 mt-1">
+                <p className="flex items-center justify-center gap-1 mt-1 text-cream/90">
                   <CalendarSvg />
                   <b>Member since</b> {user?.joinDate}
                 </p>
@@ -298,14 +290,14 @@ const UserProfile = () => {
               {/* Profile Details */}
               <div className="space-y-5">
                 <ModernProfileDetail
-                  icon={<MdOutlineMail className="text-tan text-xl" />}
+                  icon={<MdOutlineMail className="text-xl text-tan" />}
                   label="Email"
                   value={user?.email}
                   delay={0.4}
                   isCopyable
                 />
                 <ModernProfileDetail
-                  icon={<FiPhone className="text-tan text-lg" />}
+                  icon={<FiPhone className="text-lg text-tan" />}
                   label="Phone"
                   value={user?.phone || "Not provided"}
                   notProvided={!user?.phone}
@@ -313,7 +305,7 @@ const UserProfile = () => {
                   isCopyable
                 />
                 <ModernProfileDetail
-                  icon={<FaRegAddressCard className="text-tan text-lg" />}
+                  icon={<FaRegAddressCard className="text-lg text-tan" />}
                   label="Address"
                   value={defaultAddress}
                   notProvided={!user?.default_address?.address}
@@ -321,7 +313,7 @@ const UserProfile = () => {
                   delay={0.6}
                 />
                 <ModernProfileDetail
-                  icon={<FaRegHeart className="text-tan text-lg" />}
+                  icon={<FaRegHeart className="text-lg text-tan" />}
                   label="Favorite Genres"
                   value={
                     user?.favoriteGenres?.map((genre) => genre?.name) ||
@@ -341,7 +333,7 @@ const UserProfile = () => {
                 >
                   {/* Edit Button */}
                   <Button
-                    className="flex relative items-center w-full justify-center px-4 text-nowrap py-2 bg-coffee  rounded-lg shadow-md"
+                    className="relative flex items-center justify-center w-full px-4 py-2 rounded-lg shadow-md text-nowrap bg-coffee"
                     type="button"
                     onClick={() => setShowProfileUpdateModal(true)}
                   >
@@ -365,7 +357,7 @@ const UserProfile = () => {
                 >
                   <Button
                     onClick={handleLogout}
-                    className="flex items-center gap-1 w-full justify-center px-4 text-nowrap py-2 bg-red-error/15 hover:bg-red-error/20 rounded-lg shadow-md"
+                    className="flex items-center justify-center w-full gap-1 px-4 py-2 rounded-lg shadow-md text-nowrap bg-red-error/15 hover:bg-red-error/20"
                     type="button"
                   >
                     <RiLogoutCircleLine />
@@ -408,10 +400,11 @@ const UserProfile = () => {
             <div className="hidden md:flex border-b-[3px] border-sepia/20">
               <motion.button
                 onClick={() => setActiveTab("activity")}
-                className={`px-4 py-2 text-nowrap text-[16px] relative ${activeTab === "activity"
-                  ? "text-coffee opacity-100 font-bold"
-                  : "text-coffee opacity-70 font-medium"
-                  }`}
+                className={`px-4 py-2 text-nowrap text-[16px] relative ${
+                  activeTab === "activity"
+                    ? "text-coffee opacity-100 font-bold"
+                    : "text-coffee opacity-70 font-medium"
+                }`}
               >
                 Recent Activity
                 {activeTab === "activity" && (
@@ -424,10 +417,11 @@ const UserProfile = () => {
 
               <motion.button
                 onClick={() => setActiveTab("orders")}
-                className={`px-4 py-2 text-nowrap text-[16px] relative ${activeTab === "orders"
-                  ? "text-coffee opacity-100 font-bold"
-                  : "text-coffee opacity-70 font-medium"
-                  }`}
+                className={`px-4 py-2 text-nowrap text-[16px] relative ${
+                  activeTab === "orders"
+                    ? "text-coffee opacity-100 font-bold"
+                    : "text-coffee opacity-70 font-medium"
+                }`}
               >
                 Recent Orders
                 {activeTab === "orders" && (
@@ -440,10 +434,11 @@ const UserProfile = () => {
 
               <motion.button
                 onClick={() => setActiveTab("wishlist")}
-                className={`px-4 py-2 text-nowrap text-[16px] relative ${activeTab === "wishlist"
-                  ? "text-coffee opacity-100 font-bold"
-                  : "text-coffee opacity-70 font-medium"
-                  }`}
+                className={`px-4 py-2 text-nowrap text-[16px] relative ${
+                  activeTab === "wishlist"
+                    ? "text-coffee opacity-100 font-bold"
+                    : "text-coffee opacity-70 font-medium"
+                }`}
               >
                 Wishlist Preview
                 {activeTab === "wishlist" && (
@@ -456,17 +451,16 @@ const UserProfile = () => {
             </div>
 
             {/* Mobile Bottom Navigation */}
-            <div className="bg-coffee text-tan rounded-3xl border border-tan/20 md:hidden flex justify-around py-2 z-50 relative overflow-hidden">
-              <div
-                className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
-              />
-              <div className="flex relative z-10 justify-around w-full">
+            <div className="relative z-50 flex justify-around py-2 overflow-hidden border bg-coffee text-tan rounded-3xl border-tan/20 md:hidden">
+              <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
+              <div className="relative z-10 flex justify-around w-full">
                 <motion.button
                   onClick={() => setActiveTab("activity")}
-                  className={`flex flex-col items-center p-2 w-full relative ${activeTab === "activity"
-                    ? "text-tan"
-                    : "text-tan opacity-70"
-                    }`}
+                  className={`flex flex-col items-center p-2 w-full relative ${
+                    activeTab === "activity"
+                      ? "text-tan"
+                      : "text-tan opacity-70"
+                  }`}
                   whileTap={{ scale: 0.95 }}
                 >
                   <FaHistory className="w-5 h-5" />
@@ -481,10 +475,9 @@ const UserProfile = () => {
 
                 <motion.button
                   onClick={() => setActiveTab("orders")}
-                  className={`flex flex-col items-center p-2 w-full relative ${activeTab === "orders"
-                    ? "text-tan"
-                    : "text-tan opacity-70"
-                    }`}
+                  className={`flex flex-col items-center p-2 w-full relative ${
+                    activeTab === "orders" ? "text-tan" : "text-tan opacity-70"
+                  }`}
                   whileTap={{ scale: 0.95 }}
                 >
                   <FaShoppingBag className="w-5 h-5" />
@@ -499,10 +492,11 @@ const UserProfile = () => {
 
                 <motion.button
                   onClick={() => setActiveTab("wishlist")}
-                  className={`flex flex-col items-center p-2 w-full relative ${activeTab === "wishlist"
-                    ? "text-tan"
-                    : "text-tan opacity-70"
-                    }`}
+                  className={`flex flex-col items-center p-2 w-full relative ${
+                    activeTab === "wishlist"
+                      ? "text-tan"
+                      : "text-tan opacity-70"
+                  }`}
                   whileTap={{ scale: 0.95 }}
                 >
                   <FaHeart className="w-5 h-5" />
@@ -522,27 +516,27 @@ const UserProfile = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="p-6 bg-coffee text-tan h-full rounded-2xl border border-tan/10 relative overflow-hidden"
+              className="relative h-full p-6 overflow-hidden border bg-coffee text-tan rounded-2xl border-tan/10"
             >
-              <div
-                className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
-              />
+              <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
               <div className="relative z-10 h-full">
                 {activeTab === "activity" && (
                   <>
                     {user?.recentActivity?.length > 0 ? (
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {user?.recentActivity?.slice(0, 3).map((item, index) => (
-                          <ActivityItem
-                            key={item.id}
-                            title={item.title}
-                            date={item.date}
-                            description={item.description}
-                            status={item.status}
-                            delay={0.1 * index}
-                            imageUrl={item.imageUrl}
-                          />
-                        ))}
+                        {user?.recentActivity
+                          ?.slice(0, 3)
+                          .map((item, index) => (
+                            <ActivityItem
+                              key={item.id}
+                              title={item.title}
+                              date={item.date}
+                              description={item.description}
+                              status={item.status}
+                              delay={0.1 * index}
+                              imageUrl={item.imageUrl}
+                            />
+                          ))}
                       </div>
                     ) : (
                       <NoData
@@ -626,7 +620,7 @@ const UserProfile = () => {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 1.1 }}
-        className="container mt-20 border-t border-tan/10 pt-16"
+        className="container pt-16 mt-20 border-t border-tan/10"
       >
         <div className="mb-2">
           <SectionHeading
@@ -661,14 +655,12 @@ const UserProfile = () => {
       <Modal isOpen={showLogoutModal} onClose={() => setShowLogoutModal(false)}>
         <div className="text-center">
           <div className="flex justify-center mb-4">
-            <div className=" p-4 rounded-full">
+            <div className="p-4 rounded-full ">
               <RiLogoutCircleLine className="text-4xl " />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-tan mb-2">
-            Confirm Logout
-          </h2>
-          <p className="text-tan/80 mb-8">
+          <h2 className="mb-2 text-2xl font-bold text-tan">Confirm Logout</h2>
+          <p className="mb-8 text-tan/80">
             Are you sure you want to log out of your account?
           </p>
           <div className="flex gap-4">
@@ -702,15 +694,13 @@ const StatCard = ({ title, value, color, delay, icon, text, onClick }) => (
     onClick={onClick}
     className={`${color} text-tan rounded-xl shadow-md p-6 cursor-pointer transition-all duration-200 hover:shadow-lg relative overflow-hidden`}
   >
-    <div
-      className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
-    />
+    <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
     <div className="relative z-10 flex items-start justify-between">
       <div>
         <p className="text-lg font-medium">{title}</p>
         <p className="text-3xl font-bold">{value}</p>
       </div>
-      <div className="flex items-center justify-center w-10 h-10 text-tan rounded-full bg-tan/10">
+      <div className="flex items-center justify-center w-10 h-10 rounded-full text-tan bg-tan/10">
         {icon}
       </div>
     </div>
@@ -730,12 +720,10 @@ const ActivityItem = ({
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay, type: "spring", stiffness: 300 }}
     whileHover={{ y: -3, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
-    className="bg-coffee text-tan rounded-xl shadow-md overflow-hidden border border-tan/20 transition-all duration-200 hover:shadow-lg relative"
+    className="relative overflow-hidden transition-all duration-200 border shadow-md bg-coffee text-tan rounded-xl border-tan/20 hover:shadow-lg"
   >
-    <div
-      className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
-    />
-    <div className="flex flex-col sm:flex-row relative z-10">
+    <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
+    <div className="relative z-10 flex flex-col sm:flex-row">
       {/* Product Image */}
       <div className="relative flex items-center justify-center h-40 border-r rounded-r-2xl sm:w-1/4 sm:h-auto">
         <img
@@ -748,12 +736,13 @@ const ActivityItem = ({
         />
         {status && (
           <span
-            className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${status === "Delivered"
-              ? "bg-green-100 text-green-800"
-              : status === "Shipped"
-                ? "bg-blue-100 text-blue-800"
-                : "bg-yellow-100 text-yellow-800"
-              }`}
+            className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${
+              status === "Delivered"
+                ? "bg-green-100 text-green-800"
+                : status === "Shipped"
+                  ? "bg-blue-100 text-blue-800"
+                  : "bg-yellow-100 text-yellow-800"
+            }`}
           >
             {status}
           </span>
@@ -767,9 +756,7 @@ const ActivityItem = ({
           <span className="text-sm text-tan opacity-70">{date}</span>
         </div>
 
-        <p className="text-tan opacity-90 mb-4 line-clamp-2">
-          {description}
-        </p>
+        <p className="mb-4 text-tan opacity-90 line-clamp-2">{description}</p>
 
         <div className="flex items-center justify-end mt-auto">
           <motion.div
@@ -807,13 +794,13 @@ const ModernProfileDetail = ({
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay }}
-      className="flex items-start gap-3 p-3 bg-tan/10 rounded-lg backdrop-blur-sm border border-tan/20"
+      className="flex items-start gap-3 p-3 border rounded-lg bg-tan/10 backdrop-blur-sm border-tan/20"
     >
-      <span className="text-xl text-tan flex-shrink-0">{icon}</span>
+      <span className="flex-shrink-0 text-xl text-tan">{icon}</span>
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between w-full">
-          <p className="text-xs font-medium text-cream/90 uppercase tracking-wider">
+        <div className="flex items-start justify-between w-full">
+          <p className="text-xs font-medium tracking-wider uppercase text-cream/90">
             {label}
           </p>
           {Array.isArray(value) && (
@@ -821,8 +808,8 @@ const ModernProfileDetail = ({
               swiperRef={swiperRef}
               className="!relative !w-auto !h-auto justify-end gap-2"
               position={{}}
-              prevButtonClass="!w-7 !h-7 shadow-sm flex items-center justify-center scale-90"
-              nextButtonClass="!w-7 !h-7 shadow-sm flex items-center justify-center scale-90"
+              prevButtonClass="!w-7 !h-7 pr-0.5 shadow-sm flex items-center justify-center scale-90"
+              nextButtonClass="!w-7 !h-7 pl-0.5 shadow-sm flex items-center justify-center scale-90"
             />
           )}
         </div>
@@ -831,7 +818,7 @@ const ModernProfileDetail = ({
           {/* VALUE */}
           <div className="flex-1 min-w-0">
             {Array.isArray(value) ? (
-              <div className="relative ml-[-0.8rem] w-full mt-2">
+              <div className="relative ml-[-0.8rem] w-full">
                 {value.length > 0 ? (
                   <Swiper
                     modules={[Navigation, FreeMode, Autoplay]}

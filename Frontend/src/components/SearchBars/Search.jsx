@@ -27,6 +27,10 @@ const Search = ({
   const location = useLocation();
 
   useEffect(() => {
+    setSearchTerm(value || "");
+  }, [value]);
+
+  useEffect(() => {
     if (enableSuggestions && debouncedSearchTerm.trim()) {
       booksApis
         .getSuggestions(debouncedSearchTerm)

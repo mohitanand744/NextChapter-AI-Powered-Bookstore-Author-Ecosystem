@@ -1,4 +1,4 @@
-const BookModel = require("../models/bookModel");
+const BookModel = require("../Models/bookModel");
 const db = require("../Config/db.connection");
 
 const getAllBooks = async (

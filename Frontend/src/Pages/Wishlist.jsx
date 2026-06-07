@@ -22,15 +22,15 @@ const Wishlist = () => {
   }, [dispatch]);
 
   const filteredBooks = useMemo(() => {
-    return wishlists?.data?.filter(
-      (book) =>
-        book?.title
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        book?.author?.author_name
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()),
-    ) || [];
+    return (
+      wishlists?.data?.filter(
+        (book) =>
+          book?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          book?.author?.author_name
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()),
+      ) || []
+    );
   }, [wishlists?.data, searchTerm]);
 
   return (
@@ -49,7 +49,7 @@ const Wishlist = () => {
         items={[
           { label: "Home", path: "/nextChapter" },
           { label: "Profile", path: "/nextChapter/user/profile" },
-          { label: "Wishlist", path: null }
+          { label: "Wishlist", path: null },
         ]}
       />
 
@@ -68,6 +68,8 @@ const Wishlist = () => {
               styling="flex-1 md:w-[25rem] bg-sepia rounded-full"
               onChange={(val) => setSearchTerm(val)}
               onSearch={(val) => setSearchTerm(val)}
+              value={searchTerm}
+              placeholder="Search your wishlist..."
             />
           </motion.div>
 
@@ -81,7 +83,7 @@ const Wishlist = () => {
         </div>
 
         {/* Book List */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 pb-6 md:grid-cols-2 lg:grid-cols-4">
           <AnimatePresence>
             {filteredBooks.map((book, i) => (
               <motion.div
@@ -91,7 +93,6 @@ const Wishlist = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
-                whileHover={{ y: -10 }}
               >
                 <BookCard book={book} index={i} />
               </motion.div>
@@ -137,5 +138,3 @@ const Wishlist = () => {
 };
 
 export default Wishlist;
-
-
