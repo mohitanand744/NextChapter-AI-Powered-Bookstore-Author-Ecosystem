@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "../Button";
 import { motion } from "framer-motion";
-import ComingSoonModal from "../../Modal/ComingSoonModal";
 
-const SocialLoginButtons = () => {
-  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
+const SocialLoginButtons = ({ onComingSoonClick }) => {
 
   return (
     <>
@@ -40,7 +38,7 @@ const SocialLoginButtons = () => {
           <Button
             variant="outline"
             className="flex items-center !p-0 justify-center w-[44px] sm:w-full h-[44px] "
-            onClick={() => setIsComingSoonOpen(true)}
+            onClick={() => onComingSoonClick && onComingSoonClick()}
           >
             <motion.img
               initial={{ scale: 0 }}
@@ -61,7 +59,7 @@ const SocialLoginButtons = () => {
           <Button
             variant="outline"
             className="flex float-left sm:float-none items-center !p-0 justify-center w-[44px] sm:w-full h-[44px] "
-            onClick={() => setIsComingSoonOpen(true)}
+            onClick={() => onComingSoonClick && onComingSoonClick()}
           >
             <motion.img
               initial={{ scale: 0 }}
@@ -75,11 +73,6 @@ const SocialLoginButtons = () => {
           </Button>
         </motion.div>
       </div>
-
-      <ComingSoonModal
-        isOpen={isComingSoonOpen}
-        onClose={() => setIsComingSoonOpen(false)}
-      />
     </>
   );
 };
