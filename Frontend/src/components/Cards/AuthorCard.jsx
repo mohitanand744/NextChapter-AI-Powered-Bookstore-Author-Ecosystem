@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { useImagePreview } from "../../store/Context/ImagePreviewContext";
 import { PremiumVerifiedBadge } from "../SVGs/SVGs";
 
-const AuthorCard = ({ author }) => {
+const AuthorCard = ({ author, onComingSoonClick }) => {
   const navigate = useNavigate();
   const { openPreview } = useImagePreview();
 
@@ -80,7 +80,12 @@ const AuthorCard = ({ author }) => {
           <Button
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/nextChapter/author/${author?.author_id || author?.author?.author_id}`);
+              const url = `/nextChapter/author/${author?.author_id || author?.author?.author_id}`;
+              if (onComingSoonClick) {
+                onComingSoonClick(url);
+              } else {
+                navigate(url);
+              }
             }}
             variant="primary" 
             className="!w-full border-2 border-tan !rounded-[0.8rem] !text-[10px] md:!text-[12px] active:scale-95"

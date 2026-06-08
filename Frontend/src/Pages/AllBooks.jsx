@@ -10,6 +10,7 @@ import BookListingFilter from "../components/BookListingFilter";
 import CategorySlider from "../components/ScrollingContainer/CategorySlider";
 import NoData from "../components/EmptyData/noData";
 import Banners from "../components/Banners/Banners";
+import ComingSoonModal from "../components/Modal/ComingSoonModal";
 import useDebounce from "../Hooks/useDebounce";
 
 export const defaultFilters = {
@@ -37,6 +38,8 @@ const AllBooks = () => {
   const sentinelRef = useRef();
 
   const [showFilters, setShowFilters] = useState(false);
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
+  const [exploreLink, setExploreLink] = useState("");
 
   const [filters, setFilters] = useState({
     ...defaultFilters,
@@ -264,7 +267,7 @@ const AllBooks = () => {
                 transition={{ duration: 0.3 }}
                 className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
               >
-                <BookCard book={book} />
+                <BookCard book={book} onComingSoonClick={(url) => { setExploreLink(url); setIsComingSoonOpen(true); }} />
               </motion.div>
             ))}
           </div>
@@ -302,6 +305,11 @@ const AllBooks = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <ComingSoonModal
+        isOpen={isComingSoonOpen}
+        onClose={() => setIsComingSoonOpen(false)}
+        exploreLink={exploreLink}
+      />
     </div>
   );
 };

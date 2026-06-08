@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import ComingSoonModal from "../../Modal/ComingSoonModal";
 
 const Footer = () => {
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
+
   return (
     <footer className="relative rounded-t-[3rem] py-8 text-tan bg-coffee overflow-hidden">
       <div 
@@ -139,6 +142,7 @@ const Footer = () => {
             {/* Facebook */}
             <a
               href="#"
+              onClick={(e) => { e.preventDefault(); setIsComingSoonOpen(true); }}
               className="transition hover:text-tan "
               aria-label="Facebook"
             >
@@ -154,6 +158,7 @@ const Footer = () => {
             {/* Twitter */}
             <a
               href="#"
+              onClick={(e) => { e.preventDefault(); setIsComingSoonOpen(true); }}
               className="transition hover:text-tan "
               aria-label="Twitter"
             >
@@ -169,6 +174,7 @@ const Footer = () => {
             {/* Instagram */}
             <a
               href="#"
+              onClick={(e) => { e.preventDefault(); setIsComingSoonOpen(true); }}
               className="transition hover:text-tan "
               aria-label="Instagram"
             >
@@ -185,6 +191,7 @@ const Footer = () => {
             {/* YouTube */}
             <a
               href="#"
+              onClick={(e) => { e.preventDefault(); setIsComingSoonOpen(true); }}
               className="transition hover:text-tan "
               aria-label="YouTube"
             >
@@ -200,6 +207,10 @@ const Footer = () => {
           </div>
         </div>
       </div>
+      <ComingSoonModal
+        isOpen={isComingSoonOpen}
+        onClose={() => setIsComingSoonOpen(false)}
+      />
     </footer>
   );
 };

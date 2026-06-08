@@ -46,7 +46,7 @@ const Router = () => {
 
   return (
     <BrowserRouter>
-      {/*  <DevelopmentBanner /> */}
+      <DevelopmentBanner />
       <Toaster
         position="bottom-right"
         expand={true}

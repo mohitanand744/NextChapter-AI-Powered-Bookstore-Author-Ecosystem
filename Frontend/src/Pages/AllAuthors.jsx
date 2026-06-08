@@ -8,6 +8,7 @@ import { GiFeather } from "react-icons/gi";
 import Banners from "../components/Banners/Banners";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import AuthorCard from "../components/Cards/AuthorCard";
+import ComingSoonModal from "../components/Modal/ComingSoonModal";
 import Search from "../components/SearchBars/Search";
 import { fetchAllBooks } from "../store/Redux/Slices/BooksSlice";
 import { categoryApis } from "../utils/apis/categoryApis";
@@ -28,6 +29,8 @@ import "swiper/css/free-mode";
 const AllAuthors = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
+  const [exploreLink, setExploreLink] = useState("");
   const { books, loading } = useSelector((state) => state.books);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
@@ -259,7 +262,7 @@ const AllAuthors = () => {
                     <span className="text-cream/50 text-[16px] font-bold uppercase tracking-widest whitespace-nowrap">Featured Works:</span>
                     <div className="flex space-x-4">
                       {authorOfTheMonthBooks.map((book, idx) => (
-                        <div key={book.book_id} className="w-20 h-28  rounded-md overflow-hidden border-2 border-[#1A1511] shadow-[0_10px_20px_rgba(0,0,0,0.5)] hover:-translate-y-3 hover:scale-110 transition-all duration-300 z-10 hover:z-20 cursor-pointer" onClick={() => navigate(`/nextChapter/book/${book.book_id}`)}>
+                        <div key={book.book_id} className="w-20 h-28  rounded-md overflow-hidden border-2 border-[#1A1511] shadow-[0_10px_20px_rgba(0,0,0,0.5)] hover:-translate-y-3 hover:scale-110 transition-all duration-300 z-10 hover:z-20 cursor-pointer" onClick={() => { setExploreLink(`/nextChapter/book/${book.book_id}`); setIsComingSoonOpen(true); }}>
                           <img src={book?.images[0]} alt={book.title} className="w-full h-full object-cover" />
                         </div>
                       ))}
@@ -267,7 +270,7 @@ const AllAuthors = () => {
                   </div>
 
                   <Button
-                    onClick={() => navigate(`/nextChapter/author/${authorOfTheMonth.author_id}`)}
+                    onClick={() => { setExploreLink(`/nextChapter/author/${authorOfTheMonth.author_id}`); setIsComingSoonOpen(true); }}
                     variant="primary"
                     className="flex items-center gap-3 !bg-sepia hover:!bg-tan hover:!text-coffee !text-cream !rounded-xl !px-8 !py-4 shadow-[0_0_20px_rgba(180,140,90,0.2)] hover:shadow-[0_0_30px_rgba(180,140,90,0.4)] transition-all duration-300 shrink-0 group/btn"
                   >
@@ -278,7 +281,7 @@ const AllAuthors = () => {
               ) : (
                 <div className="w-full pt-8 border-t border-tan/10 flex justify-center xl:justify-start">
                   <Button
-                    onClick={() => navigate(`/nextChapter/author/${authorOfTheMonth.author_id}`)}
+                    onClick={() => { setExploreLink(`/nextChapter/author/${authorOfTheMonth.author_id}`); setIsComingSoonOpen(true); }}
                     variant="primary"
                     className="flex items-center gap-3 !bg-sepia hover:!bg-tan hover:!text-coffee !text-cream !rounded-xl !px-8 !py-4 shadow-[0_0_20px_rgba(180,140,90,0.2)] hover:shadow-[0_0_30px_rgba(180,140,90,0.4)] transition-all duration-300 group/btn"
                   >
@@ -314,7 +317,7 @@ const AllAuthors = () => {
                <NoData title="No Featured Authors" message="We're currently curating a list of featured authors. Stay tuned!" icon="search" />
              </div>
           ) : (
-             <AuthorSlider books={books} />
+             <AuthorSlider books={books} onComingSoonClick={(url) => { setExploreLink(url); setIsComingSoonOpen(true); }} />
           )}
         </motion.div>
 
@@ -471,7 +474,7 @@ const AllAuthors = () => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <AuthorCard author={author} />
+                  <AuthorCard author={author} onComingSoonClick={(url) => { setExploreLink(url); setIsComingSoonOpen(true); }} />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -484,6 +487,11 @@ const AllAuthors = () => {
           />
         )}
       </div>
+      <ComingSoonModal
+        isOpen={isComingSoonOpen}
+        onClose={() => setIsComingSoonOpen(false)}
+        exploreLink={exploreLink}
+      />
     </div>
   );
 };

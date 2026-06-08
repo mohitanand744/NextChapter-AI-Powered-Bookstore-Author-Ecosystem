@@ -41,6 +41,7 @@ import SubscribePromptModal from "../components/Modal/SubscribePromptModal";
 import MobileSubscribeModal from "../components/Modal/MobileSubscribeModal";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
 import { useImagePreview } from "../store/Context/ImagePreviewContext";
+import ComingSoonModal from "../components/Modal/ComingSoonModal";
 
 const initialPosts = [
   {
@@ -156,6 +157,8 @@ const AuthorDetails = () => {
   const { userData, isAuthenticated } = useAuth();
   const { books: allBooks, loading } = useSelector((state) => state.books);
   const [subscribeEmail, setSubscribeEmail] = useState("");
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
+  const [exploreLink, setExploreLink] = useState("");
 
   const uniqueAuthors = React.useMemo(() => {
     const authors = [];
@@ -510,7 +513,7 @@ const AuthorDetails = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.07 }}
                       >
-                        <BookCard book={book} index={i} />
+                        <BookCard book={book} index={i} onComingSoonClick={(url) => { setExploreLink(url); setIsComingSoonOpen(true); }} />
                       </motion.div>
                     ))}
                   </div>
@@ -785,6 +788,12 @@ const AuthorDetails = () => {
         subscribeEmail={subscribeEmail}
         setSubscribeEmail={setSubscribeEmail}
         handleSubscribe={handleSubscribe}
+      />
+
+      <ComingSoonModal
+        isOpen={isComingSoonOpen}
+        onClose={() => setIsComingSoonOpen(false)}
+        exploreLink={exploreLink}
       />
     </motion.div >
   );

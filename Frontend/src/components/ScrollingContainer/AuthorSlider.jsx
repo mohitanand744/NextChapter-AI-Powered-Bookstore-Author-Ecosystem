@@ -17,7 +17,7 @@ import { DecorativeHeader } from "../SVGs/SVGs";
 import Button from "../Buttons/Button";
 import AuthorCard from "../Cards/AuthorCard";
 
-function AuthorSlider({ books }) {
+function AuthorSlider({ books, onComingSoonClick }) {
   const swiperRef = useRef(null);
 
   const findUniqueAuthors = (booksArray) => {
@@ -73,7 +73,7 @@ function AuthorSlider({ books }) {
       >
         {uniqueAuthors?.map((author, i) => (
           <SwiperSlide key={i} className="!w-[240px] py-10 md:!w-[280px]">
-            <AuthorCard author={author} />
+            <AuthorCard author={author} onComingSoonClick={(url) => { if(onComingSoonClick) onComingSoonClick(url); }} />
           </SwiperSlide>
         ))}
       </Swiper>

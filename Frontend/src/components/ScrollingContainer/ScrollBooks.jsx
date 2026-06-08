@@ -7,7 +7,7 @@ import BookCard from "../Cards/BookCard";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import SwiperNavButtons from "../Buttons/SwiperNavButtons";
 
-const ScrollBooks = ({ autoScroll = true, books }) => {
+const ScrollBooks = ({ autoScroll = true, books, onComingSoonClick }) => {
   const swiperRef = useRef(null);
 
   return (
@@ -71,7 +71,7 @@ const ScrollBooks = ({ autoScroll = true, books }) => {
             key={i}
             className="relative pb-8 hover:scale-[1.02] hover:z-[9999] transition-all duration-300"
           >
-            <BookCard book={book} index={i} />
+            <BookCard book={book} index={i} onComingSoonClick={(url) => { if(onComingSoonClick) onComingSoonClick(url); }} />
           </SwiperSlide>
         ))}
       </Swiper>

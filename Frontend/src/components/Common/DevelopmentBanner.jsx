@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiAlertCircle, FiX } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
+import { FaLaptopCode } from "react-icons/fa6";
 
 const DevelopmentBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -13,25 +14,22 @@ const DevelopmentBanner = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
-          className="fixed top-0 left-0 right-0 z-[9999] px-4 py-1 sm:px-6 lg:px-8 bg-gradient-to-r from-amber-500/90 via-orange-500/90 to-amber-600/90 backdrop-blur-md shadow-lg border-b border-white/20"
+          className="fixed top-0 left-0 right-0 z-[9999] px-4 py-1.5 sm:px-6 lg:px-8 bg-gradient-to-r from-coffee via-sepia to-coffee backdrop-blur-md shadow-lg border-b border-tan/20"
         >
           <div className="flex flex-wrap items-center justify-between mx-auto max-w-7xl">
             <div className="flex items-center flex-1 w-0">
-              <span className="flex p-2 border rounded-lg shadow-sm bg-amber-800/40 border-white/10">
-                <FiAlertCircle
-                  className="w-6 h-6 text-white"
+              <span className="flex p-2 border rounded-lg shadow-sm bg-tan/10 border-tan/20">
+                <FaLaptopCode
+                  className="w-5 h-5 text-tan"
                   aria-hidden="true"
                 />
               </span>
-              <p className="ml-3 text-sm font-medium leading-snug text-white sm:text-base">
+              <p className="ml-3 text-sm font-medium leading-snug text-cream sm:text-base">
                 <span className="md:hidden">
-                  Backend offline. Building an AI-based E-commerce & Social
-                  platform.
+                  <strong className="text-tan">Work in Progress:</strong> Continuously working on this site to build a next-gen AI platform.
                 </span>
                 <span className="hidden md:inline">
-                  <strong>Notice:</strong> The backend is currently offline. I'm
-                  continuously building an AI-based E-commerce + Social Media
-                  Platform for users and authors.
+                  <strong className="text-tan">✨ Work in Progress:</strong> I am <span className="underline decoration-wavy decoration-tan/50 underline-offset-4">continuously working on this site</span>, crafting an innovative AI-powered E-commerce & Social Media ecosystem.
                 </span>
               </p>
             </div>

@@ -13,6 +13,7 @@ import { useImagePreview } from "../../../store/Context/ImagePreviewContext";
 import { NAV_LINKS } from "./NavLinksData";
 import BooksLoader from "../../Loaders/BooksLoader";
 import { useSelector } from "react-redux";
+import ComingSoonModal from "../../Modal/ComingSoonModal";
 
 const Navbar = ({ isCartOpen, setIsCartOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +25,7 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
   const { openPreview } = useImagePreview();
   const { books } = useSelector((state) => state.books);
   const navigate = useNavigate();
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
   console.log(isAuthenticated);
 
   console.log("pathName", pathName);
@@ -168,11 +170,11 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
               nav={true} styling="hidden md:block w-[16rem] bg-sepia rounded-full" />
 
             <div
-              onClick={() => setIsCartOpen(!isCartOpen)}
+              onClick={() => setIsComingSoonOpen(true)}
               className="relative flex items-center justify-center transition-all duration-300 border shadow-sm cursor-pointer bg-tan/20 hover:bg-tan/30 backdrop-blur-md w-11 h-11 rounded-2xl active:scale-95 border-tan/20 text-tan"
             >
               <div className="absolute flex items-center justify-center w-6 h-6 text-[12px] font-bold text-coffee bg-tan rounded-full -top-1 -right-1 shadow-md border-2 border-coffee">
-                3
+                0
               </div>
               <HiOutlineShoppingCart className="text-[1.4rem]" />
             </div>
@@ -259,6 +261,12 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
 
       {/* Mobile Menu */}
       <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
+
+      <ComingSoonModal
+        isOpen={isComingSoonOpen}
+        onClose={() => setIsComingSoonOpen(false)}
+        onExplore={() => setIsCartOpen(true)}
+      />
     </nav>
   );
 };

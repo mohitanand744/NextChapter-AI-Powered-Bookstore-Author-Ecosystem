@@ -24,6 +24,7 @@ import {
 } from "../../utils/validations/rules";
 import { VALIDATION_MESSAGES } from "../../utils/validations/messages";
 import useInputHandlers from "../../Hooks/useInputHandlers";
+import ComingSoonModal from "../../components/Modal/ComingSoonModal";
 
 const SignUp = () => {
   const {
@@ -54,6 +55,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
 
   useEffect(() => {
     if (confirmPassword) {
@@ -557,6 +559,7 @@ const SignUp = () => {
                     <Button
                       variant="outline"
                       className="flex items-center justify-center w-full px-1"
+                      onClick={() => setIsComingSoonOpen(true)}
                     >
                       <motion.img
                         initial={{ scale: 0 }}
@@ -576,6 +579,7 @@ const SignUp = () => {
                     <Button
                       variant="outline"
                       className="flex items-center justify-center w-full px-1"
+                      onClick={() => setIsComingSoonOpen(true)}
                     >
                       <motion.img
                         initial={{ scale: 0 }}
@@ -657,6 +661,10 @@ const SignUp = () => {
           </motion.div>
         </motion.div>
       </div>
+      <ComingSoonModal
+        isOpen={isComingSoonOpen}
+        onClose={() => setIsComingSoonOpen(false)}
+      />
     </div>
   );
 };

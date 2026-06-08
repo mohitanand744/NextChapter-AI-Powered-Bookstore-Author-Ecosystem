@@ -17,7 +17,7 @@ import useAuth from "../../Hooks/useAuth";
 import FloatingReaction from "../UI/FloatingReaction";
 import Button from "../Buttons/Button";
 
-const BookCard = ({ book, index }) => {
+const BookCard = ({ book, index, onComingSoonClick }) => {
   const navigate = useNavigate();
   const path = useLocation().pathname.replaceAll("/", "");
   const dispatch = useDispatch();
@@ -166,7 +166,12 @@ const BookCard = ({ book, index }) => {
             <Button
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/nextChapter/author/${book?.author?.author_id}`);
+                const url = `/nextChapter/author/${book?.author?.author_id}`;
+                if (onComingSoonClick) {
+                  onComingSoonClick(url);
+                } else {
+                  navigate(url);
+                }
               }}
               className="flex items-center justify-center w-full gap-2 group"
             >
@@ -178,7 +183,14 @@ const BookCard = ({ book, index }) => {
       </div>
       <div className="image w-[60%] md:w-[90%] mx-auto pt-8 h-[15rem]">
         <img
-          onClick={() => navigate(`/nextChapter/book/${book?.book_id}`)}
+          onClick={() => {
+            const url = `/nextChapter/book/${book?.book_id}`;
+            if (onComingSoonClick) {
+              onComingSoonClick(url);
+            } else {
+              navigate(url);
+            }
+          }}
           className="object-contain w-full h-full cursor-pointer"
           src={book?.images?.[0]}
           alt=""
@@ -230,7 +242,12 @@ const BookCard = ({ book, index }) => {
       </div>
       <div className="flex items-center justify-between p-4 mt-2 border-t bottom rounded-b-2xl backdrop-blur-md bg-tan/10 border-tan/10">
         <button
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onComingSoonClick) {
+              onComingSoonClick();
+            }
+          }}
           className="flex items-center gap-2 px-4 py-2 font-semibold transition border active:scale-75 text-cream bg-tan/20 rounded-xl group hover:bg-tan/30 border-tan/20"
         >
           <MdOutlineAddShoppingCart className="group-hover:-rotate-12 duration-300 text-[22px]" />
