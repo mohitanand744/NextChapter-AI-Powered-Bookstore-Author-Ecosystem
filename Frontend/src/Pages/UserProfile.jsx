@@ -34,7 +34,7 @@ import BooksLoader from "../components/Loaders/BooksLoader";
 import { useImagePreview } from "../store/Context/ImagePreviewContext";
 import ProfileUpdateModal from "../components/Modal/ProfileUpdateModal";
 import Modal from "../components/Modal/ModalContainer";
-import ComingSoonModal from "../components/Modal/ComingSoonModal";
+import { useComingSoon } from "../store/Context/ComingSoonContext";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, FreeMode } from "swiper/modules";
 import "swiper/css";
@@ -46,8 +46,7 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("activity");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
-  const [exploreLink, setExploreLink] = useState("");
+  const { openComingSoon } = useComingSoon();
   const { books } = useSelector((state) => state.books);
 
   useEffect(() => {
@@ -159,8 +158,7 @@ const UserProfile = () => {
   }, [userData?.default_address?.address]);
 
   const navigateToOrders = () => {
-    setExploreLink("/nextChapter/orders");
-    setIsComingSoonOpen(true);
+    openComingSoon({ exploreLink: "/nextChapter/orders" });
   };
 
   const navigateToWishlist = () => {
@@ -635,7 +633,7 @@ const UserProfile = () => {
           </SectionHeading>
         </div>
         <div className="">
-          <ScrollBooks autoScroll={false} books={uniqueBooks?.slice(0, 10)} onComingSoonClick={(url) => { setExploreLink(url); setIsComingSoonOpen(true); }} />
+          <ScrollBooks autoScroll={false} books={uniqueBooks?.slice(0, 10)} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
         </div>
       </motion.div>
 
@@ -686,12 +684,6 @@ const UserProfile = () => {
           </div>
         </div>
       </Modal>
-
-      <ComingSoonModal
-        isOpen={isComingSoonOpen}
-        onClose={() => setIsComingSoonOpen(false)}
-        exploreLink={exploreLink}
-      />
     </div>
   );
 };

@@ -11,14 +11,13 @@ import NoData from "./../components/EmptyData/noData";
 import AnimatedItemCount from "../components/UI/AnimatedItemCount";
 import { GiBookPile } from "react-icons/gi";
 import Breadcrumb from "../components/Common/Breadcrumb";
-import ComingSoonModal from "../components/Modal/ComingSoonModal";
+import { useComingSoon } from "../store/Context/ComingSoonContext";
 
 const Wishlist = () => {
   const dispatch = useDispatch();
   const { loading, wishlists } = useSelector((state) => state.wishlists);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
-  const [exploreLink, setExploreLink] = useState("");
+  const { openComingSoon } = useComingSoon();
 
   useEffect(() => {
     dispatch(getAllWishlists());
@@ -97,7 +96,7 @@ const Wishlist = () => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
               >
-                <BookCard book={book} index={i} onComingSoonClick={(url) => { setExploreLink(url); setIsComingSoonOpen(true); }} />
+                <BookCard book={book} index={i} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
               </motion.div>
             ))}
           </AnimatePresence>
@@ -136,11 +135,6 @@ const Wishlist = () => {
           </>
         )}
       </div>
-      <ComingSoonModal
-        isOpen={isComingSoonOpen}
-        onClose={() => setIsComingSoonOpen(false)}
-        exploreLink={exploreLink}
-      />
     </motion.div>
   );
 };

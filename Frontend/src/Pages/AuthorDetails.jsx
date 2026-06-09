@@ -41,7 +41,7 @@ import SubscribePromptModal from "../components/Modal/SubscribePromptModal";
 import MobileSubscribeModal from "../components/Modal/MobileSubscribeModal";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
 import { useImagePreview } from "../store/Context/ImagePreviewContext";
-import ComingSoonModal from "../components/Modal/ComingSoonModal";
+import { useComingSoon } from "../store/Context/ComingSoonContext";
 
 const initialPosts = [
   {
@@ -157,8 +157,7 @@ const AuthorDetails = () => {
   const { userData, isAuthenticated } = useAuth();
   const { books: allBooks, loading } = useSelector((state) => state.books);
   const [subscribeEmail, setSubscribeEmail] = useState("");
-  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
-  const [exploreLink, setExploreLink] = useState("");
+  const { openComingSoon } = useComingSoon();
 
   const uniqueAuthors = React.useMemo(() => {
     const authors = [];
@@ -390,9 +389,9 @@ const AuthorDetails = () => {
                     <Button
                       variant="ghost"
                       key={i}
-                      className="flex bg-tan/30 backdrop-blur-sm items-center justify-center text-tan transition-all duration-200 rounded-full !w-9 !h-9 !p-0 hover:bg-tan/25 hover:scale-110"
+                      className="flex bg-tan/30 backdrop-blur-sm items-center justify-center text-tan transition-all duration-200 rounded-full !w-10 !h-10 !p-0 bg-tan/25 hover:scale-110"
                     >
-                      <Icon size={15} />
+                      <Icon size={20} />
                     </Button>
                   ))}
                 </div>
@@ -406,7 +405,7 @@ const AuthorDetails = () => {
                 </Button>
               </div>
 
-              <p className="mt-4 text-tan text-sm leading-relaxed border-t-[3px] border-divider border-tan/50 pt-3 text-center  sm:text-left">
+              <p className="mt-4 text-wrap text-tan text-sm leading-relaxed border-t-[3px] border-divider border-tan/50 pt-3 text-center  sm:text-left">
                 {author?.author_description ||
                   "A passionate writer who breathes life into words and creates unforgettable stories that transcend time and culture."}{" "}
                 With over a decade of experience, this author has captivated
@@ -513,7 +512,7 @@ const AuthorDetails = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.07 }}
                       >
-                        <BookCard book={book} index={i} onComingSoonClick={(url) => { setExploreLink(url); setIsComingSoonOpen(true); }} />
+                        <BookCard book={book} index={i} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
                       </motion.div>
                     ))}
                   </div>
@@ -788,12 +787,6 @@ const AuthorDetails = () => {
         subscribeEmail={subscribeEmail}
         setSubscribeEmail={setSubscribeEmail}
         handleSubscribe={handleSubscribe}
-      />
-
-      <ComingSoonModal
-        isOpen={isComingSoonOpen}
-        onClose={() => setIsComingSoonOpen(false)}
-        exploreLink={exploreLink}
       />
     </motion.div >
   );

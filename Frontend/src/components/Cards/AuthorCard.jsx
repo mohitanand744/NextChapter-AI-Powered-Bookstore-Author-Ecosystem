@@ -11,8 +11,8 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
   const navigate = useNavigate();
   const { openPreview } = useImagePreview();
 
-  const authorImage = author?.author_image || 
-    author?.author?.author_image || 
+  const authorImage = author?.author_image ||
+    author?.author?.author_image ||
     "https://cdn.vectorstock.com/i/500p/40/53/accurate-silhouette-of-a-man-for-profile-picture-vector-14714053.jpg";
   const authorName = author?.author_name || author?.author?.author_name || "Author";
 
@@ -29,8 +29,8 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
       }}
       className="relative w-full h-[280px] mx-auto overflow-hidden bg-coffee backdrop-blur-xl rounded-[2rem] border border-tan/20 group"
     >
-      <div 
-        className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" 
+      <div
+        className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
       />
       {/* Decorative Top Banner */}
       <div className="absolute top-0 left-0 w-full z-0 transition-transform duration-700 ease-in-out group-hover:scale-[1.10] origin-top">
@@ -39,7 +39,7 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
 
       <div className="relative flex flex-col items-center px-5 pt-10 h-full">
         {/* Author Avatar */}
-        <div 
+        <div
           onClick={(e) => {
             e.stopPropagation();
             openPreview(authorImage, authorName);
@@ -87,7 +87,7 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
                 navigate(url);
               }
             }}
-            variant="primary" 
+            variant="primary"
             className="!w-full border-2 border-tan !rounded-[0.8rem] !text-[10px] md:!text-[12px] active:scale-95"
           >
             View Profile

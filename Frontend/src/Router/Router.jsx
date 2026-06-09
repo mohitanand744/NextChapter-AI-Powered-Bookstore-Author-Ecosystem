@@ -23,6 +23,7 @@ const ContactUs = lazy(() => import("../Pages/ContactUs"));
 const AuthorDetails = lazy(() => import("../Pages/AuthorDetails"));
 const AllAuthors = lazy(() => import("../Pages/AllAuthors"));
 import DevelopmentBanner from "../components/Common/DevelopmentBanner";
+import { ComingSoonProvider } from "../store/Context/ComingSoonContext";
 
 const Router = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -46,8 +47,9 @@ const Router = () => {
 
   return (
     <BrowserRouter>
-      <DevelopmentBanner />
-      <Toaster
+      <ComingSoonProvider>
+        <DevelopmentBanner />
+        <Toaster
         position="bottom-right"
         expand={true}
         closeButton={true}
@@ -132,6 +134,7 @@ const Router = () => {
           <Route path="*" element={<FallbackRoute />} />
         </Routes>
       </Suspense>
+      </ComingSoonProvider>
     </BrowserRouter>
   );
 };

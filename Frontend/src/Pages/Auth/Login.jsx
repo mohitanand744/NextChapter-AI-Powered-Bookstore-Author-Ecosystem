@@ -21,7 +21,7 @@ import {
 import useInputHandlers from "../../Hooks/useInputHandlers";
 import SocialLoginButtons from "../../components/Buttons/Auth/SocialLoginButtons";
 import EmailVerificationStatus from "../../components/Modal/Auth/EmailVerificationStatus";
-import ComingSoonModal from "../../components/Modal/ComingSoonModal";
+import { useComingSoon } from "../../store/Context/ComingSoonContext";
 
 const Login = () => {
   const {
@@ -65,7 +65,7 @@ const Login = () => {
     setAfterExitingUserResettingPasswordPopupPopup,
   ] = useState(false);
   const dispatch = useDispatch();
-  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
+  const { openComingSoon } = useComingSoon();
 
   console.log("isAuth", isAuthenticated);
 
@@ -367,7 +367,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                <SocialLoginButtons onComingSoonClick={() => setIsComingSoonOpen(true)} />
+                <SocialLoginButtons onComingSoonClick={() => openComingSoon()} />
               </motion.div>
 
               <motion.div
@@ -475,11 +475,6 @@ const Login = () => {
         onClose={setVerificationStatus}
         countdown={countdown}
         setCountdown={setCountdown}
-      />
-
-      <ComingSoonModal
-        isOpen={isComingSoonOpen}
-        onClose={() => setIsComingSoonOpen(false)}
       />
     </div>
   );

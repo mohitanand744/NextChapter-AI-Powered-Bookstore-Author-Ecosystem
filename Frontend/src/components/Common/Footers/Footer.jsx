@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import ComingSoonModal from "../../Modal/ComingSoonModal";
+import { useComingSoon } from "../../../store/Context/ComingSoonContext";
+import { FaEnvelope } from "react-icons/fa";
+import Input from "../../Inputs/Input";
+import Button from "../../Buttons/Button";
+import { BellIcon } from "@heroicons/react/24/solid";
 
 const Footer = () => {
-  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
+  const { openComingSoon } = useComingSoon();
 
   return (
     <footer className="relative rounded-t-[3rem] py-8 text-tan bg-coffee overflow-hidden">
-      <div 
-        className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" 
+      <div
+        className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
       />
       <div className="relative z-10 container px-4 mx-auto">
         {/* Top Section */}
@@ -25,9 +29,7 @@ const Footer = () => {
               </Link>
             </div>
             <p className="font-medium text-tan/90 text-md">
-              Welcome to our bookstore! We provide a wide range of books across
-              all genres, from fiction to self-help. Explore, read, and grow
-              with us.
+              Discover books, connect with authors, and explore meaningful stories. NextChapter is an AI-ready platform where readers find their next favorite book and authors build thriving communities. Read, learn, share, and grow with us.
             </p>
           </div>
           {/* Quick Links */}
@@ -108,26 +110,30 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          {/* Newsletter Section */}
+          {/* Best Offers Section */}
           <div className="col-span-12 md:col-span-6 lg:col-span-3">
-            <h3 className="mb-4 text-lg font-bold text-tan">
-              Stay Updated
+            <h3 className="mb-1 text-lg font-bold text-tan">
+              Best Offers & Updates
             </h3>
-            <p className="mb-4 font-medium text-tan/90 text-md">
-              Subscribe to our newsletter for the latest books and offers.
+            <p className="mb-4 font-medium text-tan/80 text-sm leading-relaxed">
+              Stay in the loop! <span className="text-tan">Get best deals, exclusive offers, and latest book releases.</span>
             </p>
-            <form className="relative flex">
-              <input
+            <form
+              className="relative p-1.5 flex gap-1 items-center bg-coffee overflow-hidden border-[2px] border-t-tan/20 border-b-tan/20 border-l-tan/20 border-r-tan/20 rounded-full focus-within:border-tan/50 focus-within:shadow-[0_0_15px_rgba(211,189,157,0.15)] transition-all duration-300"
+              onSubmit={(e) => { e.preventDefault(); openComingSoon(); }}
+            >
+              <div className="bg-tan/10 rounded-full flex items-center justify-center !min-h-[2.8rem] !min-w-[2.8rem] text-tan/50">
+                <FaEnvelope size={18} />
+              </div>
+              <Input
                 type="email"
-                placeholder="Enter your email"
-                className="w-full px-4 py-2 text-coffee bg-tan/10 border border-tan/20 rounded-full focus:outline-none focus:border-tan/40 placeholder:text-tan/50"
+                containerClassName="-mb-0"
+                placeholder="Enter Your Email"
+                className="!bg-transparent !border-none !h-[1.8rem] !focus:ring-0 !focus:border-none !focus:ring-none"
               />
-              <button
-                type="submit"
-                className="absolute right-0 px-4 py-2 text-coffee transition bg-tan rounded-r-full hover:bg-cream hover:scale-105 font-bold"
-              >
-                Subscribe
-              </button>
+              <Button type="submit" className="!text-nowrap flex !bg-tan/10 gap-2 items-center text-[16px] !border-[1px] hover:!scale-100 !border-tan/30 !rounded-full">
+                Get Offers <BellIcon className="text-tan !w-5" />
+              </Button>
             </form>
           </div>
         </div>
@@ -142,7 +148,7 @@ const Footer = () => {
             {/* Facebook */}
             <a
               href="#"
-              onClick={(e) => { e.preventDefault(); setIsComingSoonOpen(true); }}
+              onClick={(e) => { e.preventDefault(); openComingSoon(); }}
               className="transition hover:text-tan "
               aria-label="Facebook"
             >
@@ -158,7 +164,7 @@ const Footer = () => {
             {/* Twitter */}
             <a
               href="#"
-              onClick={(e) => { e.preventDefault(); setIsComingSoonOpen(true); }}
+              onClick={(e) => { e.preventDefault(); openComingSoon(); }}
               className="transition hover:text-tan "
               aria-label="Twitter"
             >
@@ -174,7 +180,7 @@ const Footer = () => {
             {/* Instagram */}
             <a
               href="#"
-              onClick={(e) => { e.preventDefault(); setIsComingSoonOpen(true); }}
+              onClick={(e) => { e.preventDefault(); openComingSoon(); }}
               className="transition hover:text-tan "
               aria-label="Instagram"
             >
@@ -191,7 +197,7 @@ const Footer = () => {
             {/* YouTube */}
             <a
               href="#"
-              onClick={(e) => { e.preventDefault(); setIsComingSoonOpen(true); }}
+              onClick={(e) => { e.preventDefault(); openComingSoon(); }}
               className="transition hover:text-tan "
               aria-label="YouTube"
             >
@@ -207,10 +213,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <ComingSoonModal
-        isOpen={isComingSoonOpen}
-        onClose={() => setIsComingSoonOpen(false)}
-      />
     </footer>
   );
 };

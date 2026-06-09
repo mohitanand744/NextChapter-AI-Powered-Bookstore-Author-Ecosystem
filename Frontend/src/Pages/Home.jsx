@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import ComingSoonModal from "../components/Modal/ComingSoonModal";
 import HomeBanner from "../components/Banners/HomeBanner";
+import { useComingSoon } from "../store/Context/ComingSoonContext";
 import Search from "../components/SearchBars/Search";
 
 import CountdownTimer from "../components/OfferCounter/OfferCounter";
@@ -22,8 +22,7 @@ import { toast } from "sonner";
 const Home = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
-  const [exploreLink, setExploreLink] = useState("");
+  const { openComingSoon } = useComingSoon();
 
   useEffect(() => {
     const provider = searchParams.get("loginProvider");
@@ -69,7 +68,7 @@ const Home = () => {
               {books.length === 0 ? (
                 <div className="py-8 flex justify-center"><NoData title="No Deals Currently" message="Check back soon for amazing deals!" icon="search" /></div>
               ) : (
-                <ScrollBooks books={books} onComingSoonClick={(url) => { setExploreLink(url); setIsComingSoonOpen(true); }} />
+                <ScrollBooks books={books} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
               )}
             </div>
 
@@ -81,7 +80,7 @@ const Home = () => {
                 <div className="py-8 flex justify-center"><NoData title="No Top Sellers Yet" message="Books are flying off the shelves. Be right back!" icon="search" /></div>
               ) : (
                 <>
-                  <ScrollBooks autoScroll={false} books={books} onComingSoonClick={(url) => { setExploreLink(url); setIsComingSoonOpen(true); }} />
+                  <ScrollBooks autoScroll={false} books={books} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
                   <div className="flex justify-center my-5">
                     <Link to={"/nextChapter/books"}>
                       <Button variant="primary">View All</Button>
@@ -99,7 +98,7 @@ const Home = () => {
                 <div className="py-8 flex justify-center"><NoData title="No Authors Found" message="We're inviting great minds. Stay tuned." icon="search" /></div>
               ) : (
                 <>
-                  <AuthorSlider books={books} onComingSoonClick={(url) => { setExploreLink(url); setIsComingSoonOpen(true); }} />
+                  <AuthorSlider books={books} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
                   <div className="flex justify-center my-5">
                     <Link to={"/nextChapter/authors"}>
                       <Button variant="primary">View All Authors</Button>
@@ -118,11 +117,6 @@ const Home = () => {
           </>
         )}
       </div>
-      <ComingSoonModal
-        isOpen={isComingSoonOpen}
-        onClose={() => setIsComingSoonOpen(false)}
-        exploreLink={exploreLink}
-      />
     </>
   );
 };

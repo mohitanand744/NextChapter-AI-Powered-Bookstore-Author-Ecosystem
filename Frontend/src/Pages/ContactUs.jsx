@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaPaperPlane } from "react-icons/fa";
 import Banners from "./../components/Banners/Banners";
 import Input from "../components/Inputs/Input";
+import { toast } from "sonner";
 
 const ContactUs = () => {
   const [subject, setSubject] = useState("");
@@ -23,14 +24,18 @@ const ContactUs = () => {
     {
       icon: <FaEnvelope className="text-3xl" />,
       title: "Email Us",
-      detail: "hello@nextchapter.in",
-      description: "We typically reply within 24 hours."
+      detail: "nextChapter744@gmail.com",
+      description: "We typically reply within 24 hours.",
+      action: "mailto:nextChapter744@gmail.com",
+      actionText: "Send Email"
     },
     {
       icon: <FaPhoneAlt className="text-3xl" />,
       title: "Call Us",
-      detail: "+91 98765 43210",
-      description: "Mon-Sat from 9am to 7pm."
+      detail: "+91 852127434",
+      description: "Mon-Sat from 9am to 7pm.",
+      action: "tel:+91852127434",
+      actionText: "Call Now"
     }
   ];
 
@@ -60,16 +65,27 @@ const ContactUs = () => {
               {contactInfo.map((info, index) => (
                 <motion.div
                   whileHover={{ x: 10 }}
-                  className="flex items-start gap-4 p-4 transition-colors duration-300 bg-coffee text-tan shadow-sm rounded-xl border border-tan/10"
+                  className="flex items-start gap-4 p-4 transition-colors duration-300 bg-coffee text-tan shadow-sm rounded-xl border border-tan/10 relative overflow-hidden"
                   key={index}
                 >
-                  <div className="p-3 bg-tan/10 rounded-full text-tan">
-                    {info.icon}
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold">{info.title}</h4>
-                    <p className="font-medium text-tan/90">{info.detail}</p>
-                    <p className="text-sm text-tan/60 mt-1">{info.description}</p>
+                  <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
+                  <div className="relative z-10 flex items-start gap-4 w-full">
+                    <div className="p-3 bg-tan/10 rounded-full text-tan shrink-0">
+                      {info.icon}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-lg font-bold">{info.title}</h4>
+                      <p className="font-medium text-tan/90">{info.detail}</p>
+                      <p className="text-sm text-tan/60 mt-1 mb-2">{info.description}</p>
+                      {info.action && (
+                        <a 
+                          href={info.action} 
+                          className="inline-block mt-1 px-4 py-1.5 bg-tan/10 border border-tan/20 hover:bg-tan/20 text-tan text-xs font-bold rounded-lg transition-colors"
+                        >
+                          {info.actionText}
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -84,9 +100,16 @@ const ContactUs = () => {
             viewport={{ once: true }}
             className="w-full lg:w-2/3"
           >
-            <div className="p-8 bg-coffee text-tan md:p-12 shadow-2xl rounded-[3rem] border border-tan/10">
-              <h3 className="mb-6 text-2xl font-bold">Send us a Message</h3>
-              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <div className="p-8 bg-coffee text-tan md:p-12 shadow-2xl rounded-[3rem] border border-tan/10 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
+              <div className="relative z-10">
+                <h3 className="mb-6 text-2xl font-bold">Send us a Message</h3>
+                <form className="space-y-4" onSubmit={(e) => {
+                  e.preventDefault();
+                  e.target.reset();
+                  setSubject("");
+                  toast.success("Message sent successfully!");
+                }}>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <Input
                     label="First Name"
@@ -134,6 +157,7 @@ const ContactUs = () => {
                   Send Message
                 </motion.button>
               </form>
+              </div>
             </div>
           </motion.div>
 

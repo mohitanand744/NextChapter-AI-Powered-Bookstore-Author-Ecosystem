@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../Buttons/Button";
 import CheckoutBooksCard from "../../Cards/CheckoutBooksCard";
 import NoData from "../../EmptyData/noData";
-import ComingSoonModal from "../../Modal/ComingSoonModal";
+import { useComingSoon } from "../../../store/Context/ComingSoonContext";
 
 // Mock data for cart items
 const mockCartItems = [
@@ -38,7 +38,7 @@ const mockCartItems = [
 
 const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
   const [cartItems, setCartItems] = useState(mockCartItems);
-  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
+  const { openComingSoon } = useComingSoon();
   const navigate = useNavigate();
 
   const toggleCart = () => setIsCartOpen((prev) => !prev);
@@ -184,8 +184,8 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                         >
                           <Button
                             onClick={() => {
-                              setIsComingSoonOpen(true);
                               toggleCart();
+                              openComingSoon();
                             }}
                             type="button"
                             variant="primary"
@@ -216,11 +216,6 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <ComingSoonModal
-        isOpen={isComingSoonOpen}
-        onClose={() => setIsComingSoonOpen(false)}
-      />
     </div>
   );
 };
