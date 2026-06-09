@@ -76,7 +76,7 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
         </p>
 
         {/* Floating Action Button (Revealed on Hover) */}
-        <div className="absolute bottom-5 md:bottom-6 left-0 w-full px-5 md:px-6 md:opacity-0 md:translate-y-6 translate-y-3 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] pointer-events-none md:group-hover:pointer-events-auto">
+        <div className="absolute bottom-5 md:bottom-6 left-0 w-full px-5 md:px-6 md:opacity-0 md:translate-y-6 translate-y-3 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] md:pointer-events-none md:group-hover:pointer-events-auto">
           <Button
             onClick={(e) => {
               e.stopPropagation();
