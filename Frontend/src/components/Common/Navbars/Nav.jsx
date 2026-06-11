@@ -78,12 +78,13 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
 
   return (
     <nav
-      className={`transition-all z-[999] duration-300 ${isFixed
-        ? animation
-          ? "sticky top-[-8rem] left-0 w-full opacity-0 shadow-xl"
-          : "sticky top-0 left-0 w-full bg-coffee backdrop-blur-xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.15)] opacity-100 border-b border-tan/20 animate-slideDown"
-        : "relative bg-coffee shadow-lg"
-        }`}
+      className={`transition-all z-[999] duration-300 ${
+        isFixed
+          ? animation
+            ? "sticky top-[-8rem] left-0 w-full opacity-0 shadow-xl"
+            : "sticky top-0 left-0 w-full bg-coffee backdrop-blur-xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.15)] opacity-100 border-b border-tan/20 animate-slideDown"
+          : "relative bg-coffee shadow-lg"
+      }`}
     >
       <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
       <div className="container relative z-10 px-4 py-1 mx-auto">
@@ -148,16 +149,16 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
                   <li className="px-1 py-1">
                     <Link
                       to={link.path}
-                      className={`px-5 py-2 text-[1.02rem] font-bold transition-all duration-300 rounded-2xl ${pathName === link.key
-                        ? "bg-tan/20 text-cream shadow-sm"
-                        : "text-tan bg-transparent shadow-none hover:bg-tan/10 hover:text-cream"
-                        }`}
+                      className={`px-5 py-2 text-[1.02rem] font-bold transition-all duration-300 rounded-2xl ${
+                        pathName === link.key
+                          ? "bg-tan/20 text-cream shadow-sm"
+                          : "text-tan bg-transparent shadow-none hover:bg-tan/10 hover:text-cream"
+                      }`}
                     >
                       {link.name}
                     </Link>
                   </li>
                 </motion.ul>
-
               );
             })}
           </motion.ul>
@@ -166,11 +167,17 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
             <Search
               enableSuggestions={true}
               suggestions={books}
-              onSelectSuggestion={(s) => navigate(`/nextChapter/books?search=${s?.title}`)}
-              nav={true} styling="hidden md:block w-[16rem] bg-sepia rounded-full" />
+              onSelectSuggestion={(s) =>
+                navigate(`/nextChapter/books?search=${s?.title}`)
+              }
+              nav={true}
+              styling="hidden md:block w-[16rem] bg-sepia rounded-full"
+            />
 
             <div
-              onClick={() => openComingSoon({ onExplore: () => setIsCartOpen(true) })}
+              onClick={() =>
+                openComingSoon({ onExplore: () => setIsCartOpen(true) })
+              }
               className="relative flex items-center justify-center transition-all duration-300 border shadow-sm cursor-pointer bg-tan/20 hover:bg-tan/30 backdrop-blur-md w-11 h-11 rounded-2xl active:scale-95 border-tan/20 text-tan"
             >
               <div className="absolute flex items-center justify-center w-6 h-6 text-[12px] font-bold text-coffee bg-tan rounded-full -top-1 -right-1 shadow-md border-2 border-coffee">
@@ -224,7 +231,8 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
               variants={itemVariants}
               initial="hidden"
               animate="visible"
-              className="xl:hidden">
+              className="xl:hidden"
+            >
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center justify-center transition-all duration-300 border shadow-sm bg-tan/20 hover:bg-tan/30 w-11 h-11 rounded-2xl text-tan focus:outline-none border-tan/20 active:scale-95"

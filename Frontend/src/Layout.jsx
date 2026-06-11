@@ -25,7 +25,7 @@ const Layout = () => {
       <div className="search">
         <Search
           styling="w-full block md:hidden bg-sepia"
-          inputStyles="py-4 -mb-1 !text-tan bg-sepia"
+          inputStyles="py-3 !text-tan bg-sepia"
           iconStyles="top-3 right-3 bg-sepia"
           suggestionsStyles={"mt-0"}
           enableSuggestions={true}

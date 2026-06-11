@@ -21,6 +21,7 @@ const Button = ({
     outline: "border-2 border-tan text-tan bg-transparent hover:!bg-sepia",
     "outline-tan": "border-2 border-tan/20 text-tan bg-tan/5 hover:bg-tan/10",
     ghost: "bg-transparent text-coffee hover:bg-sepia hover:text-tan",
+    glass: "bg-transparent text-coffee hover:bg-sepia/10 hover:text-tan",
   };
 
   const typographyClasses = `${isSerif ? "font-serif" : "font-sans"} ${isUppercase ? "uppercase tracking-widest text-xs" : ""}`;

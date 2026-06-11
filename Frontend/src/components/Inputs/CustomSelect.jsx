@@ -98,7 +98,6 @@ const CustomSelect = (
               <div className="pb-2 mb-2 border-b border-b-tan/30 rounded-b-xl">
                 <Search
                   styling="w-full !block"
-                  iconStyles="top-1 right-1"
                   placeholder="Filter options..."
                   onChange={(val) => setFilterQuery(val)}
                 />

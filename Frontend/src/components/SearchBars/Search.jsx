@@ -10,7 +10,6 @@ const Search = ({
   styling = "hidden md:block w-[15rem]",
   inputStyles = "rounded-full py-2 bg-coffee/20 text-tan",
   suggestionsStyles = "mt-1 rounded-2xl",
-  iconStyles = "top-1 right-1",
   onSearch,
   onChange,
   placeholder = "Search books here... ",
@@ -202,28 +201,30 @@ const Search = ({
           )}
       </AnimatePresence>
 
-      <motion.div
-        onClick={handleSearch}
-        animate={
-          isBlinking
-            ? {
-                scale: [1, 1.1, 0.7, 1],
-              }
-            : { scale: 1 }
-        }
-        transition={
-          isBlinking
-            ? {
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }
-            : { duration: 0.2 }
-        }
-        className={`absolute ${iconStyles}  cursor-pointer group-hover:text-cream active:scale-75 text-tan transition bg-coffee h-7 w-7 flex items-center justify-center rounded-full`}
-      >
-        <FaSearch className="text-sm" />
-      </motion.div>
+      <div className="absolute -translate-y-1/2 h-fit right-1 top-1/2">
+        <motion.div
+          onClick={handleSearch}
+          animate={
+            isBlinking
+              ? {
+                  scale: [1, 1.1, 0.7, 1],
+                }
+              : { scale: 1 }
+          }
+          transition={
+            isBlinking
+              ? {
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }
+              : { duration: 0.2 }
+          }
+          className="grid transition rounded-full cursor-pointer group-hover:text-cream active:scale-75 text-tan bg-coffee h-7 w-7 place-items-center"
+        >
+          <FaSearch className="block text-sm leading-none" />
+        </motion.div>
+      </div>
     </div>
   );
 };

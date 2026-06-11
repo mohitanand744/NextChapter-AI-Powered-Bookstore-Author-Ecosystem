@@ -1,6 +1,7 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { UserGroupIcon } from "@heroicons/react/24/solid";
 
 const NoData = ({
   title = "No data found",
@@ -48,14 +49,7 @@ const NoData = ({
 
       case "user":
         return (
-          <svg {...iconProps}>
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-            />
-          </svg>
+          <UserGroupIcon className="w-14 h-14" />
         );
 
       case "heart":
@@ -149,9 +143,9 @@ const NoData = ({
             animate={
               animateIcon
                 ? {
-                    scale: [1, 1.1, 1],
-                    rotate: [0, 5, -5, 0],
-                  }
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, -5, 0],
+                }
                 : {}
             }
             transition={{

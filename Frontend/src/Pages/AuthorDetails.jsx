@@ -150,9 +150,12 @@ const AuthorDetails = () => {
   const [showSubscribePrompt, setShowSubscribePrompt] = useState(false);
   const [showMobileSubscribePopup, setShowMobileSubscribePopup] = useState(false);
   const [mockFollowers, setMockFollowers] = useState([
-    { id: 101, name: "Alice Johnson", avatar: "https://randomuser.me/api/portraits/women/44.jpg" },
-    { id: 102, name: "David Smith", avatar: "https://randomuser.me/api/portraits/men/32.jpg" },
-    { id: 103, name: "Emma Watson", avatar: "https://randomuser.me/api/portraits/women/68.jpg" }
+    { id: 101, name: "Alice Johnson", avatar: "https://randomuser.me/api/portraits/women/44.jpg", bio: "Hi I am Alice", role: "Patron" },
+    { id: 102, name: "David Smith", avatar: "https://randomuser.me/api/portraits/men/32.jpg", bio: "Hi I am David", role: "Author", certified: true },
+    { id: 103, name: "Emma Watson", avatar: "https://randomuser.me/api/portraits/women/68.jpg", bio: "Hi I am Emma", role: "Patron" },
+    { id: 109, name: "emma", avatar: "https://randomuser.me/api/portraits/women/68.jpg", bio: "Hi I am Emma", role: "Patron" },
+    { id: 110, name: "emma", avatar: "https://randomuser.me/api/portraits/women/68.jpg", bio: "Hi I am Emma", role: "Patron" },
+    { id: 111, name: "emma", avatar: "https://randomuser.me/api/portraits/women/68.jpg", bio: "Hi I am Emma", role: "Patron" }
   ]);
   const { userData, isAuthenticated } = useAuth();
   const { books: allBooks, loading } = useSelector((state) => state.books);
@@ -430,7 +433,7 @@ const AuthorDetails = () => {
                       }}
                       className={`flex flex-col items-center justify-center gap-1.5 py-5 px-3 group ${stat.isClickable ? "cursor-pointer" : "cursor-default"}`}
                     >
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-coffee  flex items-center justify-center text-tan text-base shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300">
+                      <div className="w-16 h-16 mb-1 rounded-2xl bg-gradient-to-br from-coffee via-coffee/90 to-sepia/30 border border-tan/20 flex items-center justify-center text-tan text-3xl shadow-lg group-hover:shadow-[0_0_15px_rgba(210,180,140,0.3)] group-hover:scale-110 transition-all duration-300">
                         {stat.icon}
                       </div>
                       <span className="text-2xl font-black leading-none tracking-tight text-tan">

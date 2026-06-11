@@ -15,9 +15,9 @@ const CheckoutBooksCard = ({ items, updateQuantity, removeItem }) => {
         boxShadow: "0 15px 40px rgba(0,0,0,0.3)",
         y: -5,
       }}
-      className="flex p-3 h-fit bg-black/10 rounded-2xl border border-sepia"
+      className="flex p-3 border h-fit bg-black/10 rounded-2xl border-sepia"
     >
-      <div className="flex-shrink-0 w-24 h-24 p-1 overflow-hidden border border-sepia rounded-2xl">
+      <div className="flex-shrink-0 w-24 h-24 p-1 overflow-hidden border shadow-inner border-sepia rounded-2xl">
         <img
           src={item?.image}
           alt={item?.name}
@@ -30,7 +30,7 @@ const CheckoutBooksCard = ({ items, updateQuantity, removeItem }) => {
           <div className="flex justify-between text-base font-medium text-gray-900">
             <div className="flex flex-col">
               <h3 className="text-cream">{item?.name}</h3>
-              <p className="text-[12px] leading-4 text-cream/90">
+              <p className="text-[12px] leading-4 text-cream/70">
                 A journey through space and time. This special edition
                 includes...
               </p>
@@ -59,5 +59,3 @@ const CheckoutBooksCard = ({ items, updateQuantity, removeItem }) => {
 };
 
 export default CheckoutBooksCard;
-
-
