@@ -27,8 +27,8 @@ const FollowersModal = ({ isOpen, onClose, followers }) => {
         className="relative min-h-[300px] hideScroll max-h-[400px] overflow-y-auto w-full mx-auto"
       >
         <div className="flex sticky top-0 bg-coffee p-2 rounded-full z-30 mb-4 items-center justify-between border-b border-coffee/20">
-          <h3 className="flex items-center gap-2 text-xl font-bold text-tan">
-            <span className="bg-sepia p-1 rounded-full "> <FaUsers className="text-3xl" /></span> followers
+          <h3 className="flex items-center gap-2 text-sm  md:text-xl font-bold text-tan">
+            <span className="bg-sepia p-1 rounded-full "> <FaUsers className="text-xl md:text-3xl" /></span> followers
           </h3>
 
 
