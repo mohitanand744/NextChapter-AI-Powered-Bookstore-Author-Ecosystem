@@ -391,6 +391,7 @@ export const testimonialData = [
       "https://randomuser.me/api/portraits/men/10.jpg",
     review:
       "The quality of the books and fast delivery time were outstanding. I highly recommend this to everyone!!!",
+    date: "1 month ago",
   },
   {
     name: "Priya Patel",
@@ -398,6 +399,7 @@ export const testimonialData = [
     profile: "https://randomuser.me/api/portraits/women/32.jpg",
     review:
       "A fantastic collection of novels! The customer support is genuinely amazing and they helped me a lot too",
+    date: "2 months ago",
   },
   {
     name: "Rohan Gupta",
@@ -405,6 +407,7 @@ export const testimonialData = [
     profile: "https://randomuser.me/api/portraits/men/68.jpg",
     review:
       "I am quite impressed with the book condition. They have an excellent library with such affordable prices",
+    date: "3 months ago",
   },
   {
     name: "Sneha Desai",
@@ -412,6 +415,7 @@ export const testimonialData = [
     profile: "https://randomuser.me/api/portraits/women/44.jpg",
     review:
       "This bookstore never disappoints me at all. Fast shipping, great deals, and completely genuine products!",
+    date: "4 months ago",
   },
   {
     name: "Vikram Singh",
@@ -419,6 +423,7 @@ export const testimonialData = [
     profile: "https://randomuser.me/api/portraits/men/45.jpg",
     review:
       "My favorite place to shop for books online! Always a smooth experience from ordering straight to my door",
+    date: "5 months ago",
   },
   {
     name: "Anjali Verma",
@@ -426,6 +431,7 @@ export const testimonialData = [
     profile: "https://randomuser.me/api/portraits/women/12.jpg",
     review:
       "Beautifully designed app and wonderful service. I have bought five books recently and they look gorgeous",
+    date: "6 months ago",
   },
   {
     name: "Karan Malhotra",
@@ -433,6 +439,7 @@ export const testimonialData = [
     profile: "https://randomuser.me/api/portraits/men/11.jpg",
     review:
       "An absolute delight for any book lover out there. The vast variety of options matches any other retailer",
+    date: "7 months ago",
   },
   {
     name: "Meera Iyer",
@@ -440,5 +447,6 @@ export const testimonialData = [
     profile: "https://randomuser.me/api/portraits/women/22.jpg",
     review:
       "Such a reliable platform for purchasing novels. They packaged my order incredibly securely every time...",
+    date: "8 months ago",
   },
 ];

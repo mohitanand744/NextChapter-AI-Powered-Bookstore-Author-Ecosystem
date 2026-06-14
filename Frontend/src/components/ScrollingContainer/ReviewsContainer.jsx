@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import TestimonialCard from "../Cards/ReviewCard";
+import TestimonialCard from "../Cards/TestimonialCard";
 // import Swiper core and required modules
 import { Navigation, Autoplay } from "swiper/modules";
 
@@ -21,7 +21,7 @@ const ReviewsContainer = () => {
         nextButtonclassName=""
       />
       <Swiper
-        className="mb-16 "
+        className="mb-16"
         modules={[Navigation, Autoplay]}
         autoplay={{
           delay: 3500, // Auto slide change every 1.5 seconds

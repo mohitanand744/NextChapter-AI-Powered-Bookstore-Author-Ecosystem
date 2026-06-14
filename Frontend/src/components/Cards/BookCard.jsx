@@ -127,8 +127,7 @@ const BookCard = ({ book, index, onComingSoonClick }) => {
               {book?.author?.author_name}
             </h1>
             <div className="flex items-center gap-1 p-1 px-3 border-2 border-tan rounded-t-2xl">
-              <Ratings ratings={book?.author?.author_rating} />
-              <span className="text-cream">{book?.author?.author_rating}</span>
+              <Ratings ratings={book?.author?.author_rating} textColor="text-orange" />
             </div>
           </div>
           <p className="text-center text-cream">
@@ -255,7 +254,6 @@ const BookCard = ({ book, index, onComingSoonClick }) => {
         </button>
 
         <div className="flex items-center text-cream">
-          <span className="mr-2 text-[14px] sm:text-sm font-bold">4.5</span>
           <Ratings ratings={book?.book_rating} />
         </div>
       </div>

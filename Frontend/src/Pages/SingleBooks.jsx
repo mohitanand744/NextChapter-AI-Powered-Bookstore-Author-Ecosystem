@@ -233,7 +233,7 @@ const SingleBooks = () => {
                 <div className="h-10 w-px bg-coffee/10" />
                 <div>
                   <div className="mb-1 flex items-center gap-2">
-                    <Ratings textColor="text-coffee" ratings={book.author?.author_rating || 5} /> <span>({book.author?.author_rating})</span>
+                    <Ratings textColor="text-coffee" ratings={book.author?.author_rating || 5} />
                   </div>
                   <p className="text-[14px] uppercase tracking-widest text-coffee/60">Reader's Choice</p>
                 </div>
@@ -425,7 +425,8 @@ const SingleBooks = () => {
                                 data={{
                                   ...review,
                                   name: review.user.name,
-                                  avatar: review.user.avatar
+                                  profile: review.user.avatar,
+                                  review: review.comment
                                 }}
                               />
                             </SwiperSlide>

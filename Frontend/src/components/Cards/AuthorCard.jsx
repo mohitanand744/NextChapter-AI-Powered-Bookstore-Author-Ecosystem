@@ -66,9 +66,6 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
 
         <div className="flex items-center gap-2 mb-3 text-tan">
           <Ratings ratings={author?.author_rating || author?.author?.author_rating || 5} />
-          <span className="text-[10px] md:text-xs font-semibold text-tan">
-            ({author?.author_rating || author?.author?.author_rating || 5})
-          </span>
         </div>
 
         <p className="text-[10px] md:text-xs text-center text-tan/70 line-clamp-3 transition-opacity duration-300 md:group-hover:opacity-0">

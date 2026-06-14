@@ -3,21 +3,14 @@ import { motion } from "framer-motion";
 import Ratings from "../RatingsReviews/Ratings";
 import { useImagePreview } from "../../store/Context/ImagePreviewContext";
 
-/**
- * TestimonialCard Component
- * A premium card used for displaying reader reviews and testimonials.
+/**use als.
  * 
  * @param {Object} props
  * @param {Object} props.data - The review data { name, profile, rating, review, date, title }
  */
 const TestimonialCard = ({ data }) => {
-  const { name, profile, avatar, rating, review, comment, date, title } = data;
+  const { name, profile, rating, review, date, title } = data;
   const { openPreview } = useImagePreview();
-
-  // Handle both naming conventions (home page vs details page)
-  const displayName = name;
-  const displayImage = profile || avatar;
-  const displayContent = review || comment;
 
   return (
     <motion.div
@@ -32,16 +25,16 @@ const TestimonialCard = ({ data }) => {
       }}
       className="relative flex flex-col w-full overflow-hidden bg-coffee border border-tan/20 group rounded-[2.5rem]"
     >
-      <div 
-        className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" 
+      <div
+        className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none"
       />
       <div className="flex justify-between px-8 pt-8 pb-6 items-center border-b border-tan/10 bg-gradient-to-br from-tan/5 to-transparent shrink-0">
         <div className="flex items-center gap-4 z-10 w-full relative">
           <div className="relative">
             <img
-              src={displayImage}
-              alt={displayName}
-              onClick={() => openPreview(displayImage, displayName)}
+              src={profile}
+              alt={name}
+              onClick={() => openPreview(profile, name)}
               className="object-cover border-[3px] border-tan/60 rounded-full shadow-md w-16 h-16 transition-transform duration-500 group-hover:scale-110 cursor-zoom-in"
             />
             <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-tan rounded-full flex items-center justify-center border-2 border-coffee shadow-lg">
@@ -51,9 +44,9 @@ const TestimonialCard = ({ data }) => {
             </div>
           </div>
           <div className="flex-1">
-            <h4 className="text-lg font-serif text-tan leading-tight">{displayName}</h4>
+            <h4 className="text-lg font-serif text-tan leading-tight">{name}</h4>
             <div className="flex items-center mt-1">
-              <Ratings ratings={rating} textColor="text-tan" />
+              <Ratings ratings={rating} textColor="text-orange" />
               <span className="text-[10px] ml-2 font-bold text-tan/40 uppercase tracking-widest">{date}</span>
             </div>
           </div>
@@ -72,7 +65,7 @@ const TestimonialCard = ({ data }) => {
           <h5 className="text-xl font-serif text-tan mb-3 italic leading-tight">"{title}"</h5>
         )}
         <p className="text-cream/80 leading-relaxed font-sans text-sm md:text-base">
-          {displayContent}
+          {review}
         </p>
       </div>
 

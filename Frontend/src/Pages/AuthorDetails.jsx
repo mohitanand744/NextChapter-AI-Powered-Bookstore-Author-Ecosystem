@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Navigation, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import SwiperNavButtons from "../components/Buttons/SwiperNavButtons";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllBooks } from "../store/Redux/Slices/BooksSlice";
@@ -27,6 +33,7 @@ import {
   FaTag,
   FaPaperPlane,
   FaTimes,
+  FaQuoteRight,
 } from "react-icons/fa";
 import { HiOutlineBookOpen, HiOutlinePencilAlt } from "react-icons/hi";
 import useAuth from "../Hooks/useAuth";
@@ -42,6 +49,8 @@ import MobileSubscribeModal from "../components/Modal/MobileSubscribeModal";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
 import { useImagePreview } from "../store/Context/ImagePreviewContext";
 import { useComingSoon } from "../store/Context/ComingSoonContext";
+import Ratings from "../components/RatingsReviews/Ratings";
+import TestimonialCard from "../components/Cards/TestimonialCard";
 
 const initialPosts = [
   {
@@ -138,6 +147,35 @@ const initialPosts = [
 
 
 
+const testimonials = [
+  {
+    id: 1,
+    user: "Sarah Jenkins",
+    avatar: "https://randomuser.me/api/portraits/women/45.jpg",
+    text: "Absolutely phenomenal writing! Every book by this author keeps me on the edge of my seat. Highly recommended for anyone who loves deep character development.",
+    rating: 5,
+    date: "2 months ago",
+  },
+  {
+    id: 2,
+    user: "Michael Chen",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    text: "I've read almost all of their work. The world-building is just breathtaking, though sometimes the pacing in the middle of the books can be a bit slow.",
+    rating: 4,
+    date: "3 months ago",
+  },
+  {
+    id: 3,
+    user: "Emily Carter",
+    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+    text: "A true master of storytelling. I find myself rereading their novels just to catch the subtle foreshadowing I missed the first time.",
+    rating: 5,
+    date: "4 months ago",
+  },
+];
+
+
+
 const AuthorDetails = () => {
   const { authorId } = useParams();
   const navigate = useNavigate();
@@ -148,6 +186,8 @@ const AuthorDetails = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [showFollowersPopup, setShowFollowersPopup] = useState(false);
   const [showSubscribePrompt, setShowSubscribePrompt] = useState(false);
+  const [isBlinkingTestimonials, setIsBlinkingTestimonials] = useState(false);
+  const [hasScrolledForRating, setHasScrolledForRating] = useState(false);
   const [showMobileSubscribePopup, setShowMobileSubscribePopup] = useState(false);
   const [mockFollowers, setMockFollowers] = useState([
     { id: 101, name: "Alice Johnson", avatar: "https://randomuser.me/api/portraits/women/44.jpg", bio: "Hi I am Alice", role: "Patron" },
@@ -161,6 +201,7 @@ const AuthorDetails = () => {
   const { books: allBooks, loading } = useSelector((state) => state.books);
   const [subscribeEmail, setSubscribeEmail] = useState("");
   const { openComingSoon } = useComingSoon();
+  const testimonialsSwiperRef = useRef(null);
 
   const uniqueAuthors = React.useMemo(() => {
     const authors = [];
@@ -265,11 +306,33 @@ const AuthorDetails = () => {
       icon: <FaBookOpen />,
       value: authorBooks.length,
       label: "Books Published",
+      isClickable: true,
+      onClick: () => {
+        setActiveTab("books");
+        document.getElementById("tabs-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      },
     },
     {
       icon: <FaStar />,
       value: author?.author_rating || "4.5",
       label: "Avg Rating",
+      isClickable: true,
+      onClick: () => {
+        let count = 0;
+        const interval = setInterval(() => {
+          setIsBlinkingTestimonials((prev) => !prev);
+          count++;
+          if (count > 3) {
+            clearInterval(interval);
+            setIsBlinkingTestimonials(false);
+          }
+        }, 200);
+        
+        if (!hasScrolledForRating) {
+          window.scrollBy({ top: 100, behavior: 'smooth' });
+          setHasScrolledForRating(true);
+        }
+      },
     },
     {
       icon: <FaUsers />,
@@ -280,9 +343,19 @@ const AuthorDetails = () => {
         return (total / 1000).toFixed(1).replace(/\.0$/, "") + "K";
       })(),
       label: "Followers",
-      isClickable: true
+      isClickable: true,
+      onClick: () => setShowFollowersPopup(true),
     },
-    { icon: <FaFeatherAlt />, value: initialPosts.length, label: "Blog Posts" },
+    {
+      icon: <FaFeatherAlt />,
+      value: initialPosts.length,
+      label: "Blog Posts",
+      isClickable: true,
+      onClick: () => {
+        setActiveTab("posts");
+        document.getElementById("tabs-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      },
+    },
   ];
 
   const genres = ["Science Fiction", "Fantasy", "Tech Thriller"];
@@ -354,21 +427,21 @@ const AuthorDetails = () => {
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="text-center sm:text-left">
-                  <h1 className="text-2xl md:text-3xl font-bold text-tan">
+                  <h1 className="text-3xl md:text-4xl font-bold text-tan">
                     {author?.author_name}
                   </h1>
-                  <p className="text-sm text-tan/60 mt-0.5 font-medium">
+                  <p className="text-base text-tan/60 mt-0.5 font-medium">
                     Professional Author &amp; Storyteller
                   </p>
 
                   <div className="flex flex-wrap justify-center mt-2 sm:justify-start gap-x-4 gap-y-1">
-                    <span className="flex items-center gap-1 text-xs text-tan">
+                    <span className="flex items-center gap-1 text-sm text-tan">
                       <FaMapMarkerAlt className="text-tan" /> {location}
                     </span>
-                    <span className="flex items-center gap-1 text-xs text-tan">
+                    <span className="flex items-center gap-1 text-sm text-tan">
                       <FaGlobe className="text-tan" /> {website}
                     </span>
-                    <span className="flex items-center gap-1 text-xs text-tan">
+                    <span className="flex items-center gap-1 text-sm text-tan">
                       <FaRegCalendarAlt className="text-tan" /> Member since{" "}
                       {memberSince}
                     </span>
@@ -378,7 +451,7 @@ const AuthorDetails = () => {
                     {genres.map((g) => (
                       <span
                         key={g}
-                        className="text-[11px] px-2.5 py-0.5 rounded-full bg-tan/20 text-tan font-medium border border-tan/20"
+                        className="text-xs px-2.5 py-0.5 rounded-full bg-tan/20 text-tan font-medium border border-tan/20"
                       >
                         {g}
                       </span>
@@ -408,7 +481,7 @@ const AuthorDetails = () => {
                 </Button>
               </div>
 
-              <p className="mt-4 text-wrap text-tan text-sm leading-relaxed border-t-[3px] border-divider border-tan/50 pt-3 text-center  sm:text-left">
+              <p className="mt-4 text-wrap text-tan text-base leading-relaxed border-t-[3px] border-divider border-tan/50 pt-3 text-center  sm:text-left">
                 {author?.author_description ||
                   "A passionate writer who breathes life into words and creates unforgettable stories that transcend time and culture."}{" "}
                 With over a decade of experience, this author has captivated
@@ -421,7 +494,7 @@ const AuthorDetails = () => {
                   {stats.map((stat, i) => (
                     <motion.div
                       key={i}
-                      onClick={stat.isClickable ? () => setShowFollowersPopup(true) : undefined}
+                      onClick={stat.onClick ? stat.onClick : undefined}
                       whileHover={{
                         scale: 1.03,
                         backgroundColor: "rgba(255,255,255,0.05)",
@@ -439,7 +512,7 @@ const AuthorDetails = () => {
                       <span className="text-2xl font-black leading-none tracking-tight text-tan">
                         {stat.value}
                       </span>
-                      <span className="text-[10px] font-semibold uppercase tracking-widest text-center leading-tight text-tan/50">
+                      <span className="text-[14px] font-semibold uppercase tracking-widest text-center leading-tight text-tan/50">
                         {stat.label}
                       </span>
                       <motion.div
@@ -456,8 +529,75 @@ const AuthorDetails = () => {
           </motion.div>
         </div>
 
+        {/* ── Testimonials Section ── */}
+        <motion.div
+          id="testimonials-section"
+          initial={{ y: 20, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-12 mb-4 bg-coffee p-6 rounded-3xl border border-tan/10 shadow-xl relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-5 pointer-events-none" />
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className={`text-2xl font-bold text-tan flex items-center gap-2 transition-opacity duration-150 ${isBlinkingTestimonials ? "opacity-30" : "opacity-100"
+                }`}>
+                <FaStar className="text-tan/60" /> Reader <span className="text-tan/60">Testimonials</span>
+              </h2>
+              <div className="flex flex-col items-end">
+                <div className="flex items-center gap-1 mb-1">
+                  <Ratings ratings={parseFloat(author?.author_rating) || 4.5} textColor="text-orange" />
+                </div>
+                <span className="text-xs font-semibold text-tan/60 tracking-wider uppercase">{testimonials.length} reviews</span>
+              </div>
+            </div>
+
+            <div className="relative w-full mt-4">
+              <SwiperNavButtons
+                swiperRef={testimonialsSwiperRef}
+                position={{ top: "50%" }}
+                prevButtonclassName="-left-2 md:-left-6 lg:-left-10"
+                nextButtonclassName="-right-2 md:-right-6 lg:-right-10"
+              />
+              <Swiper
+                modules={[Navigation, Autoplay]}
+                autoplay={{
+                  delay: 4000,
+                  disableOnInteraction: false,
+                }}
+                spaceBetween={24}
+                onSwiper={(swiper) => {
+                  testimonialsSwiperRef.current = swiper;
+                }}
+                breakpoints={{
+                  320: { slidesPerView: 1, spaceBetween: 16 },
+                  640: { slidesPerView: 2, spaceBetween: 20 },
+                  1024: { slidesPerView: 3, spaceBetween: 24 },
+                }}
+                className="!pb-8 !px-4"
+              >
+                {testimonials.map((review, i) => (
+                  <SwiperSlide key={review.id} className="h-auto">
+                    <div className="h-full flex">
+                      <TestimonialCard
+                        data={{
+                          ...review,
+                          name: review.user,
+                          profile: review.avatar,
+                          review: review.text,
+                        }}
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          </div>
+        </motion.div>
+
         {/* ── Tabs ── */}
         <motion.div
+          id="tabs-section"
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}

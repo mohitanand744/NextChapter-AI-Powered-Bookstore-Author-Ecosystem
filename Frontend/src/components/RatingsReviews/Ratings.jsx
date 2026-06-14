@@ -21,7 +21,7 @@ const Ratings = ({ ratings, textColor = "text-tan" }) => {
 
   return (
     <div className={`flex items-center text-[14px] sm:text-[17px] ${textColor}`}>
-      {rating}
+      {rating} <span className="text-tan text-[1.1rem] font-semibold ml-1">{ratings}</span>
     </div>
   );
 };

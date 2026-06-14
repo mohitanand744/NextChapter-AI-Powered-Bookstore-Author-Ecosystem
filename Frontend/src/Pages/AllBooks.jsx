@@ -290,8 +290,8 @@ const AllBooks = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed bg-black/70 md:bg-transparent inset-0 md:inset-auto -top-[5rem] md:top-[7rem] right-0 md:right-[1.6rem] z-[9999]"
+            transition={{ duration: 0.3 }}
+            className="fixed bg-black/70 md:bg-transparent flex justify-end  inset-0 md:inset-auto -top-[5rem] md:top-[7rem] right-0 md:right-[1.5rem] z-[9999]"
           >
             <BookListingFilter
               filters={filters}
