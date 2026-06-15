@@ -12,6 +12,7 @@ import NoData from "../components/EmptyData/noData";
 import Banners from "../components/Banners/Banners";
 import { useComingSoon } from "../store/Context/ComingSoonContext";
 import useDebounce from "../Hooks/useDebounce";
+import Search from "../components/SearchBars/Search";
 
 export const defaultFilters = {
   limit: 8,
@@ -179,56 +180,69 @@ const AllBooks = () => {
       />
 
       <div className="bg-sepia/80 backdrop-blur-xl py-3 px-6 sticky top-[4.5rem] z-[100] shadow-md border-b rounded-b-[1.5rem] border-tan/10">
-        <div className="container flex items-center justify-between gap-5 md:px-4">
-          <h1 className="text-xl font-semibold uppercase text-start sm:text-center text-tan md:text-2xl">
+        <div className="container flex flex-col sm:flex-row items-center justify-between gap-5 md:px-4">
+          <h1 className="text-xl font-semibold uppercase text-center text-tan md:text-2xl">
             Browse by Category
           </h1>
 
-          <div className="flex items-center gap-2">
-            <motion.button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowFilters(!showFilters);
-              }}
-              whileTap={{ scale: 0.9 }}
-              className="relative flex items-center justify-center transition-all duration-300 border shadow-sm w-11 h-11 rounded-2xl bg-tan/10 border-tan/20 text-cream hover:bg-tan/20"
-            >
-              {appliedFiltersCount > 0 && (
-                <span className="px-2 absolute -top-1 -right-1 bg-opacity-50 backdrop-blur-sm py-0.5 text-sm font-semibold rounded-full bg-sepia text-tan">
-                  {appliedFiltersCount}
-                </span>
-              )}
+          <div className="flex items-center w-full sm:w-auto gap-4">
 
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <AnimatePresence mode="wait">
-                  {showFilters ? (
-                    <motion.path
-                      key="close"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 1 }}
-                      exit={{ pathLength: 0, opacity: 0 }}
-                      d="M6 18L18 6M6 6l12 12"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  ) : (
-                    <motion.path
-                      key="filter"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 1 }}
-                      exit={{ pathLength: 0, opacity: 0 }}
-                      d="M3 6H21M6 12H18M10 18H14"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  )}
-                </AnimatePresence>
-              </svg>
-            </motion.button>
+            <Search
+              enableSuggestions={true}
+              suggestions={books}
+              onSelectSuggestion={(s) =>
+                navigate(`/nextChapter/books?search=${s?.title}`)
+              }
+              nav={false}
+              styling="block w-full sm:w-[16rem] bg-sepia rounded-full"
+            />
+
+            <div className="flex items-center gap-2">
+              <motion.button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowFilters(!showFilters);
+                }}
+                whileTap={{ scale: 0.9 }}
+                className="relative flex items-center justify-center transition-all duration-300 border shadow-sm w-11 h-11 rounded-2xl bg-tan/10 border-tan/20 text-cream hover:bg-tan/20"
+              >
+                {appliedFiltersCount > 0 && (
+                  <span className="px-2 absolute -top-1 -right-1 bg-opacity-50 backdrop-blur-sm py-0.5 text-sm font-semibold rounded-full bg-sepia text-tan">
+                    {appliedFiltersCount}
+                  </span>
+                )}
+
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <AnimatePresence mode="wait">
+                    {showFilters ? (
+                      <motion.path
+                        key="close"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ pathLength: 1, opacity: 1 }}
+                        exit={{ pathLength: 0, opacity: 0 }}
+                        d="M6 18L18 6M6 6l12 12"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    ) : (
+                      <motion.path
+                        key="filter"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ pathLength: 1, opacity: 1 }}
+                        exit={{ pathLength: 0, opacity: 0 }}
+                        d="M3 6H21M6 12H18M10 18H14"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    )}
+                  </AnimatePresence>
+                </svg>
+              </motion.button>
+            </div>
           </div>
         </div>
       </div>

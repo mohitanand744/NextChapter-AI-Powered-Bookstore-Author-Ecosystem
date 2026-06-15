@@ -202,9 +202,9 @@ const getGoogleLoginPage = (req, res, next) => {
 
     const cookieConfig = {
       httpOnly: true,
-      secure: false,
+      secure: isProduction,
       maxAge: OAUTH_EXCHANGE_EXPIRY_MS,
-      sameSite: "lax",
+      sameSite: isProduction ? "none" : "lax",
     };
 
     res.cookie("google_oauth_state", state, cookieConfig);
@@ -275,9 +275,10 @@ const getGoogleCallBack = async (req, res, next) => {
 
     res.cookie("token", result.token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 1000 * 60 * 60 * 24,
+      path: "/",
     });
 
     const params = new URLSearchParams();

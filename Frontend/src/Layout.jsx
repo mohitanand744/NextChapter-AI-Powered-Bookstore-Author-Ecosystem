@@ -7,7 +7,7 @@ import { useAxiosLoader } from "./services/api";
 import FullScreenImageModal from "./components/Common/FullScreenImage";
 import ShoppingCart from "./components/Common/Navbars/ShoppingCarts";
 import { useState } from "react";
-import Search from "./components/SearchBars/Search";
+import NextChapterAIBtn from "./components/Buttons/NextChapterAIBtn";
 
 const Layout = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -22,15 +22,8 @@ const Layout = () => {
     <div className="flex flex-col min-h-screen bg-tan">
       <DiscountHeader />
       <Navbar isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen} />
-      <div className="search">
-        <Search
-          styling="w-full block md:hidden bg-sepia"
-          inputStyles="py-3 !text-tan bg-sepia"
-          iconStyles="top-3 right-3 bg-sepia"
-          suggestionsStyles={"mt-0"}
-          enableSuggestions={true}
-          nav={true}
-        />
+      <div className="search md:hidden px-4 py-2 bg-coffee border-b border-tan/20 shadow-sm relative z-40">
+        <NextChapterAIBtn className="w-full block" />
       </div>
       <div className="flex-1">
         <Outlet />

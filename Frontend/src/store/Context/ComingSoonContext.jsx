@@ -17,17 +17,20 @@ export const ComingSoonProvider = ({ children }) => {
     exploreLink: null,
     onExplore: null,
     message: null,
+    title: null,
+    badge: null,
+    features: null,
+    logo: null,
+    footer: null,
   });
 
-  const openComingSoon = useCallback(({ exploreLink, onExplore, message } = {}) => {
-    setModalConfig({ exploreLink, onExplore, message });
+  const openComingSoon = useCallback(({ exploreLink, onExplore, message, title, badge, features, logo, footer } = {}) => {
+    setModalConfig({ exploreLink, onExplore, message, title, badge, features, logo, footer });
     setIsOpen(true);
   }, []);
 
   const closeComingSoon = useCallback(() => {
     setIsOpen(false);
-    // Optional: reset config after close animation finishes
-    // setTimeout(() => setModalConfig({ exploreLink: null, onExplore: null, message: null }), 300);
   }, []);
 
   return (
@@ -39,6 +42,11 @@ export const ComingSoonProvider = ({ children }) => {
         exploreLink={modalConfig.exploreLink}
         onExplore={modalConfig.onExplore}
         message={modalConfig.message}
+        title={modalConfig.title}
+        badge={modalConfig.badge}
+        features={modalConfig.features}
+        logo={modalConfig.logo}
+        footer={modalConfig.footer}
       />
     </ComingSoonContext.Provider>
   );

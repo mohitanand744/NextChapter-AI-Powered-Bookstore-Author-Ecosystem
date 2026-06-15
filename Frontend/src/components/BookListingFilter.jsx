@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DualRangeSlider from "../components/Inputs/DualRangeSlider";
 import Radio from "../components/Inputs/Radio";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { defaultFilters } from "../Pages/AllBooks";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -58,46 +58,78 @@ const BookListingFilter = ({
       className={`relative flex flex-col h-screen md:max-h-[calc(100vh-14rem)] md:h-auto border border-tan/30 bg-coffee/95 backdrop-blur-3xl text-cream z-[9999] w-[85vw] sm:w-[24.5rem] overflow-hidden mt-20 md:mt-0 shadow-lg rounded-l-[3rem] md:rounded-[2.7rem]`}
     >
       <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
+
       <div className="relative flex-1 min-h-0 overflow-y-auto hideScroll">
         {/* Panel Header */}
-        <div className="relative flex items-center justify-between px-8 pt-10 pb-6 border-b border-tan/10">
+        <div className="relative sticky backdrop-blur-md rounded-b-[3.5rem] shadow-2xl top-0 z-20 flex items-center justify-between px-8 pt-10 pb-6 border-b-2 border-coffee/70">
+
+          <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
           <div>
-            <h2 className="pt-3 font-serif text-2xl tracking-tight md:text-3xl text-cream">
+            <motion.h2
+              initial={{ opacity: 0, x: "-100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="pt-3 font-serif text-2xl tracking-tight md:text-3xl text-cream"
+            >
               Curation Filters
-            </h2>
-            <p className="text-sm uppercase tracking-[0.3em] text-tan/60 mt-1 font-bold">
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+              className="text-sm uppercase tracking-[0.3em] text-tan/60 mt-1 font-bold"
+            >
               Tailor Your Discovery
-            </p>
+            </motion.p>
           </div>
 
-          <button
+          <motion.button
             onClick={(e) => {
               e.stopPropagation();
               setShowFilters(false);
             }}
+            initial={{ x: "-100%", scale: 0 }}
+            animate={{ x: 0, scale: 1 }}
+            exit={{ x: "100%", scale: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
             className="absolute top-0 md:left-4 rounded-b-[0.7rem] px-3 py-2 h-[35px] text-sm font-bold tracking-widest uppercase transition-all duration-300 border left-[1.6rem]  sm:text-sm border-tan/20 hover:bg-tan hover:text-coffee bg-tan/5"
           >
             <FaArrowLeft />
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
             onClick={resetFilters}
+            initial={{ x: "100%", scale: 0 }}
+            animate={{ x: 0, scale: 1 }}
+            exit={{ x: "100%", scale: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
             className="absolute top-0 right-0 px-3 py-2 text-xs font-bold tracking-widest uppercase transition-all duration-300 border md:right-3.5 rounded-b-[1rem] sm:text-sm border-tan/20 hover:bg-tan hover:text-coffee bg-tan/5"
           >
             Reset All
-          </button>
+          </motion.button>
 
-          {appliedFiltersCount ? (
-            <div className="absolute top-0 right-[6.5rem] md:right-[8.2rem] px-3 py-2 text-xs font-bold tracking-widest uppercase transition-all duration-300 border  rounded-b-[1rem] sm:text-sm border-tan/20 bg-tan text-coffee">
-              {appliedFiltersCount} - Filters Applied
-            </div>
-          ) : null}
+          <AnimatePresence>
+            {appliedFiltersCount > 0 && (
+              <motion.div
+                key="applied-filters-count"
+                initial={{ x: "100%", scale: 0 }}
+                animate={{ x: 0, scale: 1 }}
+                exit={{ x: "100%", scale: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="absolute top-0 right-[7rem] md:right-[8.2rem] px-3 py-2 text-xs font-bold tracking-widest uppercase transition-all duration-300 border rounded-b-[1rem] sm:text-sm border-tan/20 bg-tan text-coffee"
+              >
+                {appliedFiltersCount} - Filters Applied
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <div className="px-4 py-6 space-y-3">
           {/* Price Filter Section */}
           <div
-            className={`bg-black/20 rounded-[2.5rem] ${openCategory.PriceFilter ? "border-b shadow-lg border-black/5" : ""} `}
+            className={`bg-black/20 rounded-[2.8rem] ${openCategory.PriceFilter ? "border-b shadow-lg border-black/5" : ""} `}
           >
             <DualRangeSlider
               PriceFilter={openCategory.PriceFilter}
@@ -166,10 +198,26 @@ const BookListingFilter = ({
               ],
               key: "binding",
             },
-          ].map((section) => (
-            <div
+          ].map((section, index) => (
+            <motion.div
               key={section.id}
-              className={` ${openCategory[section.id] ? "border-b shadow-lg border-black/5" : ""} bg-black/20 rounded-[2.5rem]`}
+              className={`${openCategory[section.id] ? "border-b shadow-lg border-black/5" : ""} bg-black/20 rounded-[2.8rem]`}
+              initial={{
+                opacity: 0,
+                x: index % 2 === 0 ? -150 : 150,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+              }}
+              exit={{
+                opacity: 0,
+                x: index % 2 === 0 ? -150 : 150,
+              }}
+              transition={{
+                duration: 0.7,
+                delay: index * 0.02,
+              }}
             >
               <div
                 onClick={() => toggleCategory(section.id)}
@@ -228,7 +276,7 @@ const BookListingFilter = ({
                   </motion.li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

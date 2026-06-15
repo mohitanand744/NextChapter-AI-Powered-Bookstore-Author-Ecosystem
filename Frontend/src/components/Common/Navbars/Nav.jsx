@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import MegaMenu from "./MegaMenu";
 import { HiOutlineShoppingCart } from "react-icons/hi2";
 import { IoIosArrowDown } from "react-icons/io";
-import Search from "../../SearchBars/Search";
+import NextChapterAIBtn from "../../Buttons/NextChapterAIBtn";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "../../Buttons/Button";
 import MobileMenu from "./MobileMenu";
@@ -78,13 +78,12 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
 
   return (
     <nav
-      className={`transition-all z-[999] duration-300 ${
-        isFixed
-          ? animation
-            ? "sticky top-[-8rem] left-0 w-full opacity-0 shadow-xl"
-            : "sticky top-0 left-0 w-full bg-coffee backdrop-blur-xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.15)] opacity-100 border-b border-tan/20 animate-slideDown"
-          : "relative bg-coffee shadow-lg"
-      }`}
+      className={`transition-all z-[999] duration-300 ${isFixed
+        ? animation
+          ? "sticky top-[-8rem] left-0 w-full opacity-0 shadow-xl"
+          : "sticky top-0 left-0 w-full bg-coffee backdrop-blur-xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.15)] opacity-100 border-b border-tan/20 animate-slideDown"
+        : "relative bg-coffee shadow-lg"
+        }`}
     >
       <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
       <div className="container relative z-10 px-4 py-1 mx-auto">
@@ -149,11 +148,10 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
                   <li className="px-1 py-1">
                     <Link
                       to={link.path}
-                      className={`px-5 py-2 text-[1.02rem] font-bold transition-all duration-300 rounded-2xl ${
-                        pathName === link.key
-                          ? "bg-tan/20 text-cream shadow-sm"
-                          : "text-tan bg-transparent shadow-none hover:bg-tan/10 hover:text-cream"
-                      }`}
+                      className={`px-5 py-2 text-[1.02rem] font-bold transition-all duration-300 rounded-2xl ${pathName === link.key
+                        ? "bg-tan/20 text-cream shadow-sm"
+                        : "text-tan bg-transparent shadow-none hover:bg-tan/10 hover:text-cream"
+                        }`}
                     >
                       {link.name}
                     </Link>
@@ -164,15 +162,7 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
           </motion.ul>
 
           <div className="flex items-center gap-4">
-            <Search
-              enableSuggestions={true}
-              suggestions={books}
-              onSelectSuggestion={(s) =>
-                navigate(`/nextChapter/books?search=${s?.title}`)
-              }
-              nav={true}
-              styling="hidden md:block w-[16rem] bg-sepia rounded-full"
-            />
+            <NextChapterAIBtn className="hidden md:block w-[17rem]" />
 
             <div
               onClick={() =>
@@ -219,6 +209,7 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
                 </Button>
                 <Button
                   variant="primary"
+                  onClick={() => navigate("/signup")}
                   className="hidden !border-tan border-2 lg:flex"
                 >
                   Signup
