@@ -1,20 +1,18 @@
 import { createContext, useContext, useState } from "react";
 
-const UserContext = createContext();
+const ProfileImageContext = createContext();
 
-export const UserProvider = ({ children }) => {
+export const ProfileImageProvider = ({ children }) => {
   const [preview, setPreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
   return (
-    <UserContext.Provider
+    <ProfileImageContext.Provider
       value={{ preview, setPreview, isUploading, setIsUploading }}
     >
       {children}
-    </UserContext.Provider>
+    </ProfileImageContext.Provider>
   );
 };
 
-export const useUser = () => useContext(UserContext);
-
-
+export const useProfileImage = () => useContext(ProfileImageContext);

@@ -6,6 +6,7 @@ import { DecorativeHeader } from "../SVGs/SVGs";
 import { motion } from "framer-motion";
 import { useImagePreview } from "../../store/Context/ImagePreviewContext";
 import { PremiumVerifiedBadge } from "../SVGs/SVGs";
+import AppImage from "../Common/AppImage";
 
 const AuthorCard = ({ author, onComingSoonClick }) => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
       animate={{ y: 0, opacity: 1, scale: 1 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
       whileHover={{
-        scale: 1.01,
+        //scale: 1.01,
         transition: { duration: 0.15 },
         boxShadow: "0 15px 40px rgba(0,0,0,0.3)",
         y: -5,
@@ -47,10 +48,13 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
           className="relative w-16 h-16 md:w-20 md:h-20 p-1 mb-2 md:mb-4 bg-tan/20 rounded-full shadow-lg z-10 transition-transform duration-500 ease-out group-hover:-translate-y-2 border border-tan/30 cursor-zoom-in"
         >
           <div className="w-full h-full overflow-hidden rounded-full">
-            <img
-              className="object-cover w-full h-full transition-all duration-700 grayscale-[15%] group-hover:grayscale-0 group-hover:scale-110"
+            <AppImage
+              className="w-full h-full"
+              imgClassName="object-cover w-full h-full !transition-all !duration-500 group-hover:scale-110"
               src={authorImage}
               alt={authorName}
+              fallbackType="author"
+              name={authorName}
             />
           </div>
           {/* Verified Badge */}
@@ -64,8 +68,8 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
           {author?.author_name || author?.author?.author_name || "Unknown Author"}
         </h3>
 
-        <div className="flex items-center gap-2 mb-3 text-tan">
-          <Ratings ratings={author?.author_rating || author?.author?.author_rating || 5} />
+        <div className="flex items-center gap-2 mb-3">
+          <Ratings ratings={author?.author_rating || author?.author?.author_rating || 5} textColor="text-orange" />
         </div>
 
         <p className="text-[10px] md:text-xs text-center text-tan/70 line-clamp-3 transition-opacity duration-300 md:group-hover:opacity-0">

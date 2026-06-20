@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FaStar, FaUsers } from 'react-icons/fa';
 import Button from '../Buttons/Button';
 import ModalContainer from './ModalContainer';
+import AppImage from '../Common/AppImage';
 
 const SubscribePromptModal = ({ isOpen, onClose, onFollow, author, followersCount }) => {
   return (
@@ -15,10 +16,12 @@ const SubscribePromptModal = ({ isOpen, onClose, onFollow, author, followersCoun
       >
         <div className="flex flex-col items-center justify-center mb-5 gap-3">
           <div className="relative">
-            <img
+            <AppImage
               src={author?.author_image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
               alt={author?.author_name || "Author"}
               className="w-20 h-20 rounded-full object-cover border-4  shadow-md mx-auto"
+              fallbackType="author"
+              name={author?.author_name}
             />
             <div className="absolute -bottom-1 -right-2 bg-gradient-to-br from-coffee  text-tan px-2 py-0.5 rounded-xl border-2  shadow-sm flex items-center gap-1">
               <FaStar size={10} className="text-tan" />

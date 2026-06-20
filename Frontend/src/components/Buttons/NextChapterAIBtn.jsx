@@ -6,13 +6,17 @@ import { GiFeather } from "react-icons/gi";
 import { useComingSoon } from "../../store/Context/ComingSoonContext";
 
 const rotatingTexts = [
-  "Ask NextChapter AI",
-  "Find Your Next Adventure",
-  "Talk With Your AI Librarian",
-  "Discover Books by Mood",
-  "Personalized Recommendations",
+  "Consult The Archivist",
+  "Meet Nexty, Your AI Librarian",
+  "Unlock Your Next Story",
+  "Seek Wisdom Among Books",
+  "Let Nexty Guide Your Journey",
+  "Every Reader Has A Next Chapter",
+  "Discover Tales Meant For You",
+  "Find Books Beyond Bestsellers",
+  "Stories Chosen For Your Soul",
+  "Enter The Library Of Possibilities",
 ];
-
 const NextChapterAIBtn = ({ className = "hidden md:block w-[16rem]" }) => {
   const { openComingSoon } = useComingSoon();
   const [textIndex, setTextIndex] = useState(0);
@@ -42,7 +46,7 @@ const NextChapterAIBtn = ({ className = "hidden md:block w-[16rem]" }) => {
         })}
         whileHover="hover"
         whileTap={{ scale: 0.98 }}
-        className="relative flex items-center justify-between w-full h-11 px-4 py-2 transition-all duration-300 border shadow-md bg-coffee/70 border-tan/30 rounded-2xl overflow-hidden group-hover:border-yellow-600/50 group-hover:shadow-[0_0_15px_rgba(217,160,91,0.2)]"
+        className="relative flex items-center justify-between w-full h-11 px-4 py-2 transition-all duration-300 border shadow-md bg-coffee/70 border-tan/30 rounded-full overflow-hidden group-hover:border-yellow-600/50 group-hover:shadow-[0_0_15px_rgba(217,160,91,0.2)]"
       >
         {/* Animated background glow on hover */}
         <motion.div
@@ -67,14 +71,14 @@ const NextChapterAIBtn = ({ className = "hidden md:block w-[16rem]" }) => {
         </div>
 
         {/* Rotating Text Content */}
-        <div className="relative z-10 flex-1 h-full mx-2 overflow-hidden flex items-center justify-start">
+        <div className="relative z-10 flex-1 h-full mx-2 overflow-hidden flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.p
               key={textIndex}
-              initial={{ y: 20, opacity: 0, filter: "blur(4px)" }}
-              animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-              exit={{ y: -20, opacity: 0, filter: "blur(4px)" }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              initial={{ y: 60, opacity: 0, filter: "blur(3px)", scale: 0.50 }}
+              animate={{ y: 0, opacity: 1, filter: "blur(0px)", scale: 1 }}
+              exit={{ y: -60, opacity: 0, filter: "blur(3px)", scale: 0.50 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="text-[0.9rem] md:text-[0.8rem] font-medium tracking-wide text-tan whitespace-nowrap group-hover:text-cream transition-colors duration-300"
             >
               {rotatingTexts[textIndex]}

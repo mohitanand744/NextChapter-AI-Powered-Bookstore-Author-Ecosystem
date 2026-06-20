@@ -23,12 +23,10 @@ const ResetPasswordModal = ({
   showReset,
   setShowReset,
   emailVerified,
-  email,
   resetToken,
   countdown,
   setCountdown,
-  isAuthenticated,
-  forgotPasswordEmail,
+  isAuthenticated, forgotPasswordEmail,
   setLinkSent,
   setResetToken,
   afterExitingUserResettingPasswordPopup,
@@ -57,7 +55,7 @@ const ResetPasswordModal = ({
     if (forgotPasswordEmail) {
       setValue("email", forgotPasswordEmail);
     }
-  }, [forgotPasswordEmail]);
+  }, [forgotPasswordEmail, setValue]);
 
   const onSubmit = async (data) => {
     try {
@@ -105,7 +103,7 @@ const ResetPasswordModal = ({
     setIsResending(true);
 
     try {
-      const finalEmail = forgotPasswordEmail || email || emailValue;
+      const finalEmail = forgotPasswordEmail;
       const response = await authApis.forgotPassword(finalEmail);
 
       if (response?.success) {
@@ -145,6 +143,7 @@ const ResetPasswordModal = ({
     };
   }, [countdown]);
 
+
   // Email Sent UI - Show when email is not verified yet
   if (emailVerified) {
     return (
@@ -171,7 +170,7 @@ const ResetPasswordModal = ({
             />
             <div className="text-center -mt-6 mb-8">
               <span className="px-4 py-1 bg-tan/10 rounded-full text-xs font-semibold text-tan/80 border border-tan/10">
-                {forgotPasswordEmail || email || emailValue}
+                {forgotPasswordEmail}
               </span>
             </div>
 

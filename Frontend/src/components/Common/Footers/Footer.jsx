@@ -5,6 +5,7 @@ import { FaEnvelope } from "react-icons/fa";
 import Input from "../../Inputs/Input";
 import Button from "../../Buttons/Button";
 import { BellIcon } from "@heroicons/react/24/solid";
+import AppImage from "../../Common/AppImage";
 
 const Footer = () => {
   const { openComingSoon } = useComingSoon();
@@ -21,10 +22,11 @@ const Footer = () => {
           <div className="col-span-12 md:col-span-6 lg:col-span-3">
             <div className="flex-shrink-0 w-36 mb-4">
               <Link to="/nextChapter">
-                <img
+                <AppImage
                   className="object-cover w-full h-full"
                   src="/images/logo-transperant-light.png"
                   alt="BookStore Logo"
+                  fallbackType="default"
                 />
               </Link>
             </div>
@@ -125,12 +127,13 @@ const Footer = () => {
               <div className="bg-tan/10 rounded-full flex items-center justify-center !min-h-[2.8rem] !min-w-[2.8rem] text-tan/50">
                 <FaEnvelope size={18} />
               </div>
-              <Input
-                type="email"
-                containerClassName="-mb-0"
-                placeholder="Enter Your Email"
-                className="!bg-transparent !border-none !h-[1.8rem] !focus:ring-0 !focus:border-none !focus:ring-none"
-              />
+              <div className="-mb-4">
+                <Input
+                  type="email"
+                  containerClassName="-mb-0"
+                  placeholder="Enter Your Email"
+                  className="!bg-transparent  !shadow-none !border-none !h-[1.8rem] !focus:ring-0 !focus:border-none !focus:ring-none"
+                /></div>
               <Button type="submit" className="!text-nowrap flex !bg-tan/10 gap-2 items-center text-[16px] !border-[1px] hover:!scale-100 !border-tan/30 !rounded-full">
                 Get Offers <BellIcon className="text-tan !w-5" />
               </Button>
@@ -142,13 +145,13 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="flex flex-col items-center justify-between md:flex-row">
           <p className="font-medium text-tan/80 text-md">
-            &copy; {new Date().getFullYear()} BookStore. All rights reserved.
+            &copy; {new Date().getFullYear()} NextChapter. All rights reserved.
           </p>
           <div className="flex mt-4 space-x-4 md:mt-0">
             {/* Facebook */}
             <a
               href="#"
-              onClick={(e) => { e.preventDefault(); openComingSoon(); }}
+              //  onClick={(e) => { e.preventDefault(); openComingSoon(); }}
               className="transition hover:text-tan "
               aria-label="Facebook"
             >
@@ -164,7 +167,7 @@ const Footer = () => {
             {/* Twitter */}
             <a
               href="#"
-              onClick={(e) => { e.preventDefault(); openComingSoon(); }}
+              // onClick={(e) => { e.preventDefault(); openComingSoon(); }}
               className="transition hover:text-tan "
               aria-label="Twitter"
             >
@@ -180,7 +183,7 @@ const Footer = () => {
             {/* Instagram */}
             <a
               href="#"
-              onClick={(e) => { e.preventDefault(); openComingSoon(); }}
+              // onClick={(e) => { e.preventDefault(); openComingSoon(); }}
               className="transition hover:text-tan "
               aria-label="Instagram"
             >
@@ -197,7 +200,7 @@ const Footer = () => {
             {/* YouTube */}
             <a
               href="#"
-              onClick={(e) => { e.preventDefault(); openComingSoon(); }}
+              // onClick={(e) => { e.preventDefault(); openComingSoon(); }}
               className="transition hover:text-tan "
               aria-label="YouTube"
             >

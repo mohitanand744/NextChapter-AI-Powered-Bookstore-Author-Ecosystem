@@ -20,7 +20,7 @@ const AllBooks = lazy(() => import("../Pages/AllBooks"));
 const SingleBooks = lazy(() => import("../Pages/SingleBooks"));
 const AboutUs = lazy(() => import("../Pages/AboutUs"));
 const ContactUs = lazy(() => import("../Pages/ContactUs"));
-const AuthorDetails = lazy(() => import("../Pages/AuthorDetails"));
+const AuthorProfile = lazy(() => import("../Pages/AuthorProfile"));
 const AllAuthors = lazy(() => import("../Pages/AllAuthors"));
 import DevelopmentBanner from "../components/Common/DevelopmentBanner";
 import { ComingSoonProvider } from "../store/Context/ComingSoonContext";
@@ -50,90 +50,90 @@ const Router = () => {
       <ComingSoonProvider>
         <DevelopmentBanner />
         <Toaster
-        position="bottom-right"
-        expand={true}
-        closeButton={true}
-        richColors={true}
-        toastOptions={{
-          style: {
-            background: "rgba(92, 76, 73, 0.85)",
-            backdropFilter: "blur(24px) saturate(150%)",
-            WebkitBackdropFilter: "blur(24px) saturate(150%)",
-            color: "#ffe6c1",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            boxShadow:
-              "0px 10px 40px -10px rgba(0,0,0,0.5), inset 0px 1px 0px rgba(255, 255, 255, 0.05)",
-            borderRadius: "24px",
-            padding: "10px 20px",
-            fontSize: "14px",
-            fontWeight: "500",
-            fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-            gap: "12px",
-          },
-        }}
-      />
+          position="bottom-right"
+          expand={true}
+          closeButton={true}
+          richColors={true}
+          toastOptions={{
+            style: {
+              background: "rgba(92, 76, 73, 0.85)",
+              backdropFilter: "blur(24px) saturate(150%)",
+              WebkitBackdropFilter: "blur(24px) saturate(150%)",
+              color: "#ffe6c1",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
+              boxShadow:
+                "0px 10px 40px -10px rgba(0,0,0,0.5), inset 0px 1px 0px rgba(255, 255, 255, 0.05)",
+              borderRadius: "24px",
+              padding: "10px 20px",
+              fontSize: "14px",
+              fontWeight: "500",
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+              gap: "12px",
+            },
+          }}
+        />
 
-      <Suspense fallback={<Loading />}>
-        <Routes>
-          {/* Auth routes */}
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            {/* Auth routes */}
+            <Route path="/" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
 
-          {/* Default landing page for all users */}
-          <Route path="/nextChapter" element={<Layout />}>
-            <Route index element={<Home />} />
+            {/* Default landing page for all users */}
+            <Route path="/nextChapter" element={<Layout />}>
+              <Route index element={<Home />} />
 
-            {/* Public routes */}
-            <Route path="aboutUs" element={<AboutUs />} />
-            <Route path="contact" element={<ContactUs />} />
-            <Route path="books" element={<AllBooks />} />
-            <Route path="authors" element={<AllAuthors />} />
-            <Route path="book/:id" element={<SingleBooks />} />
-            <Route path="author/:authorId" element={<AuthorDetails />} />
+              {/* Public routes */}
+              <Route path="aboutUs" element={<AboutUs />} />
+              <Route path="contact" element={<ContactUs />} />
+              <Route path="books" element={<AllBooks />} />
+              <Route path="authors" element={<AllAuthors />} />
+              <Route path="book/:id" element={<SingleBooks />} />
+              <Route path="author/:authorId" element={<AuthorProfile />} />
 
-            {/* Protected routes */}
-            <Route
-              path="user/profile"
-              element={
-                <ProtectedRoute>
-                  <UserProfile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="checkout"
-              element={
-                <ProtectedRoute>
-                  <CheckoutPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="orders"
-              element={
-                <ProtectedRoute>
-                  <OrdersPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="wishlist"
-              element={
-                <ProtectedRoute>
-                  <Wishlist />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="tracking/:itemId/:trackingId"
-              element={<TrackingPage />}
-            />
-          </Route>
+              {/* Protected routes */}
+              <Route
+                path="user/profile"
+                element={
+                  <ProtectedRoute>
+                    <UserProfile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="checkout"
+                element={
+                  <ProtectedRoute>
+                    <CheckoutPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="orders"
+                element={
+                  <ProtectedRoute>
+                    <OrdersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="wishlist"
+                element={
+                  <ProtectedRoute>
+                    <Wishlist />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="tracking/:itemId/:trackingId"
+                element={<TrackingPage />}
+              />
+            </Route>
 
-          {/* Fallback route */}
-          <Route path="*" element={<FallbackRoute />} />
-        </Routes>
-      </Suspense>
+            {/* Fallback route */}
+            <Route path="*" element={<FallbackRoute />} />
+          </Routes>
+        </Suspense>
       </ComingSoonProvider>
     </BrowserRouter>
   );

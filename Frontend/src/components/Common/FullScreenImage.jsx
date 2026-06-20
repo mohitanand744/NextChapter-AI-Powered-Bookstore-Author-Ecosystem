@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useImagePreview } from "../../store/Context/ImagePreviewContext";
+import AppImage from "./AppImage";
 
 const FullScreenImageModal = () => {
   const { preview, closePreview } = useImagePreview();
@@ -36,10 +37,11 @@ const FullScreenImageModal = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
           >
-            <img
+            <AppImage
               src={preview.src}
               alt={preview.alt}
               className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+              fallbackType="default"
             />
           </motion.div>
         </div>

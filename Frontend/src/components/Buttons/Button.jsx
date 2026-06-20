@@ -8,7 +8,6 @@ const Button = ({
   variant = "primary",
   className = "",
   isLoading = false,
-  isSerif = false,
   isUppercase = false,
   ...props
 }) => {
@@ -24,7 +23,7 @@ const Button = ({
     glass: "bg-transparent text-coffee hover:bg-sepia/10 hover:text-tan",
   };
 
-  const typographyClasses = `${isSerif ? "font-serif" : "font-sans"} ${isUppercase ? "uppercase tracking-widest text-xs" : ""}`;
+  const typographyClasses = `${isUppercase ? "uppercase tracking-widest text-xs" : ""}`;
 
   return (
     <motion.button

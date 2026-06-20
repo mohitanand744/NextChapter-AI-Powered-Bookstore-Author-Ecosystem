@@ -70,7 +70,7 @@ const BookListingFilter = ({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "100%" }}
               transition={{ duration: 0.3, delay: 0.1 }}
-              className="pt-3 font-serif text-2xl tracking-tight md:text-3xl text-cream"
+              className="pt-3  text-2xl tracking-tight md:text-3xl text-cream"
             >
               Curation Filters
             </motion.h2>
@@ -230,7 +230,7 @@ const BookListingFilter = ({
                     <span className="text-sm font-bold tracking-widest uppercase text-tan/40">
                       {section.subtitle}
                     </span>
-                    <h3 className="mt-1 font-serif text-xl transition-colors text-cream group-hover:text-tan">
+                    <h3 className="mt-1  text-xl transition-colors text-cream group-hover:text-tan">
                       {section.title}
                     </h3>
                   </div>

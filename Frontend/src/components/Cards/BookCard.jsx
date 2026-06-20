@@ -4,6 +4,7 @@ import { HiOutlineEye } from "react-icons/hi2";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
 import Ratings from "../RatingsReviews/Ratings";
 import { useLocation, useNavigate } from "react-router-dom";
+import AppImage from "../Common/AppImage";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
@@ -97,33 +98,38 @@ const BookCard = ({ book, index, onComingSoonClick }) => {
       <div className="absolute top-0 right-0 px-3 py-1 text-xs font-medium border-b border-l bg-tan/20 text-tan backdrop-blur-md rounded-bl-2xl rounded-tr-3xl border-tan/10">
         <p>{book?.category}</p>
       </div>
-      <div className="absolute group top-1 left-1">
-        <div className=" w-12 border-2 rounded-full border-tan p-[0.1rem] h-12">
-          <img
+      <div className="absolute group top-0 left-0">
+        <div className=" w-12 border-r border-b-2 rounded-br-2xl rounded-tl-3xl border-tan p-[0.1rem] h-12">
+          <AppImage
             src={
               book?.author?.author_image ||
               "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
             }
-            className="object-cover w-full h-full rounded-full cursor-pointer"
+            className="w-full h-full rounded-br-2xl rounded-tl-3xl cursor-pointer"
+            imgClassName="object-cover w-full h-full rounded-br-2xl rounded-tl-2xl"
             alt=""
+            fallbackType="author"
+            name={book?.author?.author_name}
           />
         </div>
 
-        <div className="absolute border-2 border-tan shadow-lg left-[1rem] w-[20rem] text-sm z-[11111] transition-all duration-300 scale-0 group-hover:translate-y-0 group-hover:scale-100 group-hover:translate-x-0 rotate-90 group-hover:rotate-0 translate-x-[-9.6rem] translate-y-[-13rem] font-medium bg-coffee/50 backdrop-blur-md p-4 rounded-3xl">
+        <div className="absolute border-2 border-tan shadow-lg left-[1rem] w-[16rem] text-sm z-[11111] transition-all duration-300 scale-0 group-hover:translate-y-0 group-hover:scale-100 group-hover:translate-x-0 rotate-90 group-hover:rotate-0 translate-x-[-9.6rem] translate-y-[-13rem] font-medium bg-coffee/50 backdrop-blur-md p-4 rounded-3xl">
           <div className="relative mx-auto mb-2 border-[4px] border-tan h-44 w-44 rounded-3xl">
-            <img
+            <AppImage
               src={
-                book?.author?.author_image ||
-                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                book?.author?.author_image
               }
-              className="object-cover object-top w-full h-full rounded-3xl"
+              className="w-full h-full rounded-2xl"
+              imgClassName="object-cover object-top w-full h-full rounded-2xl"
               alt=""
+              fallbackType="author"
+              name={book?.author?.author_name}
             />
           </div>
           <div className="flex flex-col items-center gap-3 mb-2">
             <h1 className="text-cream">
               {" "}
-              <b className="text-[0.9rem]"> Name:</b>{" "}
+              <b className="text-[0.9rem] text-tan"> Name:</b>{" "}
               {book?.author?.author_name}
             </h1>
             <div className="flex items-center gap-1 p-1 px-3 border-2 border-tan rounded-t-2xl">
@@ -150,7 +156,7 @@ const BookCard = ({ book, index, onComingSoonClick }) => {
                   e.stopPropagation();
                   setIsReadMore(!isReadMore);
                 }}
-                className="inline-block pl-1 text-xs cursor-pointer text-cream hover:underline"
+                className="inline-block pl-1 text-xs cursor-pointer text-tan hover:underline"
               >
                 {isReadMore ? "Show less" : "Read more"}
               </span>
@@ -180,8 +186,8 @@ const BookCard = ({ book, index, onComingSoonClick }) => {
           </motion.div>
         </div>
       </div>
-      <div className="image w-[60%] md:w-[90%] mx-auto pt-8 h-[15rem]">
-        <img
+      <div className="image w-[60%] md:w-[90%] mx-auto pt-[3.5rem] h-[15rem]">
+        <AppImage
           onClick={() => {
             const url = `/nextChapter/book/${book?.book_id}`;
             if (onComingSoonClick) {
@@ -190,9 +196,11 @@ const BookCard = ({ book, index, onComingSoonClick }) => {
               navigate(url);
             }
           }}
-          className="object-contain w-full h-full cursor-pointer"
-          src={book?.images?.[0]}
+          className="w-full h-full cursor-pointer"
+          imgClassName="object-contain w-full h-full"
+          src={book?.cover_image}
           alt=""
+          fallbackType="book"
         />
       </div>
       <div className="px-4 text-xl">
@@ -228,7 +236,7 @@ const BookCard = ({ book, index, onComingSoonClick }) => {
           </div>
         </div>
 
-        <p className="text-sm text-cream/80 md:text-lg">
+        <p className="text-sm text-cream/80 md:text-[1.1rem]">
           {book?.description?.slice(0, 50)}...
         </p>
 
@@ -253,8 +261,8 @@ const BookCard = ({ book, index, onComingSoonClick }) => {
           <span className="text-sm">Add</span>
         </button>
 
-        <div className="flex items-center text-cream">
-          <Ratings ratings={book?.book_rating} />
+        <div className="flex items-center">
+          <Ratings ratings={book?.book_rating} textColor="text-orange" />
         </div>
       </div>
     </motion.div>

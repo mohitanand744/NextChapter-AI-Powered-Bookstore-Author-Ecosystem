@@ -221,48 +221,44 @@ const getGoogleLoginPage = (req, res, next) => {
 };
 
 const getGoogleCallBack = async (req, res, next) => {
-  const { state, code } = req.query;
-
-  const {
-    google_code_verifier: codeVerifier,
-    google_oauth_state: storedState,
-  } = req.cookies;
-
-  if (
-    !state ||
-    !code ||
-    !codeVerifier ||
-    !storedState ||
-    state !== storedState
-  ) {
-    return errorResponse(res, 400, "Invalid request parameters", null, "/");
-  }
-
-  let token;
-
   try {
-    token = await google.validateAuthorizationCode(code, codeVerifier);
-  } catch (error) {
-    handleDbError(error, res, next);
-  }
+    const { state, code } = req.query;
 
-  console.log("Google Token", token.data.id_token);
-  console.log("Google Token222", token);
+    const {
+      google_code_verifier: codeVerifier,
+      google_oauth_state: storedState,
+    } = req.cookies;
 
-  const claims = decodeIdToken(token.data.id_token);
+    if (
+      !state ||
+      !code ||
+      !codeVerifier ||
+      !storedState ||
+      state !== storedState
+    ) {
+      const msg = "Invalid or expired session parameters.";
+      const redirectUrl = `${process.env.FRONTEND_URL}/?error=${encodeURIComponent(msg)}`;
+      return errorResponse(res, 400, msg, null, redirectUrl);
+    }
 
-  console.log("Google Claims", claims);
+    const token = await google.validateAuthorizationCode(code, codeVerifier);
 
-  const {
-    sub: googleUserId,
-    given_name,
-    family_name,
-    email,
-    email_verified,
-    picture,
-  } = claims;
+    console.log("Google Token", token.data.id_token);
+    console.log("Google Token222", token);
 
-  try {
+    const claims = decodeIdToken(token.data.id_token);
+
+    console.log("Google Claims", claims);
+
+    const {
+      sub: googleUserId,
+      given_name,
+      family_name,
+      email,
+      email_verified,
+      picture,
+    } = claims;
+
     const result = await handleSocialLogin({
       provider: "google",
       providerId: googleUserId,
@@ -297,9 +293,22 @@ const getGoogleCallBack = async (req, res, next) => {
 
     return successResponse(res, 200, "Logged in with Google", {}, redirectUrl);
   } catch (err) {
-    const status = err.status || 500;
-    const msg = err.message || "Social login failed";
-    return errorResponse(res, status, msg);
+    console.error("Google OAuth Error Details:", err);
+
+    let msg = "Social login failed. Please try again later.";
+    let status = err.status || 500;
+
+    if (err.code === "ER_DUP_ENTRY" || (err.message && err.message.includes("Duplicate entry"))) {
+      msg = "An account with this email already exists. Please login using your registered method.";
+      status = 400;
+    } else if (err.status && err.status < 500) {
+      msg = err.message; // Keep intentional 400 errors from authService
+    } else if (err.customMessage) {
+      msg = err.message;
+    }
+
+    const redirectUrl = `${process.env.FRONTEND_URL}/?error=${encodeURIComponent(msg)}`;
+    return errorResponse(res, status, msg, null, redirectUrl);
   }
 };
 

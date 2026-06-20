@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
+import AppImage from "../../components/Common/AppImage";
 import Button from "../../components/Buttons/Button";
 import {
   EnvelopeIcon,
@@ -132,7 +133,7 @@ const SignUp = () => {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="mb-2 font-serif text-4xl font-bold tracking-tight text-tan"
+                  className="mb-2 text-4xl font-bold tracking-tight text-tan"
                 >
                   Open Your NextChapter
                 </motion.h1>
@@ -168,10 +169,11 @@ const SignUp = () => {
                       <div
                         className={` p-0.5 rounded-2xl border-t-2 border-b-2 transition-all duration-500 ${watch("role") === "user" ? "border-tan scale-110 shadow-lg" : "border-transparent opacity-50"}`}
                       >
-                        <img
+                        <AppImage
                           src="/images/patron-avatar.png"
                           alt="Patron"
                           className="object-cover w-28 h-28 rounded-2xl bg-tan/10"
+                          fallbackType="default"
                         />
                       </div>
 
@@ -224,10 +226,11 @@ const SignUp = () => {
                       <div
                         className={` p-0.5 rounded-2xl border-t-2  border-b-2 transition-all duration-500 ${watch("role") === "author" ? "border-tan scale-110 shadow-lg" : "border-transparent opacity-50"}`}
                       >
-                        <img
+                        <AppImage
                           src="/images/author-avatar.jpeg"
                           alt="Author"
                           className="object-cover w-28 h-28 rounded-2xl bg-tan/10"
+                          fallbackType="default"
                         />
                       </div>
 
@@ -524,7 +527,7 @@ const SignUp = () => {
                     <div className="w-full border-t border-tan/30 "></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-4 py-1.5 bg-coffee/80 backdrop-blur-md text-tan/70 rounded-full border border-tan/20 font-serif italic text-xs">
+                    <span className="px-4 py-1.5 bg-coffee/80 backdrop-blur-md text-tan/70 rounded-full border border-tan/20 italic text-xs">
                       Sign in with your social account
                     </span>
                   </div>

@@ -29,7 +29,7 @@ import useAuth from "../Hooks/useAuth";
 import NoData from "../components/EmptyData/noData";
 import AddressModal from "../components/Modal/AddressModal";
 import { userApis } from "../utils/apis/userApis";
-import { useUser } from "../store/Context/UserContext";
+import { useProfileImage } from "../store/Context/ProfileImageContext";
 import BooksLoader from "../components/Loaders/BooksLoader";
 import { useImagePreview } from "../store/Context/ImagePreviewContext";
 import ProfileUpdateModal from "../components/Modal/ProfileUpdateModal";
@@ -41,7 +41,7 @@ import "swiper/css";
 import SwiperNavButtons from "../components/Buttons/SwiperNavButtons";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import SectionHeading from "../components/Headings/SectionHeading";
-
+import AppImage from "../components/Common/AppImage";
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("activity");
   const navigate = useNavigate();
@@ -83,7 +83,7 @@ const UserProfile = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const { openPreview } = useImagePreview();
   const fileInputRef = useRef(null);
-  const { preview, setPreview, isUploading, setIsUploading } = useUser();
+  const { preview, setPreview, isUploading, setIsUploading } = useProfileImage();
   const [defaultAddress, setDefaultAddress] = useState("No Address Selected");
 
   const uploadProfilePic = async (file) => {
@@ -190,20 +190,23 @@ const UserProfile = () => {
       >
         {/* Header */}
         <div className="flex flex-col items-start justify-between mb-8 md:flex-row md:items-center">
-          <motion.h1
-            initial={{ x: -20 }}
-            animate={{ x: 0 }}
-            className="mb-4 text-3xl font-bold text-coffee md:mb-0"
+          <motion.div
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="flex-1 w-full max-w-[400px] mb-4 md:mb-0"
           >
-            My Profile
-          </motion.h1>
+            <SectionHeading align="left" className="!py-0 ">
+              My Profile
+            </SectionHeading>
+          </motion.div>
           <div className="flex flex-wrap justify-center gap-3 sm:justify-start">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={navigateToOrders}
             >
-              <Button className="flex items-center gap-1 px-4 py-2 rounded-lg shadow-md text-nowrap bg-coffee">
+              <Button className="flex !border-none items-center gap-1 px-4 py-2 rounded-lg shadow-md text-nowrap bg-coffee">
                 <BagSvg />
                 My Orders
               </Button>
@@ -213,7 +216,7 @@ const UserProfile = () => {
               whileTap={{ scale: 0.95 }}
               onClick={navigateToWishlist}
             >
-              <Button className="flex items-center gap-1 px-4 py-2 border rounded-lg shadow-md text-nowrap bg-coffee text-tan border-tan/20">
+              <Button className="flex !border-none items-center gap-1 px-4 py-2 rounded-lg shadow-md text-nowrap bg-coffee text-tan">
                 <HearthSvg />
                 My Wishlist
               </Button>
@@ -243,16 +246,18 @@ const UserProfile = () => {
                 transition={{ type: "spring", stiffness: 100 }}
                 className="relative w-32 h-32 rounded-full bg-coffee"
               >
-                <img
+                <AppImage
                   src={preview || "/images/loading.gif"}
                   alt="Profile"
                   className="object-cover w-full h-full border-4 rounded-full shadow-lg cursor-pointer border-tan"
                   onClick={() => openPreview(preview, "Profile Image")}
+                  fallbackType="avatar"
+                  name={user?.name}
                 />
 
                 <img
                   onClick={() => fileInputRef.current.click()}
-                  className="absolute bottom-0 bg-cream border-2 border-coffee p-[0.7px] z-30 w-8 h-8 rounded-full cursor-pointer duration-200 active:scale-75 top-[5rem]  -right-[0.5px]"
+                  className="absolute bottom-0 bg-coffee border-2 border-coffee p-[0.7px] z-30 w-8 h-8 rounded-full cursor-pointer duration-200 active:scale-75 bottom-3 right-0"
                   src="/images/camera.png"
                   alt="Upload"
                 />
@@ -323,6 +328,7 @@ const UserProfile = () => {
                   }
                   notProvided={!user?.favoriteGenres?.length}
                   delay={0.7}
+                  setShowProfileUpdateModal={setShowProfileUpdateModal}
                 />
               </div>
 
@@ -343,7 +349,7 @@ const UserProfile = () => {
                       ? "Update Profile"
                       : "Complete Your Profile"}
                     {!user?.isComplete && (
-                      <span className="absolute top-[-10px] left-[-10px] w-8 h-8 bg-coffee border-2 border-tan rounded-full flex items-center justify-center text-xs">
+                      <span className="absolute font-sans top-[-10px] left-[-10px] w-8 h-8 bg-coffee border-2 border-tan rounded-full flex items-center justify-center text-xs">
                         {user?.percentage}%
                       </span>
                     )}
@@ -402,11 +408,10 @@ const UserProfile = () => {
             <div className="hidden md:flex border-b-[3px] border-sepia/20">
               <motion.button
                 onClick={() => setActiveTab("activity")}
-                className={`px-4 py-2 text-nowrap text-[16px] relative ${
-                  activeTab === "activity"
-                    ? "text-coffee opacity-100 font-bold"
-                    : "text-coffee opacity-70 font-medium"
-                }`}
+                className={`px-4 py-2 text-nowrap text-[16px] relative ${activeTab === "activity"
+                  ? "text-coffee opacity-100 font-bold"
+                  : "text-coffee opacity-70 font-medium"
+                  }`}
               >
                 Recent Activity
                 {activeTab === "activity" && (
@@ -419,11 +424,10 @@ const UserProfile = () => {
 
               <motion.button
                 onClick={() => setActiveTab("orders")}
-                className={`px-4 py-2 text-nowrap text-[16px] relative ${
-                  activeTab === "orders"
-                    ? "text-coffee opacity-100 font-bold"
-                    : "text-coffee opacity-70 font-medium"
-                }`}
+                className={`px-4 py-2 text-nowrap text-[16px] relative ${activeTab === "orders"
+                  ? "text-coffee opacity-100 font-bold"
+                  : "text-coffee opacity-70 font-medium"
+                  }`}
               >
                 Recent Orders
                 {activeTab === "orders" && (
@@ -436,11 +440,10 @@ const UserProfile = () => {
 
               <motion.button
                 onClick={() => setActiveTab("wishlist")}
-                className={`px-4 py-2 text-nowrap text-[16px] relative ${
-                  activeTab === "wishlist"
-                    ? "text-coffee opacity-100 font-bold"
-                    : "text-coffee opacity-70 font-medium"
-                }`}
+                className={`px-4 py-2 text-nowrap text-[16px] relative ${activeTab === "wishlist"
+                  ? "text-coffee opacity-100 font-bold"
+                  : "text-coffee opacity-70 font-medium"
+                  }`}
               >
                 Wishlist Preview
                 {activeTab === "wishlist" && (
@@ -458,11 +461,10 @@ const UserProfile = () => {
               <div className="relative z-10 flex justify-around w-full">
                 <motion.button
                   onClick={() => setActiveTab("activity")}
-                  className={`flex flex-col items-center p-2 w-full relative ${
-                    activeTab === "activity"
-                      ? "text-tan"
-                      : "text-tan opacity-70"
-                  }`}
+                  className={`flex flex-col items-center p-2 w-full relative ${activeTab === "activity"
+                    ? "text-tan"
+                    : "text-tan opacity-70"
+                    }`}
                   whileTap={{ scale: 0.95 }}
                 >
                   <FaHistory className="w-5 h-5" />
@@ -477,9 +479,8 @@ const UserProfile = () => {
 
                 <motion.button
                   onClick={() => setActiveTab("orders")}
-                  className={`flex flex-col items-center p-2 w-full relative ${
-                    activeTab === "orders" ? "text-tan" : "text-tan opacity-70"
-                  }`}
+                  className={`flex flex-col items-center p-2 w-full relative ${activeTab === "orders" ? "text-tan" : "text-tan opacity-70"
+                    }`}
                   whileTap={{ scale: 0.95 }}
                 >
                   <FaShoppingBag className="w-5 h-5" />
@@ -494,11 +495,10 @@ const UserProfile = () => {
 
                 <motion.button
                   onClick={() => setActiveTab("wishlist")}
-                  className={`flex flex-col items-center p-2 w-full relative ${
-                    activeTab === "wishlist"
-                      ? "text-tan"
-                      : "text-tan opacity-70"
-                  }`}
+                  className={`flex flex-col items-center p-2 w-full relative ${activeTab === "wishlist"
+                    ? "text-tan"
+                    : "text-tan opacity-70"
+                    }`}
                   whileTap={{ scale: 0.95 }}
                 >
                   <FaHeart className="w-5 h-5" />
@@ -622,7 +622,7 @@ const UserProfile = () => {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 1.1 }}
-        className="container pt-16 mt-20 border-t border-tan/10"
+        className="container pt-4 mt-10 border-t border-tan/10"
       >
         <div className="mb-2">
           <SectionHeading
@@ -728,23 +728,23 @@ const ActivityItem = ({
     <div className="relative z-10 flex flex-col sm:flex-row">
       {/* Product Image */}
       <div className="relative flex items-center justify-center h-40 border-r rounded-r-2xl sm:w-1/4 sm:h-auto">
-        <img
+        <AppImage
           src={
             imageUrl ||
             "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQwm3sKSSsqSSqtZNE_Funcouaw8XHA885zkmvnK3MUH8RxvbPpyN72hQuAMbkzP-0Dm9xpJu9JVODLh4I8p9bWbAYlDoZZWscNXeRf58yOO0jV6qffaEtq8g"
           }
           alt={title}
           className="object-contain w-full h-[9rem] p-4"
+          fallbackType="book"
         />
         {status && (
           <span
-            className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${
-              status === "Delivered"
-                ? "bg-green-100 text-green-800"
-                : status === "Shipped"
-                  ? "bg-blue-100 text-blue-800"
-                  : "bg-yellow-100 text-yellow-800"
-            }`}
+            className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${status === "Delivered"
+              ? "bg-green-100 text-green-800"
+              : status === "Shipped"
+                ? "bg-blue-100 text-blue-800"
+                : "bg-yellow-100 text-yellow-800"
+              }`}
           >
             {status}
           </span>
@@ -787,7 +787,7 @@ const ModernProfileDetail = ({
   setShowAddressModal,
   delay,
   isCopyable,
-  notProvided,
+  notProvided, setShowProfileUpdateModal
 }) => {
   const swiperRef = useRef(null);
 
@@ -805,7 +805,7 @@ const ModernProfileDetail = ({
           <p className="text-xs font-medium tracking-wider uppercase text-cream/90">
             {label}
           </p>
-          {Array.isArray(value) && (
+          {Array.isArray(value) && value.length > 3 && (
             <SwiperNavButtons
               swiperRef={swiperRef}
               className="!relative !w-auto !h-auto justify-end gap-2"
@@ -820,7 +820,7 @@ const ModernProfileDetail = ({
           {/* VALUE */}
           <div className="flex-1 min-w-0">
             {Array.isArray(value) ? (
-              <div className="relative ml-[-0.8rem] w-full">
+              <div className="relative w-full">
                 {value.length > 0 ? (
                   <Swiper
                     modules={[Navigation, FreeMode, Autoplay]}
@@ -853,7 +853,9 @@ const ModernProfileDetail = ({
                     ))}
                   </Swiper>
                 ) : (
-                  <span className="">Not Provided</span>
+                  <p className={`text-sm font-semibold`}>
+                    Select Your Favorite Genres
+                  </p>
                 )}
               </div>
             ) : (
@@ -884,13 +886,18 @@ const ModernProfileDetail = ({
             </motion.button>
           )}
 
-          {/* ADDRESS */}
-          {label === "Address" && (
+          {["Address", "Favorite Genres"].includes(label) && (
             <div
-              onClick={() => setShowAddressModal(true)}
-              className=" w-[32px] cursor-pointer h-[32px] flex items-center justify-center rounded-full bg-coffee"
+              onClick={() => {
+                if (label === "Address") {
+                  setShowAddressModal(true)
+                } else if (label === "Favorite Genres") {
+                  setShowProfileUpdateModal(true)
+                }
+              }}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-coffee cursor-pointer"
             >
-              <EllipsisHorizontalIcon className="w-6 h-6" />
+              <EllipsisHorizontalIcon className="w-5 h-5 text-tan" />
             </div>
           )}
         </div>

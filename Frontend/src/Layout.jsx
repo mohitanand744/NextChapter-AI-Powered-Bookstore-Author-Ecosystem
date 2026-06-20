@@ -20,9 +20,12 @@ const Layout = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-tan">
+
       <DiscountHeader />
       <Navbar isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen} />
-      <div className="search md:hidden px-4 py-2 bg-coffee border-b border-tan/20 shadow-sm relative z-40">
+      <div className="search md:hidden flex gap-2 items-center px-4 py-2 bg-coffee border-b border-tan/20 shadow-sm relative z-40">
+
+
         <NextChapterAIBtn className="w-full block" />
       </div>
       <div className="flex-1">

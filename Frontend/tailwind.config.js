@@ -23,6 +23,10 @@ export default {
       screens: {
         "xl-custom": "1560px",
       },
+      fontFamily: {
+        sans: ["Outfit", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["Playfair Display", "ui-serif", "Georgia", "serif"],
+      },
     },
     plugins: [],
   },

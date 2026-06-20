@@ -5,7 +5,7 @@ const BackButton = ({ label = "Back", to = -1, className = "" }) => {
   const navigate = useNavigate();
 
   return (
-    <div className={`mx-auto mb-8 ${className}`}>
+    <div className={`mx-auto  ${className}`}>
       <button
         onClick={() => navigate(to)}
         className="

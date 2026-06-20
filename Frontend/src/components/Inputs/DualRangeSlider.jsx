@@ -46,7 +46,7 @@ function DualRangeSlider({ toggleCategory, PriceFilter, filters, setFilters }) {
             <span className="text-sm font-bold tracking-widest uppercase text-tan/40">
               Investment Range
             </span>
-            <h3 className="mt-1 font-serif text-xl transition-colors text-cream group-hover:text-tan">
+            <h3 className="mt-1 text-xl transition-colors text-cream group-hover:text-tan">
               Price Filter
             </h3>
           </div>

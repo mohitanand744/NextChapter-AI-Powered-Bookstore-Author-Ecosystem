@@ -25,6 +25,7 @@ import ModelsHeading from "../Headings/ModelsHeading";
 import { EyesSvg } from "../SVGs/SVGs";
 import useInputHandlers from "../../Hooks/useInputHandlers";
 import ViewAddressDetailsModal from "./ViewAddressDetailsModal";
+import Badge from "../Common/Badge";
 
 const AddressModal = ({
   showAddress,
@@ -473,20 +474,22 @@ const AddressModal = ({
                           />
 
                           <div
-                            className={`p-2 rounded-lg ${address.color} text-tan`}
+                            className={`p-1 rounded-lg ${address.color} text-tan`}
                           >
-                            <Icon className="w-5 h-5" />
+                            <Icon className="w-7 h-7" />
                           </div>
 
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="font-semibold">
-                                {address.type}
-                              </span>
+                              <Badge
+                                text={address.type}
+                                variant="outline"
+                              />
                               {address.isDefault && (
-                                <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
-                                  ● <b>Default</b>
-                                </span>
+                                <Badge
+                                  text="Default"
+                                  variant="primary"
+                                />
                               )}
                             </div>
                             <p className="text-sm text-tan/70 [overflow-wrap:anywhere]">
@@ -815,14 +818,14 @@ const AddressModal = ({
                     setConfirmationData(null);
                   }}
                 >
-                  CONFIRM
+                  Confirm
                 </Button>
                 <Button
                   variant="outline"
                   className="flex-1"
                   onClick={() => setConfirmationData(null)}
                 >
-                  BACK
+                  Back
                 </Button>
               </div>
             </motion.div>

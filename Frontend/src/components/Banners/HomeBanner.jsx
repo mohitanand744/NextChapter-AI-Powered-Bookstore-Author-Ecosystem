@@ -3,6 +3,7 @@ import React from "react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import AppImage from "../Common/AppImage";
 
 // Import Swiper styles
 import "swiper/css";
@@ -27,19 +28,21 @@ const HomeBanner = () => {
       >
         <SwiperSlide className="relative">
           {/* Image with a gradient fade at the bottom */}
-          <img
+          <AppImage
             className="object-cover object-top w-full h-full"
             src="/images/Welcome_Banner.png"
             alt="Welcome Banner"
+            fallbackType="default"
           />
           {/* Gradient effect */}
           <div className="absolute bottom-0 left-0 w-full h-1/5 bg-gradient-to-t from-tan to-transparent"></div>
         </SwiperSlide>
         <SwiperSlide className="relative">
-          <img
+          <AppImage
             className="object-cover object-top w-full h-full"
             src="/images/bannersec.png"
             alt="Second Banner"
+            fallbackType="default"
           />
           {/* Gradient effect */}
           <div className="absolute bottom-0 left-0 w-full h-2/5 bg-gradient-to-t from-tan to-transparent"></div>

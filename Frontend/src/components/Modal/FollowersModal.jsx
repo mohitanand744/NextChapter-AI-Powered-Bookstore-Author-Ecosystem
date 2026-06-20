@@ -6,6 +6,7 @@ import ModalContainer from "./ModalContainer";
 import Search from "../SearchBars/Search";
 import NoData from "../EmptyData/noData";
 import { PremiumVerifiedBadge } from "../SVGs/SVGs";
+import AppImage from "../Common/AppImage";
 
 const FollowersModal = ({ isOpen, onClose, followers }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,7 +29,7 @@ const FollowersModal = ({ isOpen, onClose, followers }) => {
       >
         <div className="flex sticky top-0 bg-coffee p-2 rounded-full z-30 mb-4 items-center justify-between border-b border-coffee/20">
           <h3 className="flex items-center gap-2 text-sm  md:text-xl font-bold text-tan">
-            <span className="bg-sepia p-1 rounded-full "> <FaUsers className="text-xl md:text-3xl" /></span> followers
+            <span className="bg-sepia p-1 rounded-full "> <FaUsers className="text-xl md:text-3xl" /></span> Followers
           </h3>
 
 
@@ -53,10 +54,12 @@ const FollowersModal = ({ isOpen, onClose, followers }) => {
             >
               <div className="flex items-center gap-3 min-w-0">
                 <div className="relative shrink-0">
-                  <img
+                  <AppImage
                     src={follower.avatar}
                     alt={follower.name}
                     className="h-11 w-11 rounded-full border-2 border-orange p-0.5 object-cover shadow-md transition-transform duration-300 group-hover:scale-105"
+                    fallbackType="avatar"
+                    name={follower.name}
                   />
                   {follower.certified && (
                     <div className="absolute -bottom-1 -right-1 z-20">

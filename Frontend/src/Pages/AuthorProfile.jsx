@@ -51,7 +51,7 @@ import { useImagePreview } from "../store/Context/ImagePreviewContext";
 import { useComingSoon } from "../store/Context/ComingSoonContext";
 import Ratings from "../components/RatingsReviews/Ratings";
 import TestimonialCard from "../components/Cards/TestimonialCard";
-
+import AppImage from "../components/Common/AppImage";
 const initialPosts = [
   {
     id: 1,
@@ -176,7 +176,7 @@ const testimonials = [
 
 
 
-const AuthorDetails = () => {
+const AuthorProfile = () => {
   const { authorId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -289,7 +289,7 @@ const AuthorDetails = () => {
           showAction={true}
           actionText="Go Back"
           onActionClick={() => navigate(-1)}
-          customIcon={<UserGroupIcon size={48} className="text-coffee" />}
+          customIcon={<UserGroupIcon className="!w-12" />}
         />
 
       </div>
@@ -327,7 +327,7 @@ const AuthorDetails = () => {
             setIsBlinkingTestimonials(false);
           }
         }, 200);
-        
+
         if (!hasScrolledForRating) {
           window.scrollBy({ top: 100, behavior: 'smooth' });
           setHasScrolledForRating(true);
@@ -371,10 +371,12 @@ const AuthorDetails = () => {
     >
       <div className="relative w-full p-2">
         <div className="w-full h-56 md:h-96 overflow-hidden rounded-3xl shadow-2xl relative">
-          <img
+          <AppImage
             src="/images/author_banner.png"
-            className="w-full h-full object-cover"
+            className="w-full h-full"
+            imgClassName="object-cover"
             alt="Author Banner"
+            fallbackType="default"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-coffee/40 via-transparent to-coffee/40"></div>
         </div>
@@ -413,13 +415,16 @@ const AuthorDetails = () => {
                 className="absolute left-0 right-0 z-10 mx-auto overflow-hidden border-4 border-tan shadow-2xl -top-28 md:-top-30 w-28 md:w-40 h-28 md:h-40 rounded-3xl cursor-zoom-in"
                 onClick={() => openPreview(author?.author_image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", author?.author_name)}
               >
-                <img
+                <AppImage
                   src={
                     author?.author_image ||
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
                   alt={author?.author_name}
+                  imgClassName="object-cover"
                   className="object-cover object-top w-full h-full"
+                  fallbackType="author"
+                  name={author?.author_name}
                 />
               </motion.div>
 
@@ -854,10 +859,12 @@ const AuthorDetails = () => {
                           >
                             <div className="flex items-center gap-3">
                               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-tan/30 flex-shrink-0">
-                                <img
+                                <AppImage
                                   src={uAuthor.author_image}
                                   alt={uAuthor.author_name}
                                   className="w-full h-full object-cover"
+                                  fallbackType="author"
+                                  name={uAuthor.author_name}
                                 />
                               </div>
                               <div className="flex-1 min-w-0">
@@ -935,6 +942,6 @@ const AuthorDetails = () => {
   );
 };
 
-export default AuthorDetails;
+export default AuthorProfile;
 
 

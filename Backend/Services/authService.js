@@ -377,83 +377,47 @@ exports.handleSocialLogin = async ({
     const existingByEmail = await findUserByEmail(email);
 
     if (existingByEmail) {
-      if (existingByEmail.provider === "local" || !existingByEmail.provider) {
-        if (emailVerified) {
+      if (emailVerified) {
+        if (
+          existingByEmail.provider !== provider ||
+          existingByEmail.provider_id !== providerId
+        ) {
           await updateUserProvider(existingByEmail.id, provider, providerId);
-
-          if (picture && !isCloudinaryUrl(existingByEmail.profile_pic)) {
-            const { url = picture, public_id } = await uploadFromUrl(
-              picture.replace(/=s\d+-c$/, ""),
-            );
-
-            await updateUserPicture(existingByEmail.id, url);
-            await updateUserPicturePublicId(existingByEmail.id, public_id);
-          }
-
-          const User = await findUserById(existingByEmail.id);
-
-          const updatedUser = formatUser(User);
-
-          const token = generateJWT(
-            { id: updatedUser.userId, email: updatedUser.email },
-            process.env.JWT_SECRET,
-            `${USER_TOKEN_EXPIRES_IN}h`,
-          );
-          return {
-            success: true,
-            user: updatedUser,
-            token,
-            isNewUser: false,
-            linked: true,
-            accountLinked: true,
-            provider: updatedUser.provider,
-          };
-        } else {
-          throw {
-            status: 400,
-            message:
-              "Email not verified by provider. Please verify your email with the provider or link from your account settings.",
-          };
         }
-      }
-      if (existingByEmail.provider && existingByEmail.provider !== provider) {
-        if (emailVerified) {
-          await updateUserProvider(existingByEmail.id, provider, providerId);
 
-          if (picture && !isCloudinaryUrl(existingByEmail.profile_pic)) {
-            const { url = picture, public_id } = await uploadFromUrl(
-              picture.replace(/=s\d+-c$/, ""),
-            );
-
-            await updateUserPicture(existingByEmail.id, url);
-            await updateUserPicturePublicId(existingByEmail.id, public_id);
-          }
-
-          const User = await findUserById(existingByEmail.id);
-
-          const updatedUser = formatUser(User);
-
-          const token = generateJWT(
-            { id: updatedUser.userId, email: updatedUser.email },
-            process.env.JWT_SECRET,
-            `${USER_TOKEN_EXPIRES_IN}h`,
+        if (picture && !isCloudinaryUrl(existingByEmail.profile_pic)) {
+          const { url = picture, public_id } = await uploadFromUrl(
+            picture.replace(/=s\d+-c$/, ""),
           );
-          return {
-            success: true,
-            user: updatedUser,
-            token,
-            isNewUser: false,
-            linked: true,
-            accountLinked: true,
-            provider: updatedUser.provider,
-          };
-        } else {
-          throw {
-            status: 400,
-            message:
-              "Provider did not verify email. Unable to link accounts automatically.",
-          };
+
+          await updateUserPicture(existingByEmail.id, url);
+          await updateUserPicturePublicId(existingByEmail.id, public_id);
         }
+
+        const User = await findUserById(existingByEmail.id);
+
+        const updatedUser = formatUser(User);
+
+        const token = generateJWT(
+          { id: updatedUser.userId, email: updatedUser.email },
+          process.env.JWT_SECRET,
+          `${USER_TOKEN_EXPIRES_IN}h`,
+        );
+        return {
+          success: true,
+          user: updatedUser,
+          token,
+          isNewUser: false,
+          linked: true,
+          accountLinked: true,
+          provider: User.provider,
+        };
+      } else {
+        throw {
+          status: 400,
+          message:
+            "Email not verified by provider. Please verify your email with the provider or link from your account settings.",
+        };
       }
     }
   }
@@ -493,6 +457,6 @@ exports.handleSocialLogin = async ({
     token,
     isNewUser: true,
     linked: true,
-    provider: user.provider,
+    provider: newUser.provider,
   };
 };

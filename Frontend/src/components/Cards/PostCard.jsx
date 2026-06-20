@@ -26,6 +26,7 @@ import { useImagePreview } from "../../store/Context/ImagePreviewContext";
 import useAuth from "../../Hooks/useAuth";
 import Input from "../Inputs/Input";
 import { toast } from "sonner";
+import AppImage from "../Common/AppImage";
 
 const tagColors = {
   "Writing Tips": "bg-amber-100 text-amber-700",
@@ -182,10 +183,12 @@ const PostCard = ({ post, index, author }) => {
         {/* LinkedIn Style Header */}
         <div className="flex items-center gap-3 p-4">
           <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-tan/30 flex-shrink-0">
-            <img
+            <AppImage
               src={author?.author_image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
               alt={author?.author_name}
               className="w-full h-full object-cover"
+              fallbackType="author"
+              name={author?.author_name}
             />
           </div>
           <div className="flex-1 min-w-0">
@@ -262,11 +265,12 @@ const PostCard = ({ post, index, author }) => {
 
         {/* Post Image (LinkedIn Style - after text) */}
         <div className="relative w-full h-64 overflow-hidden bg-tan/5 border-y border-tan/5">
-          <img
+          <AppImage
             src={post.image}
             alt={post.title}
             onClick={() => openPreview(post.image, post.title)}
             className="object-cover w-full h-full transition-transform duration-500 cursor-pointer group-hover:scale-105"
+            fallbackType="default"
           />
           <span
             className={`absolute top-3 left-3 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg backdrop-blur-md ${tagColors[post.tag] || "bg-coffee/80 text-tan"}`}
@@ -385,10 +389,12 @@ const PostCard = ({ post, index, author }) => {
                           {/* Avatar with colored ring */}
                           <div className="relative flex-shrink-0">
                             <div className="w-8 h-8 rounded-full p-[2px] bg-gradient-to-br from-tan to-coffee shadow-sm">
-                              <img
+                              <AppImage
                                 src={c.avatar}
                                 alt={c.user}
                                 className="object-cover w-full h-full rounded-full"
+                                fallbackType="avatar"
+                                name={c.user}
                               />
                             </div>
                           </div>
@@ -461,10 +467,12 @@ const PostCard = ({ post, index, author }) => {
                                     className="flex gap-2"
                                   >
                                     <div className="w-7 h-7 rounded-full p-[1px] bg-tan/20 flex-shrink-0">
-                                      <img
+                                      <AppImage
                                         src={reply.avatar}
                                         alt={reply.user}
                                         className="w-full h-full rounded-full object-cover"
+                                        fallbackType="avatar"
+                                        name={reply.user}
                                       />
                                     </div>
                                     <div className="flex-1 bg-tan/5 border border-tan/5 rounded-xl px-3 py-1.5">
@@ -502,10 +510,12 @@ const PostCard = ({ post, index, author }) => {
                     className="flex items-center gap-2 mt-4 bg-tan/5 border border-tan/10 rounded-full px-1 py-1"
                   >
                     <div className="w-8 h-8 rounded-full overflow-hidden border border-tan/90 flex-shrink-0">
-                      <img
+                      <AppImage
                         src={userData?.profilePic || "https://img.freepik.com/premium-vector/human-icon_970584-3.jpg?semt=ais_hybrid&w=740&q=80"}
                         alt="You"
                         className="object-cover w-full h-full"
+                        fallbackType="avatar"
+                        name={userData?.name}
                       />
                     </div>
                     <div className="flex-1 h-8">

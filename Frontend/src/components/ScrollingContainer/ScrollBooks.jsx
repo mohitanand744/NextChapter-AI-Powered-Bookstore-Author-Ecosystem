@@ -11,7 +11,7 @@ const ScrollBooks = ({ autoScroll = true, books, onComingSoonClick }) => {
   const swiperRef = useRef(null);
 
   return (
-    <div className="container relative mb-15">
+    <div className="w-full relative mb-15">
       {/* Custom Navigation Buttons */}
       <SwiperNavButtons
         swiperRef={swiperRef}

@@ -11,7 +11,6 @@ const EmailVerificationStatus = ({
   status,
   setStatus,
   email,
-  onClose,
   password,
   countdown,
   setCountdown,
@@ -46,14 +45,22 @@ const EmailVerificationStatus = ({
   };
 
   useEffect(() => {
-    setShowModal(status !== "");
-  }, [status]);
+    if (status === "alreadyVerified") {
+      setShowModal(false);
+      return
+    } else {
+      setShowModal(status !== "")
+    }
+  }, [status, setShowModal]);
 
   useEffect(() => {
     setTimeout(() => {
       setEmailResent(false);
     }, 3000);
   }, [emailResent]);
+
+  console.log("status-------", status);
+
 
   const handleClose = () => {
     if (status === "unverified" && !warningMsg) {
@@ -378,6 +385,7 @@ const EmailVerificationStatus = ({
   };
 
   return (<Modal isOpen={showModal} onClose={handleClose}>
+
     {renderModal(email)}
   </Modal>)
 };

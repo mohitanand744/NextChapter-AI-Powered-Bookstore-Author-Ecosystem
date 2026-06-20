@@ -35,6 +35,7 @@ import "swiper/css";
 import SwiperNavButtons from "../Buttons/SwiperNavButtons";
 import { EyesSvg } from "../SVGs/SVGs";
 import ViewAddressDetailsModal from "./ViewAddressDetailsModal";
+import Badge from "../Common/Badge";
 
 const ProfileUpdateModal = ({
   showProfileUpdateModal,
@@ -63,6 +64,7 @@ const ProfileUpdateModal = ({
     setError,
     clearErrors,
   );
+  const [isDefaultAddress, setIsDefaultAddress] = useState(null)
   const { userData, getUserUpdatedDetails } = useAuth();
   const swiperRef = useRef(null);
 
@@ -173,12 +175,16 @@ const ProfileUpdateModal = ({
   };
 
   useEffect(() => {
-    const defaultAddr = userAddresses.find((addr) => addr.isDefault);
+    if (!showProfileUpdateModal) return;
 
-    if (defaultAddr) {
-      setValue("address", defaultAddr, { shouldValidate: true });
-    }
-  }, [userAddresses]);
+    const isDefault = userAddresses?.find((addr) => addr.isDefault);
+
+    console.log("isDefault ----", isDefault);
+
+    handleSetAsDefaultAddress(isDefault?.id);
+
+    setIsDefaultAddress(isDefault ? true : false);
+  }, [showProfileUpdateModal, userAddresses]);
 
   console.log(userAddresses);
 
@@ -369,15 +375,19 @@ const ProfileUpdateModal = ({
                         Selected Favorite Genres
                       </label>
 
-                      <div className="bg-tan/10 border border-tan/20 rounded-2xl">
+                      <div className="bg-black/10 border border-tan/20 p-1 rounded-3xl">
                         {selectedGenres?.length > 0 ? (
-                          <div className="grid grid-cols-2 p-3 h-[140px] overflow-y-auto gap-3">
+                          <div className="grid grid-cols-2 p-3 h-[180px] overflow-y-auto hideScroll gap-3">
                             {selectedGenres.map((genre) => (
-                              <span
+                              <div
                                 key={genre.id}
-                                className="p-1 text-sm relative h-8 flex items-center border-b border-tan/10 shadow-xl justify-center  rounded-2xl text-tan "
+                                className="relative flex items-center justify-between h-8 min-w-0"
                               >
-                                <span className="mr-4">{genre.name}</span>
+                                <Badge
+                                  text={genre.name}
+                                  variant="outline"
+                                  className="w-full h-full"
+                                />
 
                                 <div
                                   onClick={() => {
@@ -386,22 +396,24 @@ const ProfileUpdateModal = ({
                                     );
                                     field.onChange(newValue);
                                   }}
-                                  className="absolute right-0 flex items-center justify-center w-8 h-full text-red-600 transition-all duration-200 ease-linear cursor-pointer rounded-xl bg-red-600/20 active:scale-75 hover:scale-105"
+                                  className="absolute right-0 top-0 bottom-0 flex items-center justify-center w-8 h-full text-red-error transition-all duration-200 ease-linear cursor-pointer rounded-r-2xl bg-red-error/10 active:scale-75 hover:scale-105"
                                 >
                                   <TrashIcon className="w-4 h-4" />
                                 </div>
-                              </span>
+                              </div>
                             ))}
                           </div>
                         ) : (
-                          <NoData
-                            icon="heart"
-                            title="No favorite genres selected"
-                            message="Select your favorite genres so our AI can recommend books based on your preferences."
-                            iconClassName="w-8 h-8"
-                            messageClassName="text-sm"
-                            titleClassName="text-md"
-                          />
+                          <div className="p-2 h-[180px]">
+                            <NoData
+                              icon="heart"
+                              title="No favorite genres selected"
+                              message="Select your favorite genres so our AI can recommend books based on your preferences."
+                              iconClassName="w-8 h-8"
+                              messageClassName="text-sm"
+                              titleClassName="text-md"
+                            />
+                          </div>
                         )}
                       </div>
                     </div>
@@ -432,10 +444,15 @@ const ProfileUpdateModal = ({
               <Controller
                 name="address"
                 control={control}
-                rules={{ required: "Please select an default address" }}
+                rules={{
+                  required:
+                    !isDefaultAddress
+                      ? "Please select a default address"
+                      : false,
+                }}
                 render={({ field, fieldState }) => (
                   <div
-                    className={`bg-tan/10 px-1 ${fieldState?.error?.message ? "border-red-error" : ""} border-2 border-tan/20 rounded-2xl p-1`}
+                    className={`bg-black/10 ${fieldState?.error?.message ? "border-red-error" : ""} border-2 border-tan/20 rounded-3xl p-1`}
                   >
                     {userAddresses.length > 0 ? (
                       <>
@@ -460,9 +477,9 @@ const ProfileUpdateModal = ({
                                     field.onChange(address);
                                     clearErrors("address");
                                   }}
-                                  className={`relative cursor-pointer rounded-xl border p-3 transition-all ${fieldState?.error?.message ? "border-red-error" : " border-tan/20"} duration-200 h-full ${isSelected
-                                    ? "border-tan bg-tan/20 scale-105 shadow-md"
-                                    : "hover:shadow-sm "
+                                  className={`relative shadow-lg cursor-pointer rounded-xl border border-sepia/50 p-3 transition-all ${fieldState?.error?.message ? "border-red-error" : " border-tan/20"} duration-200 h-full ${isSelected
+                                    ? "bg-tan/20 scale-105"
+                                    : ""
                                     }`}
                                 >
                                   <div
@@ -493,9 +510,11 @@ const ProfileUpdateModal = ({
                                   </div>
 
                                   {address.isDefault && (
-                                    <span className="absolute px-2 py-1 text-[9px] text-green-700 bg-green-100 rounded-full top-1 left-1">
-                                      Default
-                                    </span>
+                                    <Badge
+                                      text="Default"
+                                      variant="primary"
+                                      className="absolute top-1.5 left-1.5"
+                                    />
                                   )}
 
                                   <div className="mt-5 space-y-1 text-sm text-tan/80">
@@ -516,7 +535,7 @@ const ProfileUpdateModal = ({
                         </Swiper>
 
                         {fieldState.error && (
-                          <p className="mx-auto mb-2 text-xs font-semibold text-center text-red-error">
+                          <p className="mx-auto mb-2 text-[14px]  text-center text-red-error">
                             {fieldState.error.message}
                           </p>
                         )}
@@ -548,7 +567,7 @@ const ProfileUpdateModal = ({
                         </div>
                       </>
                     ) : (
-                      <>
+                      <div className="p-2 h-[180px]">
                         <NoData
                           icon={"search"}
                           title="You have not added any addresses"
@@ -561,11 +580,11 @@ const ProfileUpdateModal = ({
                         />
 
                         {fieldState.error && (
-                          <p className="mx-auto my-2 text-xs font-semibold text-center text-red-error">
+                          <p className="mx-auto mt-4 text-[14px]  text-center text-red-error">
                             {fieldState.error.message}
                           </p>
                         )}
-                      </>
+                      </div>
                     )}
                   </div>
                 )}

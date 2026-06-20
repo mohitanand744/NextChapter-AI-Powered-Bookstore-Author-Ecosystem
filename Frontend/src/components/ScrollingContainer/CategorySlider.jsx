@@ -6,6 +6,8 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import { categoryApis } from "../../utils/apis/categoryApis";
 import { FaCheckCircle } from "react-icons/fa";
+import { FiArrowRight } from "react-icons/fi";
+import AppImage from "../Common/AppImage";
 
 const categories = [
   {
@@ -129,9 +131,9 @@ const CategorySlider = ({ filters, setFilters }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="px-4 py-6 md:px-6"
+      className=""
     >
-      <div className="container relative px-4 mx-auto">
+      <div className="container relative mx-auto">
         <Swiper
           slidesPerView="auto"
           spaceBetween={16}
@@ -158,8 +160,8 @@ const CategorySlider = ({ filters, setFilters }) => {
                   whileHover={{ y: -5 }}
                   onClick={() => handleCategoryClick(category.name)}
                   className={`relative w-32 h-40 overflow-hidden cursor-pointer rounded-2xl group md:w-36 md:h-44 transition-all duration-300 ${isSelected
-                      ? "border-[3px] border-tan shadow-[0_0_20px_rgba(210,180,140,0.5)]"
-                      : "border-[3px] border-transparent"
+                    ? "border-[3px] border-tan shadow-[0_0_20px_rgba(210,180,140,0.5)]"
+                    : "border-[3px] border-transparent"
                     }`}
                   style={{
                     transformStyle: "preserve-3d",
@@ -187,31 +189,33 @@ const CategorySlider = ({ filters, setFilters }) => {
                     />
                   )}
 
-                  <img
+                  <AppImage
                     src={categoryImage || ""}
                     alt={category.name}
-                    className={`object-cover w-full h-full transition-all duration-500 ${isSelected
-                        ? "scale-110 brightness-75"
-                        : "brightness-90 group-hover:brightness-75 group-hover:scale-105"
+                    className="w-full h-full"
+                    imgClassName={`object-cover transition-all duration-500 ${isSelected
+                      ? "scale-110 brightness-75"
+                      : "brightness-90 group-hover:brightness-75 group-hover:scale-105"
                       }`}
-                    style={{
+                    imgStyle={{
                       transform: isSelected
                         ? "translateZ(10px) scale(1.1)"
                         : "translateZ(0)",
                     }}
+                    fallbackType="default"
                   />
 
                   <div
                     className={`absolute inset-0 flex items-end p-3 transition-all duration-300 z-10 ${isSelected
-                        ? "bg-gradient-to-t from-black/95 via-black/40 to-transparent"
-                        : "bg-gradient-to-t from-black/70 via-transparent to-transparent"
+                      ? "bg-gradient-to-t from-black/95 via-black/40 to-transparent"
+                      : "bg-gradient-to-t from-black/70 via-transparent to-transparent"
                       }`}
                   >
                     <div className="w-full">
                       <motion.span
                         className={`block text-sm font-medium ${isSelected
-                            ? "text-tan font-bold tracking-wide"
-                            : "text-tan"
+                          ? "text-tan font-bold tracking-wide"
+                          : "text-tan"
                           } md:text-base`}
                         initial={{ opacity: 0.9 }}
                         whileHover={{ opacity: 1 }}

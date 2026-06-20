@@ -8,11 +8,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "../../Buttons/Button";
 import MobileMenu from "./MobileMenu";
 import useAuth from "../../../Hooks/useAuth";
-import { useUser } from "../../../store/Context/UserContext";
+import { useProfileImage } from "../../../store/Context/ProfileImageContext";
 import { useImagePreview } from "../../../store/Context/ImagePreviewContext";
 import { NAV_LINKS } from "./NavLinksData";
 import BooksLoader from "../../Loaders/BooksLoader";
 import { useSelector } from "react-redux";
+import AppImage from "../../Common/AppImage";
 import { useComingSoon } from "../../../store/Context/ComingSoonContext";
 
 const Navbar = ({ isCartOpen, setIsCartOpen }) => {
@@ -21,7 +22,7 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
   const pathName = useLocation().pathname.replaceAll("/", "");
   const [animation, setAnimation] = useState(false);
   const { isAuthenticated, userData } = useAuth();
-  const { preview, isUploading, setPreview } = useUser();
+  const { preview, isUploading, setPreview } = useProfileImage();
   const { openPreview } = useImagePreview();
   const { books } = useSelector((state) => state.books);
   const navigate = useNavigate();
@@ -58,20 +59,20 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
+        staggerChildren: 0.08,
+        delayChildren: 0.2,
       },
     },
   };
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: -20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         type: "spring",
-        stiffness: 300,
-        damping: 15,
+        stiffness: 200,
+        damping: 10,
       },
     },
   };
@@ -87,23 +88,27 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
     >
       <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
       <div className="container relative z-10 px-4 py-1 mx-auto">
-        <div className="flex items-center justify-between">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex items-center justify-between"
+        >
           {/* Logo */}
-          <div className="flex-shrink-0 w-28">
+          <motion.div variants={itemVariants} className="flex-shrink-0 w-28">
             <Link to="/nextChapter">
-              <img
+              <AppImage
                 className="object-cover w-full h-full rounded-lg"
                 src="/images/logo-transperant-light.png"
                 alt=""
+                fallbackType="default"
               />
             </Link>
-          </div>
+          </motion.div>
 
           {/* Desktop Menu */}
           <motion.ul
             variants={containerVariants}
-            initial="hidden"
-            animate="visible"
             className="items-center hidden space-x-2 xl:flex"
           >
             {NAV_LINKS.map((link) => {
@@ -115,7 +120,7 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
                     className="group"
                   >
                     <li
-                      className={`px-5 py-2 flex gap-1 items-center text-[1.02rem] font-bold text-tan transition-all cursor-pointer hover:bg-tan/20 hover:text-cream duration-300 rounded-2xl `}
+                      className={`px-5 py-2 flex gap-1 items-center text-[1.02rem] font-bold text-tan transition-all cursor-pointer hover:bg-tan/20 hover:text-cream duration-300 rounded-full `}
                     >
                       {link.name}
                       <span>
@@ -138,17 +143,18 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
                 >
                   {link.hasTag && (
                     <span className="absolute z-10 transition-transform duration-300 pointer-events-none -top-[14px] -right-2 drop-shadow-md h-5 w-20 group-hover:rotate-12">
-                      <img
+                      <AppImage
                         src="/images/tag.avif"
                         alt="New"
                         className="w-full h-full "
+                        fallbackType="default"
                       />
                     </span>
                   )}
                   <li className="px-1 py-1">
                     <Link
                       to={link.path}
-                      className={`px-5 py-2 text-[1.02rem] font-bold transition-all duration-300 rounded-2xl ${pathName === link.key
+                      className={`px-5 py-2 text-[1.02rem] font-bold transition-all duration-300 rounded-full ${pathName === link.key
                         ? "bg-tan/20 text-cream shadow-sm"
                         : "text-tan bg-transparent shadow-none hover:bg-tan/10 hover:text-cream"
                         }`}
@@ -162,24 +168,27 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
           </motion.ul>
 
           <div className="flex items-center gap-4">
-            <NextChapterAIBtn className="hidden md:block w-[17rem]" />
+            <motion.div variants={itemVariants} className="hidden md:block">
+              <NextChapterAIBtn className="w-[18.2rem]" />
+            </motion.div>
 
-            <div
+            <motion.div
+              variants={itemVariants}
               onClick={() =>
                 openComingSoon({ onExplore: () => setIsCartOpen(true) })
               }
-              className="relative flex items-center justify-center transition-all duration-300 border shadow-sm cursor-pointer bg-tan/20 hover:bg-tan/30 backdrop-blur-md w-11 h-11 rounded-2xl active:scale-95 border-tan/20 text-tan"
+              className="relative flex items-center justify-center border shadow-sm cursor-pointer bg-tan/20 hover:bg-tan/30 backdrop-blur-md w-11 h-11 rounded-full active:scale-95 border-tan/20 text-tan"
             >
               <div className="absolute flex items-center justify-center w-6 h-6 text-[12px] font-bold text-coffee bg-tan rounded-full -top-1 -right-1 shadow-md border-2 border-coffee">
                 0
               </div>
               <HiOutlineShoppingCart className="text-[1.4rem]" />
-            </div>
+            </motion.div>
             {isAuthenticated ? (
-              <div className="">
+              <motion.div variants={itemVariants} className="">
                 <Link to="/nextChapter/user/profile">
                   <div className="w-12 h-12 relative cursor-pointer active:scale-95 bg-coffee transition-all duration-300  border-[2px] border-tan shadow-lg shadow-tan/30 rounded-full overflow-hidden">
-                    <img
+                    <AppImage
                       src={preview || "/images/loading.gif"}
                       alt="Profile"
                       className="object-cover w-full h-full rounded-full text-sepia"
@@ -188,6 +197,8 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
                           openPreview(preview, "Profile Image");
                         }
                       }}
+                      fallbackType="avatar"
+                      name={userData?.name}
                     />
 
                     {isUploading && (
@@ -197,9 +208,9 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
                     )}
                   </div>
                 </Link>
-              </div>
+              </motion.div>
             ) : (
-              <div className="flex items-center gap-2">
+              <motion.div variants={itemVariants} className="flex items-center gap-2">
                 <Button
                   variant="primary"
                   onClick={() => navigate("/")}
@@ -214,19 +225,17 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
                 >
                   Signup
                 </Button>
-              </div>
+              </motion.div>
             )}
 
             {/* Mobile Hamburger */}
             <motion.div
               variants={itemVariants}
-              initial="hidden"
-              animate="visible"
               className="xl:hidden"
             >
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center justify-center transition-all duration-300 border shadow-sm bg-tan/20 hover:bg-tan/30 w-11 h-11 rounded-2xl text-tan focus:outline-none border-tan/20 active:scale-95"
+                className="flex items-center justify-center transition-all duration-300 border shadow-sm bg-tan/20 hover:bg-tan/30 w-11 h-11 rounded-full text-tan focus:outline-none border-tan/20 active:scale-95"
               >
                 <svg
                   className="w-6 h-6"
@@ -255,7 +264,7 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
               </button>
             </motion.div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Mobile Menu */}

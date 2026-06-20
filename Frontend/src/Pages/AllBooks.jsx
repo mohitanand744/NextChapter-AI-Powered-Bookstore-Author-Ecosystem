@@ -11,8 +11,9 @@ import CategorySlider from "../components/ScrollingContainer/CategorySlider";
 import NoData from "../components/EmptyData/noData";
 import Banners from "../components/Banners/Banners";
 import { useComingSoon } from "../store/Context/ComingSoonContext";
+import SectionHeading from "../components/Headings/SectionHeading";
+import SubNavbar from "../components/Common/Navbars/SubNavbar";
 import useDebounce from "../Hooks/useDebounce";
-import Search from "../components/SearchBars/Search";
 
 export const defaultFilters = {
   limit: 8,
@@ -179,24 +180,23 @@ const AllBooks = () => {
         ]}
       />
 
-      <div className="bg-sepia/80 backdrop-blur-xl py-3 px-6 sticky top-[4.5rem] z-[100] shadow-md border-b rounded-b-[1.5rem] border-tan/10">
-        <div className="container flex flex-col sm:flex-row items-center justify-between gap-5 md:px-4">
-          <h1 className="text-xl font-semibold uppercase text-center text-tan md:text-2xl">
-            Browse by Category
-          </h1>
-
-          <div className="flex items-center w-full sm:w-auto gap-4">
-
-            <Search
-              enableSuggestions={true}
-              suggestions={books}
-              onSelectSuggestion={(s) =>
-                navigate(`/nextChapter/books?search=${s?.title}`)
-              }
-              nav={false}
-              styling="block w-full sm:w-[16rem] bg-sepia rounded-full"
-            />
-
+      <div className="container px-4 pb-8 pt-0 mx-auto sm:px-6 lg:px-8">
+        <SubNavbar
+          showBackButton={false}
+          registryLabel="Library Catalog"
+          registryCount={`${books?.length ?? 0} ${books?.length === 1 ? "Book" : "Books"} Loaded`}
+          searchTerm={filters.search}
+          setSearchTerm={(val) =>
+            setFilters((prev) => ({
+              ...prev,
+              search: val,
+              cursor: "",
+            }))
+          }
+          searchPlaceholder="Search by title, author, or genre..."
+          enableSuggestions={true}
+          suggestions={books}
+          extraActions={
             <div className="flex items-center gap-2">
               <motion.button
                 onClick={(e) => {
@@ -243,60 +243,71 @@ const AllBooks = () => {
                 </svg>
               </motion.button>
             </div>
+          }
+        />
+
+        <CategorySlider filters={filters} setFilters={setFilters} />
+
+        <SectionHeading
+          align="left"
+          className="!py-2 !pt-5 !mb-6"
+          subtitle="Explore our curated collection of masterfully crafted novels and anthologies"
+        >
+          The Book Gallery
+        </SectionHeading>
+
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[40vh] py-20">
+            <BooksLoader />
           </div>
-        </div>
+        ) : books?.length === 0 ? (
+          <div className="my-20">
+            <NoData
+              title="No Books Found"
+              message="We couldn't find any books matching your current filters. Try adjusting your search or filters."
+              icon="search"
+              showAction={true}
+              actionText="Clear All Filters"
+              onActionClick={() => {
+                navigate("/nextChapter/books");
+                setFilters(defaultFilters);
+              }}
+            />
+          </div>
+        ) : (
+          <div>
+            <div className="grid grid-cols-12 gap-3 my-10">
+              {books?.map((book) => (
+                <motion.div
+                  key={book.book_id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.3 }}
+                  className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
+                >
+                  <BookCard
+                    book={book}
+                    onComingSoonClick={(url) => openComingSoon({ exploreLink: url })}
+                  />
+                </motion.div>
+              ))}
+            </div>
+
+            <div
+              ref={sentinelRef}
+              className="flex items-center justify-center w-full h-10 my-14"
+            >
+              {fetchingMore && (
+                <div className="flex items-center justify-center">
+                  <BooksLoader />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
-
-      <CategorySlider filters={filters} setFilters={setFilters} />
-
-      {loading ? (
-        <div className="flex items-center justify-center min-h-[40vh] py-20">
-          <BooksLoader />
-        </div>
-      ) : books?.length === 0 ? (
-        <div className="my-20">
-          <NoData
-            title="No Books Found"
-            message="We couldn't find any books matching your current filters. Try adjusting your search or filters."
-            icon="search"
-            showAction={true}
-            actionText="Clear All Filters"
-            onActionClick={() => {
-              navigate("/nextChapter/books");
-              setFilters(defaultFilters);
-            }}
-          />
-        </div>
-      ) : (
-        <div>
-          <div className="container grid flex-1 grid-cols-12 gap-3 px-6 mx-auto my-10">
-            {books?.map((book) => (
-              <motion.div
-                key={book.book_id}
-                layout
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.3 }}
-                className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
-              >
-                <BookCard book={book} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
-              </motion.div>
-            ))}
-          </div>
-
-          <div
-            ref={sentinelRef}
-            className="flex items-center justify-center w-full h-10 my-14"
-          >
-            {fetchingMore && (
-              <div className="flex items-center justify-center">
-                <BooksLoader />
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       <AnimatePresence>
         {showFilters && (
@@ -305,7 +316,7 @@ const AllBooks = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed bg-black/70 md:bg-transparent flex justify-end  inset-0 md:inset-auto -top-[5rem] md:top-[7rem] right-0 md:right-[1.5rem] z-[9999]"
+            className="fixed bg-black/70 md:bg-transparent flex justify-end  inset-0 md:inset-auto -top-[5rem] md:top-[10rem] right-0 md:right-[1.5rem] z-[9999]"
           >
             <BookListingFilter
               filters={filters}

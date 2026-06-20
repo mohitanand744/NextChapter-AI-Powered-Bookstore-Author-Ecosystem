@@ -58,7 +58,7 @@ const Login = () => {
   const location = useLocation();
   const [verificationEmail, setVerificationEmail] = useState(null);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState(
-    null || localStorage.getItem("forgotPasswordEmail"),
+    localStorage.getItem("forgotPasswordEmail") || null,
   );
   const [
     afterExitingUserResettingPasswordPopup,
@@ -90,6 +90,13 @@ const Login = () => {
     const token = queryParams.get("token");
     const status = queryParams.get("status");
     const verifiedEmail = queryParams.get("email");
+    const errorMsg = queryParams.get("error");
+
+    if (errorMsg) {
+      toast.error(errorMsg);
+      navigate("/", { replace: true });
+      return;
+    }
 
     if (verifiedEmail) {
       setVerificationEmail(verifiedEmail);
@@ -200,7 +207,7 @@ const Login = () => {
       } else {
         toast.error(
           error.response?.data?.message ||
-            "Something went wrong. Please try again later.",
+          "Something went wrong. Please try again later.",
         );
       }
     }

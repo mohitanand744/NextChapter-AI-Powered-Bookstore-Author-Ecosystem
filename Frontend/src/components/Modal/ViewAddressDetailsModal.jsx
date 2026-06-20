@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import Badge from "../Common/Badge";
 
 const ViewAddressDetailsModal = ({ viewAddressDetails, setViewAddressDetails }) => {
   const ViewAddressDetailsIcon = viewAddressDetails?.Icon;
@@ -18,9 +19,12 @@ const ViewAddressDetailsModal = ({ viewAddressDetails, setViewAddressDetails }) 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="w-full max-w-sm p-6 bg-coffee relative border border-tan shadow-xl rounded-xl"
+            className="w-full max-w-sm p-6 bg-coffee relative border border-tan shadow-xl rounded-xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Background Image */}
+            <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
+
             {/* Close Button */}
             <motion.button
               className="absolute top-1 right-1 text-tan/70 hover:text-tan bg-black/10 hover:bg-tan/20 rounded-xl z-[10000]"
@@ -32,31 +36,24 @@ const ViewAddressDetailsModal = ({ viewAddressDetails, setViewAddressDetails }) 
               <XCircleIcon className="w-7 h-7" />
             </motion.button>
 
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2 relative z-10">
               <h3 className="text-xl font-bold text-tan">
                 Address Details
               </h3>{" "}
               <div className="flex items-center">
-                {viewAddressDetails.isDefault && (
-                  <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-green-700 bg-green-200 rounded-full ms-2">
-                    <div className={``}>
-                      <b>●</b>
-                    </div>
-                    <b>Default</b>
-                  </span>
+                 {viewAddressDetails.isDefault && (
+                  <Badge text="Default" variant="secondary" className="ms-2" />
                 )}
-                <span className="inline-flex ms-2 items-center gap-1 py-1 px-2  text-xs font-medium text-green-100 bg-coffee rounded-full">
-                  <div
-                    className={`rounded-lg ${viewAddressDetails?.color} text-tan`}
-                  >
-                    {ViewAddressDetailsIcon && <ViewAddressDetailsIcon className="w-4 h-4" />}
-                  </div>
-                  <b>{viewAddressDetails.type}</b>
-                </span>
+                <Badge
+                  text={viewAddressDetails.type}
+                  icon={ViewAddressDetailsIcon}
+                  variant="outline"
+                  className="ms-2"
+                />
               </div>
             </div>
 
-            <div className="mt-3 space-y-2 text-sm text-tan/80">
+            <div className="mt-3 space-y-2 text-sm text-tan/80 relative z-10">
               <div className="flex gap-2 p-2 transition-all duration-200 ease-in-out border-b shadow-lg border-tan/10 rounded-b-xl hover:scale-105">
                 <span className="font-medium text-tan min-w-[110px]">
                   Street Address:

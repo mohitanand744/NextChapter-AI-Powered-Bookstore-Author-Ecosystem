@@ -4,6 +4,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import MegaMenu from "./MegaMenu";
 import { motion, AnimatePresence } from "framer-motion";
 import { NAV_LINKS } from "./NavLinksData";
+import AppImage from "../../Common/AppImage";
 
 export default function MobileMenu({ isOpen, setIsOpen }) {
   const [openMegaMenu, setOpenMegaMenu] = useState(false);
@@ -119,10 +120,11 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
                     {link.name}
                     {link.hasTag && (
                       <span className=" relative z-10 flex items-center  justify-center">
-                        <img
+                        <AppImage
                           src="/images/tag.avif"
                           alt="New Tag"
                           className="w-28 h-7 drop-shadow-md drop-shadow-tan"
+                          fallbackType="default"
                         />
                       </span>
                     )}

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FaRobot, FaWandMagicSparkles } from "react-icons/fa6";
 import { BiCodeAlt } from "react-icons/bi";
 import { HiSparkles } from "react-icons/hi2";
+import AppImage from "../Common/AppImage";
 
 const ComingSoonModal = ({ isOpen, onClose, message, exploreLink, onExplore, title, badge, features, logo, footer }) => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const ComingSoonModal = ({ isOpen, onClose, message, exploreLink, onExplore, tit
               transition={{ delay: 0.1, type: "spring", stiffness: 180 }}
               className="relative flex h-44 w-44 items-center justify-center overflow-hidden"
             >
-              <img src={logo} alt="Logo" className="w-full h-full object-contain" />
+              <AppImage src={logo} alt="Logo" className="w-full h-full object-contain mb-5" fallbackType="default" />
             </motion.div>
           ) : (
             <motion.div
@@ -69,7 +70,7 @@ const ComingSoonModal = ({ isOpen, onClose, message, exploreLink, onExplore, tit
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="mb-4 font-serif text-3xl font-bold text-tan sm:text-4xl"
+            className="mb-4 text-3xl font-bold text-tan sm:text-4xl"
           >
             {title || "AI Feature Coming Soon"}
           </motion.h2>

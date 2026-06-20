@@ -46,6 +46,7 @@ function AuthorSlider({ books, onComingSoonClick }) {
         prevButtonclassName=""
         nextButtonclassName=""
       />
+
       <Swiper
         loop={true}
         initialSlide={3}
@@ -53,7 +54,7 @@ function AuthorSlider({ books, onComingSoonClick }) {
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
         }}
-        grabCursor={true}
+        //grabCursor={true}
         centeredSlides={true}
 
         slidesPerView={"auto"}
@@ -72,8 +73,8 @@ function AuthorSlider({ books, onComingSoonClick }) {
         className="w-full pt-10 pb-16"
       >
         {uniqueAuthors?.map((author, i) => (
-          <SwiperSlide key={i} className="!w-[240px] py-10 md:!w-[280px]">
-            <AuthorCard author={author} onComingSoonClick={(url) => { if(onComingSoonClick) onComingSoonClick(url); }} />
+          <SwiperSlide key={i} className="!w-[240px] group py-10 md:!w-[280px]">
+            <AuthorCard author={author} onComingSoonClick={(url) => { if (onComingSoonClick) onComingSoonClick(url); }} />
           </SwiperSlide>
         ))}
       </Swiper>

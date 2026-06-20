@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllBooks } from "../store/Redux/Slices/BooksSlice";
 import ScrollBooks from "./../components/ScrollingContainer/ScrollBooks";
+import AuthorSlider from "../components/ScrollingContainer/AuthorSlider";
 import QuantitySelector from "../components/QuantitySelector";
 import Button from "../components/Buttons/Button";
 import SectionHeading from "../components/Headings/SectionHeading";
@@ -14,7 +15,8 @@ import TestimonialCard from "../components/Cards/TestimonialCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import SwiperNavButtons from "../components/Buttons/SwiperNavButtons";
-
+import AppImage from "../components/Common/AppImage";
+import { useComingSoon } from "../store/Context/ComingSoonContext";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -78,17 +80,19 @@ const mockReviews = [
 ];
 
 const additionalProductImages = [
-  "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1519682337058-a94d519337bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0Lt3gcicBU20IL3BWPC6rH47mB-9pN9puvp2DjGpRkVjiByVki3z9oadl&s=10",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKy4d-f_lspLsPBoxOWHrkluzAGIYBuspEJrd-JG76kuh45j66NqV9QqKo&s=10",
+  "https://dbz-images.dubizzle.com/images/2026/06/08/dbe30e952eb94a059a83477d113d28f0-.jpeg?impolicy=dpc",
 ];
 
 const SingleBooks = () => {
   const { id } = useParams();
   const reviewsSwiperRef = useRef(null);
+  const imageSwiperRef = useRef(null);
+  const { openComingSoon } = useComingSoon();
 
   const [book] = useState(mockBook);
-  const [mainImage, setMainImage] = useState(mockBook.images[0]);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [allImages] = useState([
     ...mockBook.images,
@@ -113,6 +117,7 @@ const SingleBooks = () => {
   const handleReviewSubmit = (e) => {
     e.preventDefault();
     console.log("Review submitted:", newReview);
+    openComingSoon();
   };
 
   if (!book) {
@@ -147,44 +152,69 @@ const SingleBooks = () => {
       </div>
 
       <div className="container mx-auto px-4 py-12 lg:py-10 max-w-7xl">
-        <div className="flex flex-col lg:flex-row gap-16 xl:gap-28 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 xl:gap-28 items-start">
 
           {/* Left Column: Elegant Image Display */}
-          <div className="w-full lg:w-1/2 lg:sticky lg:top-28">
-            <div className="relative">
-              {/* Decorative Background Element */}
-              <div className="absolute -inset-10 bg-coffee/5 blur-3xl rounded-full pointer-events-none" />
+          <div className="w-full lg:sticky lg:top-28 lg:h-[calc(100vh-17rem)] flex flex-col justify-between">
+            <div className="relative w-full h-full flex flex-col justify-between gap-4">
 
               <motion.div
                 layoutId={`book-image-${book.book_id}`}
-                className="relative z-10 aspect-[4/5] rounded-[2rem] overflow-hidden bg-white/40 backdrop-blur-sm border border-coffee/10 shadow-[0_50px_100px_-20px_rgba(92,76,73,0.3)] flex items-center justify-center p-12 lg:p-16"
+                className="relative z-10 bookDetailsPage w-full rounded-[2rem] overflow-hidden bg-coffee text-tan border border-tan/20 shadow-2xl flex items-center justify-center group/slider aspect-[3/3.5] lg:aspect-auto lg:flex-1 lg:min-h-0"
               >
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={mainImage}
-                    initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
-                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
-                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    src={mainImage}
-                    alt={book.title}
-                    className="w-full h-full object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.3)]"
+                {/* Background design overlay */}
+                <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none z-0" />
+
+                <Swiper
+                  modules={[Navigation]}
+                  onSwiper={(swiper) => {
+                    imageSwiperRef.current = swiper;
+                  }}
+                  onSlideChange={(swiper) => {
+                    setActiveIndex(swiper.activeIndex);
+                  }}
+                  className="w-full h-full z-10"
+                >
+                  {allImages.map((img, idx) => (
+                    <SwiperSlide key={idx} className="w-full h-full flex items-center justify-center p-5">
+                      <AppImage
+                        src={img}
+                        alt={book.title}
+                        className="w-full h-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.3)] select-none"
+                        imgClassName="object-contain"
+                        fallbackType="book"
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                {/* Navigation Buttons Overlay */}
+                {allImages.length > 1 && (
+                  <SwiperNavButtons
+                    swiperRef={imageSwiperRef}
+                    className="justify-between px-6 opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 absolute left-0 right-0 z-20 pointer-events-none"
+                    prevButtonClass="w-12 h-12 !bg-tan/20 hover:!bg-tan/40 text-tan border border-tan/30 pointer-events-auto flex items-center justify-center backdrop-blur-sm"
+                    nextButtonClass="w-12 h-12 !bg-tan/20 hover:!bg-tan/40 text-tan border border-tan/30 pointer-events-auto flex items-center justify-center backdrop-blur-sm"
+                    position={{ top: "50%", transform: "translateY(-50%)" }}
                   />
-                </AnimatePresence>
+                )}
               </motion.div>
 
               {/* Minimalist Thumbnails */}
-              <div className="mt-12 flex justify-center gap-5">
+              <div className="flex justify-center gap-5 flex-shrink-0 mt-2 lg:mt-0">
                 {allImages.map((img, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setMainImage(img)}
-                    className={`relative w-20 aspect-square rounded-xl overflow-hidden transition-all duration-500 ${mainImage === img
+                    onClick={() => {
+                      setActiveIndex(idx);
+                      imageSwiperRef.current?.slideTo(idx);
+                    }}
+                    className={`relative w-20 aspect-square rounded-xl overflow-hidden transition-all duration-500 ${activeIndex === idx
                       ? "ring-2 ring-coffee ring-offset-4 ring-offset-tan scale-110"
-                      : "opacity-40 grayscale hover:opacity-100 hover:grayscale-0 hover:scale-105"
+                      : "opacity-40 hover:opacity-100  hover:scale-105"
                       }`}
                   >
-                    <img src={img} className="w-full h-full object-cover" alt="" />
+                    <AppImage src={img} className="w-full h-full " imgClassName="object-cover" fallbackType="book" alt="" />
                   </button>
                 ))}
               </div>
@@ -192,8 +222,8 @@ const SingleBooks = () => {
           </div>
 
           {/* Right Column: Content & Commerce */}
-          <div className="w-full lg:w-1/2 flex flex-col pt-2">
-
+          <div className="w-full relative !p-4 rounded-3xl flex flex-col pt-2 min-w-0">
+            <div className="absolute inset-0 rounded-3xl bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none z-0" />
             <div className="mb-12">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -223,7 +253,7 @@ const SingleBooks = () => {
               >
                 <div className="flex items-center space-x-4">
                   <div className="w-14 h-14 rounded-full border-2 border-coffee/20 p-0.5 overflow-hidden">
-                    <img src={book.author?.author_image_url || 'https://img.freepik.com/premium-vector/human-icon_970584-3.jpg?semt=ais_hybrid&w=740&q=80'} className="w-full h-full object-cover rounded-full" alt="" />
+                    <AppImage src={book.author?.author_image_url || 'https://img.freepik.com/premium-vector/human-icon_970584-3.jpg?semt=ais_hybrid&w=740&q=80'} className="w-full h-full object-cover rounded-full" fallbackType="author" alt="" />
                   </div>
                   <div>
                     <p className="text-[14px] uppercase tracking-widest text-coffee/60 mb-0.5">Author</p>
@@ -263,6 +293,7 @@ const SingleBooks = () => {
                   <Button
                     variant="primary"
                     className="flex-1  flex items-center justify-center gap-2"
+                    onClick={() => openComingSoon()}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -272,6 +303,7 @@ const SingleBooks = () => {
                   <Button
                     variant="outline"
                     className="flex-1 flex items-center justify-center gap-2 hover:bg-sepia !bg-coffee"
+                    onClick={() => openComingSoon()}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -317,14 +349,53 @@ const SingleBooks = () => {
                       <p className="text-2xl text-coffee/90 leading-relaxed first-letter:text-5xl first-letter:float-left first-letter:mr-3 first-letter:mt-2 first-letter:font-bold first-letter:text-coffee">
                         {book.book_description || book.description}
                       </p>
-                      <div className="p-8 bg-coffee/5 rounded-[2rem] border border-coffee/10 relative overflow-hidden group">
-                        <div className="absolute -top-10 -right-10 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                          <svg className="w-24 h-24 text-coffee" fill="currentColor" viewBox="0 0 24 24">
+
+                      {/* Video Trailer Section */}
+                      <div
+                        className="relative group/video overflow-hidden rounded-[2rem] border border-coffee/20 bg-coffee shadow-2xl aspect-video flex items-center justify-center cursor-pointer"
+                        onClick={() => openComingSoon()}
+                      >
+                        {/* Thumbnail Image */}
+                        <img
+                          src="/images/thumbnail.png"
+                          alt="Book Trailer Thumbnail"
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/video:scale-105"
+                        />
+
+                        {/* Dark Overlay with background design pattern */}
+                        <div className="absolute inset-0 bg-coffee/40 backdrop-blur-[1px] group-hover/video:bg-coffee/30 transition-colors duration-500 z-10" />
+                        <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none z-10" />
+
+                        {/* Play Button Icon */}
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="relative z-20 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-coffee text-tan flex items-center justify-center shadow-2xl border-4 border-coffee/30 transition-colors "
+                        >
+                          {/* Inner pulse effect */}
+                          <div className="absolute inset-0 rounded-full bg-tan/40 animate-ping opacity-25 group-hover/video:animate-none" />
+                          <svg className="w-8 h-8 sm:w-12 sm:h-12 ml-1 fill-current" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </motion.div>
+
+                        {/* Badge Overlay */}
+                        <div className="absolute bottom-6 left-6 z-20 px-4 py-1.5 bg-coffee/80 backdrop-blur-md border border-tan/20 rounded-full text-[12px] uppercase tracking-widest text-tan font-bold">
+                          Watch Trailer
+                        </div>
+                      </div>
+
+                      <div className="p-8 bg-coffee text-tan rounded-[2rem] border border-tan/20 relative overflow-hidden group shadow-xl">
+                        {/* Background design overlay */}
+                        <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
+
+                        <div className="absolute -top-10 -right-10 p-4 opacity-10 group-hover:opacity-20 transition-opacity z-10">
+                          <svg className="w-24 h-24 text-tan" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l12.586-12.586-5.657-5.657-12.586 12.586 5.657 5.657zm14.594-13.177l-4.242-4.242c-.781-.781-2.047-.781-2.828 0l-1.414 1.414 7.071 7.071 1.414-1.414c.781-.781.781-2.047 0-2.829z" />
                           </svg>
                         </div>
-                        <h4 className="text-[14px] uppercase tracking-[0.4em] text-coffee/60 mb-4 font-black">Collector's Insight</h4>
-                        <p className="text-[15px] text-coffee/80 leading-relaxed">
+                        <h4 className="text-[14px] uppercase tracking-[0.4em] text-tan/60 mb-4 font-black relative z-10 font-serif">Collector's Insight</h4>
+                        <p className="text-[15px] text-cream leading-relaxed relative z-10">
                           "An unparalleled journey into the human psyche. This edition captures the very essence of literary craftsmanship that our house stands for."
                         </p>
                       </div>
@@ -332,7 +403,9 @@ const SingleBooks = () => {
                   )}
 
                   {activeTab === "details" && (
-                    <div className="bg-coffee rounded-[2.5rem] border border-tan/10 overflow-hidden shadow-2xl">
+                    <div className="relative bg-coffee text-tan rounded-[2.5rem] border border-tan/20 overflow-hidden shadow-2xl">
+                      {/* Background design overlay */}
+                      <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
                       <div className="grid grid-cols-1 md:grid-cols-2">
                         {[
                           { label: "Publishing House", value: "Vintage International", icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" },
@@ -361,8 +434,10 @@ const SingleBooks = () => {
                   {activeTab === "reviews" && (
                     <div className="space-y-16">
                       {/* Reviews Summary Dashboard */}
-                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 p-10 bg-coffee rounded-[3rem] border border-tan/10 shadow-2xl">
-                        <div className="flex flex-col items-center justify-center lg:border-r border-tan/10 py-4">
+                      <div className="relative overflow-hidden grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12 p-6 sm:p-10 bg-coffee rounded-[2rem] sm:rounded-[3rem] border border-tan/20 shadow-2xl">
+                        {/* Background design overlay */}
+                        <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
+                        <div className="flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-tan/10 pb-6 lg:pb-0 lg:pr-6">
                           <h3 className="text-7xl  text-tan mb-4">4.9</h3>
                           <div className="mb-3">
                             <Ratings ratings={4.9} textColor="text-tan" />
@@ -370,7 +445,7 @@ const SingleBooks = () => {
                           <p className="text-[12px] uppercase tracking-widest text-cream/70 font-bold">Based on 128 reviews</p>
                         </div>
 
-                        <div className="lg:col-span-2 flex flex-col justify-center space-y-4">
+                        <div className="lg:col-span-2 flex flex-col justify-center space-y-4 pt-6 lg:pt-0">
                           {[
                             { stars: 5, percent: 88 },
                             { stars: 4, percent: 9 },
@@ -395,12 +470,13 @@ const SingleBooks = () => {
                       </div>
 
                       {/* Review List Slider */}
-                      <div className="relative">
+                      <div className="relative w-full overflow-hidden">
                         <SwiperNavButtons
                           swiperRef={reviewsSwiperRef}
                           position={{ top: "45%" }}
-                          prevButtonclassName="-left-4 lg:-left-12"
-                          nextButtonclassName="-right-4 lg:-right-12"
+                          prevButtonClass="w-10 h-10 sm:w-12 sm:h-12 !bg-tan/15 hover:!bg-tan/30 text-tan border border-tan/20 flex items-center justify-center backdrop-blur-sm pointer-events-auto"
+                          nextButtonClass="w-10 h-10 sm:w-12 sm:h-12 !bg-tan/15 hover:!bg-tan/30 text-tan border border-tan/20 flex items-center justify-center backdrop-blur-sm pointer-events-auto"
+                          className="justify-between px-2 sm:px-4 md:px-6 absolute left-0 right-0 z-20 pointer-events-none"
                         />
                         <Swiper
                           modules={[Navigation, Autoplay]}
@@ -414,8 +490,8 @@ const SingleBooks = () => {
                           spaceBetween={30}
                           breakpoints={{
                             320: { slidesPerView: 1, spaceBetween: 20 },
-                            768: { slidesPerView: 2, spaceBetween: 25 },
-                            1280: { slidesPerView: 2, spaceBetween: 30 },
+                            1024: { slidesPerView: 1, spaceBetween: 25 },
+                            1440: { slidesPerView: 2, spaceBetween: 30 },
                           }}
                           className="!pb-12"
                         >
@@ -435,9 +511,12 @@ const SingleBooks = () => {
                       </div>
 
                       {/* Add Review Form */}
-                      <div className="p-12 bg-coffee rounded-[3.5rem] border border-tan/10 relative overflow-hidden group shadow-2xl">
+                      <div className="p-6 sm:p-10 md:p-12 bg-coffee rounded-[2rem] sm:rounded-[3rem] border border-tan/20 relative overflow-hidden group shadow-2xl">
+                        {/* Background design overlay */}
+                        <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
+
                         {/* Decorative Background Icon */}
-                        <div className="absolute -top-10 -right-10 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+                        <div className="absolute -top-10 -right-10 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none z-10">
                           <svg className="w-64 h-64 text-tan" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l12.586-12.586-5.657-5.657-12.586 12.586 5.657 5.657zm14.594-13.177l-4.242-4.242c-.781-.781-2.047-.781-2.828 0l-1.414 1.414 7.071 7.071 1.414-1.414c.781-.781.781-2.047 0-2.829z" />
                           </svg>
@@ -446,31 +525,28 @@ const SingleBooks = () => {
                         <div className="relative z-10">
                           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                             <div>
-                              <h4 className="text-4xl  text-tan mb-3">Leave a Legacy</h4>
-                              <p className="text-tan/50 max-w-md">Your thoughts shape the journey of future readers. Share your experience with this curation.</p>
+                              <h4 className="text-3xl sm:text-4xl  text-tan mb-3">Leave a Legacy</h4>
+                              <p className="text-tan/50 max-w-md text-sm sm:text-base">Your thoughts shape the journey of future readers. Share your experience with this curation.</p>
                             </div>
                             <div className="flex gap-1 items-center pb-2">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <button
-                                  key={star}
-                                  onClick={() => setNewReview({ ...newReview, rating: star })}
-                                  className={`text-2xl transition-all hover:scale-125 ${newReview.rating >= star ? "text-tan" : "text-tan/10"}`}
-                                >
-                                  ★
-                                </button>
-                              ))}
+                              <Ratings
+                                ratings={newReview.rating}
+                                textColor="text-tan"
+                                isClickable={true}
+                                onChange={(star) => setNewReview({ ...newReview, rating: star })}
+                              />
                             </div>
                           </div>
 
                           <form onSubmit={handleReviewSubmit} className="space-y-8">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                               <Input
                                 label="Review Title"
                                 labelclassname="text-tan/70"
                                 placeholder="E.g., A journey beyond words..."
                                 value={newReview.title}
                                 onChange={(e) => setNewReview({ ...newReview, title: e.target.value })}
-                                className="!bg-white/5 !border-tan/20 !text-cream !rounded-[2rem] h-16 focus:!border-tan"
+                                className="!bg-white/5 !border-tan/20 !text-cream !rounded-[1.5rem] sm:!rounded-[2rem] h-14 sm:h-16 focus:!border-tan"
                               />
                               <Input
                                 label="Numerical Grade"
@@ -484,7 +560,7 @@ const SingleBooks = () => {
                                   const val = parseFloat(e.target.value);
                                   setNewReview({ ...newReview, rating: isNaN(val) ? "" : val });
                                 }}
-                                className="!bg-white/5 !border-tan/20 !text-cream !rounded-[2rem] h-16 focus:!border-tan"
+                                className="!bg-white/5 !border-tan/20 !text-cream !rounded-[1.5rem] sm:!rounded-[2rem] h-14 sm:h-16 focus:!border-tan"
                               />
                             </div>
                             <Input
@@ -495,12 +571,13 @@ const SingleBooks = () => {
                               placeholder="Describe your emotional voyage through these pages..."
                               value={newReview.comment}
                               onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
-                              className="!bg-white/5 !border-tan/20 !text-cream !rounded-[2.5rem] p-8 resize-none focus:!border-tan"
+                              className="!bg-white/5 !border-tan/20 !text-cream !rounded-[1.2rem] sm:!rounded-[1.5rem] p-5 sm:p-8 resize-none focus:!border-tan"
                             />
                             <Button
                               type="submit"
                               variant="outline"
-                              className="w-full h-20 !rounded-[2rem] !text-xl !uppercase !tracking-[0.4em] shadow-2xl shadow-tan/10"
+                              className="w-full h-16 sm:h-20 !rounded-[1.5rem] sm:!rounded-[2rem] !text-lg sm:!text-xl !uppercase !tracking-[0.3em] sm:!tracking-[0.4em] shadow-2xl shadow-tan/10 border border-tan/30 text-tan transition-all duration-300 font-serif"
+                              onClick={() => openComingSoon()}
                             >
                               Publish Your Review
                             </Button>
@@ -542,20 +619,35 @@ const SingleBooks = () => {
           </div>
         </div>
 
-        {/* Similar Curations Section */}
-        <div className="mt-40 pt-24 border-t border-coffee/10">
-          <div className="flex items-end justify-between mb-16">
+        {/* Recommended for You Section */}
+        <div className=" pt-24 border-t border-coffee/10">
+          <div className="flex items-end justify-between">
             <SectionHeading
               align="left"
-              subtitle="Further Exploration"
+              subtitle="Handpicked Selection"
             >
-              Similar Curations
+              Recommended for You
             </SectionHeading>
-
           </div>
           <div className="relative group/curations">
-            <div className="absolute -inset-10 bg-coffee/5 blur-3xl opacity-0 group-hover/curations:opacity-100 transition-opacity pointer-events-none" />
-            <ScrollBooks autoScroll={false} books={books} />
+            <div className="absolute -top-10 -bottom-10 left-0 right-0 bg-coffee/5 blur-3xl opacity-0 group-hover/curations:opacity-100 transition-opacity pointer-events-none" />
+            <ScrollBooks autoScroll={false} books={books} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
+          </div>
+        </div>
+
+        {/* Favorite Authors Section */}
+        <div className="">
+          <div className="flex items-end justify-between ">
+            <SectionHeading
+              align="left"
+              subtitle="Discover Great Minds"
+            >
+              Find Your Favorite Author
+            </SectionHeading>
+          </div>
+          <div className="relative group/authors">
+            <div className="absolute -top-10 -bottom-10 left-0 right-0 bg-coffee/5 blur-3xl opacity-0 group-hover/authors:opacity-100 transition-opacity pointer-events-none" />
+            <AuthorSlider books={books} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
           </div>
         </div>
 

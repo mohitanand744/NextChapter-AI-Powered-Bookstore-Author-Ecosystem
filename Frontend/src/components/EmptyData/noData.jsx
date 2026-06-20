@@ -22,13 +22,61 @@ const NoData = ({
   animateIcon = true,
   children,
 }) => {
+  const containerRef = React.useRef(null);
+  const [dimensions, setDimensions] = React.useState({ width: 0, height: 0 });
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        // Measure parent container to know how much space we have
+        const parent = containerRef.current.parentElement;
+        if (parent) {
+          const rect = parent.getBoundingClientRect();
+          setDimensions({
+            width: rect.width || entry.contentRect.width,
+            height: rect.height || entry.contentRect.height,
+          });
+        } else {
+          setDimensions({
+            width: entry.contentRect.width,
+            height: entry.contentRect.height,
+          });
+        }
+      }
+    });
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Determine size mode based on observed dimensions
+  const width = dimensions.width || 400;
+  const height = dimensions.height || 300;
+
+  const isVeryCompactHeight = height > 0 && height < 150;
+  const isVeryCompactWidth = width > 0 && width < 220;
+  const isCompactHeight = height > 0 && height < 240;
+  const isCompactWidth = width > 0 && width < 340;
+
+  const sizeMode =
+    (isVeryCompactHeight || isVeryCompactWidth) ? "mini" :
+      (isCompactHeight || isCompactWidth) ? "compact" :
+        "normal";
+
   // Icon configurations
-  const getIcon = () => {
+  const getIcon = (mode) => {
     if (customIcon) return customIcon;
+
+    const iconSizeClass =
+      mode === "mini" ? "w-5 h-5" :
+        mode === "compact" ? "w-8 h-8" :
+          "w-14 h-14";
 
     const iconProps = {
       xmlns: "http://www.w3.org/2000/svg",
-      className: `w-14 h-14 ${iconClassName}`,
+      className: `${iconSizeClass} ${iconClassName}`,
       fill: "none",
       viewBox: "0 0 24 24",
       stroke: "currentColor",
@@ -49,7 +97,7 @@ const NoData = ({
 
       case "user":
         return (
-          <UserGroupIcon className="w-14 h-14" />
+          <UserGroupIcon className={`${iconSizeClass} ${iconClassName}`} />
         );
 
       case "heart":
@@ -109,17 +157,20 @@ const NoData = ({
       <button
         type="button"
         onClick={onActionClick}
-        className="flex items-center gap-1 font-medium transition-colors duration-200 text-tan"
+        className={`group flex items-center gap-2 font-serif tracking-widest uppercase transition-all duration-300 text-tan hover:text-tan/80 ${sizeMode === "compact" || sizeMode === "mini" ? "text-[11px]" : "text-sm"
+          }`}
       >
-        <span> {actionText}</span>
-        <span aria-hidden="true" className="text-xl ">
-          {" "}
+        <span className="relative pb-0.5">
+          {actionText}
+          <span className="absolute left-0 bottom-0 w-full h-[1px] bg-tan/40 transform scale-x-100 transition-transform duration-300 group-hover:scale-x-0 origin-right"></span>
+          <span className="absolute left-0 bottom-0 w-full h-[1px] bg-tan transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100 origin-left"></span>
+        </span>
+        <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">
           &rarr;
         </span>
       </button>
     );
 
-    // If actionLink is provided, wrap with Link, otherwise use button alone
     if (actionLink && !onActionClick) {
       return <Link to={actionLink}>{buttonContent}</Link>;
     }
@@ -127,24 +178,43 @@ const NoData = ({
     return buttonContent;
   };
 
+  // Determine scaling layout parameters
+  const containerClasses =
+    sizeMode === "mini" ? "w-full h-full max-w-full max-h-full p-2.5 rounded-2xl border-double border-2" :
+      sizeMode === "compact" ? "w-full h-full max-w-full max-h-full p-4 rounded-3xl border-double border-2" :
+        `w-full max-w-md p-8 sm:p-10 rounded-[2rem] border-double border-4 min-h-[300px]`;
+
+  const iconContainerClass =
+    sizeMode === "mini" ? "w-8 h-8 border-2 mb-1" :
+      sizeMode === "compact" ? "w-11 h-11 border-2 mb-2" :
+        "w-16 h-16 border-4 mb-4";
+
+  const dividerOpacityClass =
+    sizeMode === "mini" ? "mb-1 opacity-30" :
+      sizeMode === "compact" ? "mb-2 opacity-50" :
+        "mb-3 opacity-60";
+
   return (
     <AnimatePresence>
       <motion.div
+        ref={containerRef}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className={`flex flex-col bg-sepia mx-auto border border-tan/20 shadow-xl items-center justify-center max-w-md p-5 rounded-xl ${className} relative overflow-hidden`}
+        className={`flex flex-col bg-coffee mx-auto border-tan/20 shadow-2xl items-center justify-center relative overflow-hidden ${containerClasses} ${className}`}
+        style={{ boxSizing: "border-box" }}
       >
-        <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
-        <div className="relative z-10 flex flex-col items-center">
+        <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-[0.15] mix-blend-overlay pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col items-center w-full h-full  justify-center">
           <motion.div
-            className="flex items-center mb-3 justify-center p-0.5 w-12 h-12 border-[2.8px] border-tan/70 text-tan/70  rounded-full bg-tan/10"
+            className={`flex items-center justify-center border-double border-tan/60 text-tan/80 rounded-full bg-tan/5 shadow-inner flex-shrink-0 ${iconContainerClass}`}
             animate={
               animateIcon
                 ? {
                   scale: [1, 1.1, 1],
-                  rotate: [0, 5, -5, 0],
+                  rotate: [0, 3, -3, 0],
                 }
                 : {}
             }
@@ -155,11 +225,16 @@ const NoData = ({
               repeatDelay: 0.5,
             }}
           >
-            {getIcon()}
+            {getIcon(sizeMode)}
           </motion.div>
 
           <motion.h3
-            className={`mb-1 text-center font-semibold text-tan ${titleClassName}`}
+            className={`text-center font-serif tracking-wide font-bold text-tan ${sizeMode === "mini"
+              ? "text-xs mb-0.5"
+              : sizeMode === "compact"
+                ? "text-sm mb-1"
+                : `mb-2 ${titleClassName}`
+              }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -167,8 +242,25 @@ const NoData = ({
             {title}
           </motion.h3>
 
+          {/* Vintage Divider */}
+          <motion.div
+            className={`flex items-center justify-center w-full ${dividerOpacityClass}`}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: sizeMode === "mini" ? 0.75 : sizeMode === "compact" ? 0.9 : 1 }}
+            transition={{ delay: 0.25 }}
+          >
+            <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-tan/50"></div>
+            <div className="w-1.5 h-1.5 mx-2 rotate-45 border border-tan/50"></div>
+            <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-tan/50"></div>
+          </motion.div>
+
           <motion.p
-            className={`mb-3 text-center text-tan/75 ${messageClassName}`}
+            className={`text-center font-serif italic tracking-wide text-tan/70 ${sizeMode === "mini"
+              ? "text-[11px] leading-tight mb-1"
+              : sizeMode === "compact"
+                ? "text-[14px] leading-snug mb-2"
+                : `text-sm mb-5 ${messageClassName}`
+              }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -182,7 +274,8 @@ const NoData = ({
           {/* Action button */}
           {showAction && (
             <motion.div
-              className="flex justify-center mt-2 text-sm text-center text-gray-500"
+              className={`flex justify-center text-center text-gray-500 ${sizeMode === "mini" ? "mt-1" : sizeMode === "compact" ? "mt-1.5" : "mt-2"
+                }`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}

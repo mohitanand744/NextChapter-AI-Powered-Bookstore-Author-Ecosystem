@@ -1,8 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaSearch, FaUsers } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { GiBookPile } from "react-icons/gi";
+import { FiSearch, FiX } from "react-icons/fi";
+import AppImage from "../Common/AppImage";
 import useDebounce from "../../Hooks/useDebounce";
 import { booksApis } from "../../utils/apis/booksApis";
 
@@ -21,6 +22,8 @@ const Search = ({
   const [searchTerm, setSearchTerm] = useState(value || "");
   const [isBlinking, setIsBlinking] = useState(false);
   const [dynamicSuggestions, setDynamicSuggestions] = useState([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const blurTimeoutRef = useRef(null);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const navigate = useNavigate();
   const location = useLocation();
@@ -85,6 +88,14 @@ const Search = ({
     };
   }, [searchTerm, onSearch, onChange]);
 
+  useEffect(() => {
+    return () => {
+      if (blurTimeoutRef.current) {
+        clearTimeout(blurTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleSearch = () => {
     if (onSearch) {
       onSearch(searchTerm);
@@ -134,6 +145,17 @@ const Search = ({
 
           if (onChange) onChange(e.target.value);
         }}
+        onFocus={() => {
+          if (blurTimeoutRef.current) {
+            clearTimeout(blurTimeoutRef.current);
+          }
+          setIsFocused(true);
+        }}
+        onBlur={() => {
+          blurTimeoutRef.current = setTimeout(() => {
+            setIsFocused(false);
+          }, 200);
+        }}
         onKeyDown={handleKeyDown}
         className={`${inputStyles} w-full px-3 text-tan/80 placeholder:font-semibold placeholder:!text-tan/60 focus:outline-none`}
         placeholder={placeholder}
@@ -141,6 +163,7 @@ const Search = ({
 
       <AnimatePresence>
         {enableSuggestions &&
+          isFocused &&
           searchTerm.trim() &&
           filteredSuggestions.length > 0 && (
             <motion.div
@@ -167,11 +190,12 @@ const Search = ({
                   }}
                   className="relative flex items-center gap-3 px-4 py-2 transition-all duration-300 border-b shadow-lg cursor-pointer hover:rounded-t-2xl border-coffee/30 rounded-b-2xl hover:bg-coffee/20 hover:scale-95"
                 >
-                  <div className="w-8 h-10 rounded-lg">
-                    <img
-                      className="object-cover w-full h-full"
+                  <div className="w-8 h-10 rounded-3xl">
+                    <AppImage
+                      className="object-cover w-full rounded-2xl h-full"
                       src={suggestion?.cover_image}
                       alt=""
+                      fallbackType="book"
                     />
                   </div>
                   <div className="">
@@ -207,17 +231,17 @@ const Search = ({
           animate={
             isBlinking
               ? {
-                  scale: [1, 1.1, 0.7, 1],
-                }
+                scale: [1, 1.1, 0.7, 1],
+              }
               : { scale: 1 }
           }
           transition={
             isBlinking
               ? {
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }
               : { duration: 0.2 }
           }
           className="grid transition rounded-full cursor-pointer group-hover:text-cream active:scale-75 text-tan bg-coffee h-7 w-7 place-items-center"

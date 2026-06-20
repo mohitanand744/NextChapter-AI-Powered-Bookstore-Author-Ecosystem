@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiHeart, FiChevronRight } from "react-icons/fi";
+import SectionHeading from "../components/Headings/SectionHeading";
+import SubNavbar from "../components/Common/Navbars/SubNavbar";
 import BookCard from "../components/Cards/BookCard";
-import Banners from "./../components/Banners/Banners";
-import Search from "../components/SearchBars/Search";
-import BackButton from "../components/Buttons/BackButton";
+import Banners from "../components/Banners/Banners";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllWishlists } from "../store/Redux/Slices/wishlistSlice";
 import NoData from "./../components/EmptyData/noData";
@@ -55,34 +55,24 @@ const Wishlist = () => {
         ]}
       />
 
-      <div className="container px-4 pt-12 mx-auto sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-8 md:justify-between">
-          {/* Search Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="relative mb-8"
-          >
-            <BackButton label="Back to Profile" />
+      <div className="container px-4 pb-8 pt-0 mx-auto sm:px-6 lg:px-8">
+        <SubNavbar
+          backLabel="Back to Profile"
+          backTo="/nextChapter/user/profile"
+          registryLabel="Reading List"
+          registryCount={`${wishlists?.data?.length ?? 0} ${wishlists?.data?.length === 1 ? 'Book' : 'Books'} Saved`}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          searchPlaceholder="Search your wishlist..."
+        />
 
-            <Search
-              styling="flex-1 md:w-[25rem] bg-sepia rounded-full"
-              onChange={(val) => setSearchTerm(val)}
-              onSearch={(val) => setSearchTerm(val)}
-              value={searchTerm}
-              placeholder="Search your wishlist..."
-            />
-          </motion.div>
-
-          <AnimatedItemCount
-            count={wishlists?.data?.length ?? 0}
-            label="book"
-            suffix="saved"
-            Icon={GiBookPile}
-            delay={0.4}
-          />
-        </div>
+        <SectionHeading
+          align="left"
+          className="!py-2 !mb-6"
+          subtitle="Your handpicked collection of saved titles and future reads"
+        >
+          My Wishlist
+        </SectionHeading>
 
         {/* Book List */}
         <div className="grid grid-cols-1 gap-6 pb-6 md:grid-cols-2 lg:grid-cols-4">

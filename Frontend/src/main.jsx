@@ -11,18 +11,18 @@ import "swiper/css/pagination";
 import { Provider } from "react-redux";
 import store from "./store/Redux/ConfigureReduxStore.js";
 import { LoaderProvider } from "./store/Context/LoaderProvider.jsx";
-import { UserProvider } from "./store/Context/UserContext.jsx";
+import { ProfileImageProvider } from "./store/Context/ProfileImageContext.jsx";
 import { ImagePreviewProvider } from "./store/Context/ImagePreviewContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <UserProvider>
+    <ProfileImageProvider>
       <ImagePreviewProvider>
         <LoaderProvider>
           <Router />
         </LoaderProvider>
       </ImagePreviewProvider>
-    </UserProvider>
+    </ProfileImageProvider>
   </Provider>
 );
 

@@ -14,6 +14,7 @@ import { fetchAllBooks } from "../store/Redux/Slices/BooksSlice";
 import { categoryApis } from "../utils/apis/categoryApis";
 import BooksLoader from "../components/Loaders/BooksLoader";
 import NoData from "../components/EmptyData/noData";
+import AppImage from "../components/Common/AppImage";
 
 import AuthorSlider from "../components/ScrollingContainer/AuthorSlider";
 import SectionHeading from "../components/Headings/SectionHeading";
@@ -186,10 +187,12 @@ const AllAuthors = () => {
               <div className="absolute inset-0 rounded-full border-2 border-tan/30 border-dashed animate-[spin_20s_linear_infinite_reverse] scale-[1.3]" />
               <div className="relative w-56 h-56 sm:w-72 sm:h-72 rounded-full p-2 bg-gradient-to-br from-sepia via-tan to-coffee shadow-[0_0_50px_rgba(180,140,90,0.15)] group-hover:shadow-[0_0_70px_rgba(180,140,90,0.25)] transition-shadow duration-700">
                 <div className="w-full h-full overflow-hidden rounded-full border-4 border-[#1A1511] bg-coffee">
-                  <img
+                  <AppImage
                     src={authorOfTheMonth.author_image || "https://cdn.vectorstock.com/i/500p/40/53/accurate-silhouette-of-a-man-for-profile-picture-vector-14714053.jpg"}
                     alt={authorOfTheMonth.author_name}
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    fallbackType="author"
+                    name={authorOfTheMonth.author_name}
                   />
                 </div>
                 {/* Verified Badge */}
@@ -262,7 +265,7 @@ const AllAuthors = () => {
                     <div className="flex space-x-4">
                       {authorOfTheMonthBooks.map((book, idx) => (
                         <div key={book.book_id} className="w-20 h-28  rounded-md overflow-hidden border-2 border-[#1A1511] shadow-[0_10px_20px_rgba(0,0,0,0.5)] hover:-translate-y-3 hover:scale-110 transition-all duration-300 z-10 hover:z-20 cursor-pointer" onClick={() => openComingSoon({ exploreLink: `/nextChapter/book/${book.book_id}` })}>
-                          <img src={book?.images[0]} alt={book.title} className="w-full h-full object-cover" />
+                          <AppImage src={book?.images[0]} alt={book.title} className="w-full h-full object-cover" fallbackType="book" />
                         </div>
                       ))}
                     </div>

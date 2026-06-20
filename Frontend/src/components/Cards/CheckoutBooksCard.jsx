@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import QuantitySelector from "../QuantitySelector";
+import AppImage from "../Common/AppImage";
 
 const CheckoutBooksCard = ({ items, updateQuantity, removeItem }) => {
   return items?.map((item, index) => (
@@ -18,10 +19,11 @@ const CheckoutBooksCard = ({ items, updateQuantity, removeItem }) => {
       className="flex p-3 border h-fit bg-black/10 rounded-2xl border-sepia"
     >
       <div className="flex-shrink-0 w-24 h-24 p-1 overflow-hidden border shadow-inner border-sepia rounded-2xl">
-        <img
+        <AppImage
           src={item?.image}
           alt={item?.name}
           className="object-contain object-center w-full h-full"
+          fallbackType="book"
         />
       </div>
 

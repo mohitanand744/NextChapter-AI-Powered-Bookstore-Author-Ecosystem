@@ -26,7 +26,7 @@ const insertWishlist = async (userId, bookId) => {
 
 const WISHLIST_QUERY = `
   SELECT 
-    B.ID, B.TITLE, B.DESCRIPTION, B.AUTHOR, B.BOOK_PRICE, C.name AS category_name,
+    B.ID, B.TITLE, B.DESCRIPTION, B.AUTHOR, B.BOOK_PRICE, B.BOOK_RATING, C.name AS category_name,
     A.AUTHOR_DESCRIPTION, A.AUTHOR_ID, A.AUTHOR_IMAGE_URL, A.AUTHOR_RATING,
     BI.IMAGE_URL,
     true AS isLiked
