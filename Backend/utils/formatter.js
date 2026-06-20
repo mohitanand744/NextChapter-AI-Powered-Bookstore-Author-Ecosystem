@@ -1,20 +1,20 @@
 exports.formatBook = (item) => ({
-  book_id: item.ID,
-  title: item.TITLE,
-  description: item.DESCRIPTION,
-  isLiked: item.isLiked,
+  book_id: item?.ID,
+  title: item?.TITLE,
+  description: item?.DESCRIPTION,
+  isLiked: item?.isLiked,
   author: {
-    author_id: item.AUTHOR_ID,
-    author_name: item.AUTHOR,
-    author_description: item.AUTHOR_DESCRIPTION,
-    author_image: item.AUTHOR_IMAGE_URL,
-    author_rating: item.AUTHOR_RATING,
+    author_id: item?.AUTHOR_ID,
+    author_name: item?.AUTHOR,
+    author_description: item?.AUTHOR_DESCRIPTION,
+    author_image: item?.AUTHOR_IMAGE_URL,
+    author_rating: item?.AUTHOR_RATING,
   },
-  book_price: item.BOOK_PRICE,
-  category: item.category_name,
-  images: item.IMAGE_URL,
-  cover_image: item.cover_image || "https://bookshow.blurb.com/bookshow/cache/P11360640/md/cover_2.jpeg?access_key=675523b769268bce5b0b710b3d0e7841",
-  book_rating: item.BOOK_RATING
+  book_price: item?.BOOK_PRICE,
+  category: item?.category_name,
+  images: item?.IMAGE_URL,
+  cover_image: item?.cover_image,
+  book_rating: item?.BOOK_RATING
 });
 
 const formateName = (name) => {

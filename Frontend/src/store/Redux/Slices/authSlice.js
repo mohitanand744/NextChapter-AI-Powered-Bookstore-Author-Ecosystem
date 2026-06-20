@@ -83,14 +83,17 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(validateToken.pending, (state) => {
+        state.loading = true;
         state.error = null;
       })
       .addCase(validateToken.fulfilled, (state, action) => {
         state.isAuthenticated = true;
         state.userData = action.payload;
+        state.loading = false;
         state.error = null;
       })
       .addCase(validateToken.rejected, (state, action) => {
+        state.loading = false;
 
         if (action.payload === "Token invalid") {
           state.isAuthenticated = false;

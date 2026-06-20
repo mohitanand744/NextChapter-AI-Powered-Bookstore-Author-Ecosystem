@@ -184,16 +184,17 @@ const PostCard = ({ post, index, author }) => {
         <div className="flex items-center gap-3 p-4">
           <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-tan/30 flex-shrink-0">
             <AppImage
-              src={author?.author_image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+              src={author?.author_image}
               alt={author?.author_name}
-              className="w-full h-full object-cover"
+              className="w-full h-full "
+              imgClassName="object-cover"
               fallbackType="author"
               name={author?.author_name}
             />
           </div>
           <div className="flex-1 min-w-0">
             <h4 className="text-tan font-bold text-sm truncate">{author?.author_name || "Author Name"}</h4>
-            <p className="text-[10px] text-tan truncate">
+            <p className="text-[11px] text-tan truncate">
               Professional Author & Storyteller • {new Date(post.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
             </p>
           </div>
@@ -269,11 +270,12 @@ const PostCard = ({ post, index, author }) => {
             src={post.image}
             alt={post.title}
             onClick={() => openPreview(post.image, post.title)}
-            className="object-cover w-full h-full transition-transform duration-500 cursor-pointer group-hover:scale-105"
+            className="w-full h-full transition-transform duration-500 cursor-pointer group-hover:scale-105"
+            imgClassName="object-cover"
             fallbackType="default"
           />
           <span
-            className={`absolute top-3 left-3 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg backdrop-blur-md ${tagColors[post.tag] || "bg-coffee/80 text-tan"}`}
+            className={`absolute top-3 left-3 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg backdrop-blur-md ${tagColors[post.tag] || "bg-coffee/80 text-tan"}`}
           >
             <FaTag size={8} />
             {post.tag}
@@ -319,7 +321,7 @@ const PostCard = ({ post, index, author }) => {
                     scale-90 group-hover/tip:scale-100
                     transition-all duration-200 ease-out"
                       >
-                        <span className="relative flex items-center tanspace-nowrap bg-sepia text-tan text-[10px] font-semibold px-1.5 py-1 rounded-lg shadow-xl">
+                        <span className="relative flex items-center tanspace-nowrap bg-sepia text-tan text-[11px] font-semibold px-1.5 py-1 rounded-lg shadow-xl">
                           {label}
                           <span className="absolute -top-[5px] left-1/2 -translate-x-1/2 border-l-4 border-r-4 border-b-[5px] border-l-transparent border-r-transparent border-b-sepia" />
                         </span>
@@ -342,7 +344,7 @@ const PostCard = ({ post, index, author }) => {
                           className={isActive ? activeText : "text-tan"}
                         />
                         {count > 0 && (
-                          <span className="text-[10px] font-bold text-tan/90 tabular-nums leading-none">
+                          <span className="text-[11px] font-bold text-tan/90 tabular-nums font-sans leading-none">
                             {count}
                           </span>
                         )}
@@ -392,7 +394,8 @@ const PostCard = ({ post, index, author }) => {
                               <AppImage
                                 src={c.avatar}
                                 alt={c.user}
-                                className="object-cover w-full h-full rounded-full"
+                                className=" w-full h-full rounded-full"
+                                imgClassName="object-cover"
                                 fallbackType="avatar"
                                 name={c.user}
                               />
@@ -405,7 +408,7 @@ const PostCard = ({ post, index, author }) => {
                                 <span className="text-xs font-bold text-cream">
                                   {c.user}
                                 </span>
-                                <span className="text-[10px] text-cream/60 ml-2 flex-shrink-0">
+                                <span className="text-[11px] text-cream/60 ml-2 flex-shrink-0">
                                   {new Date(c.date).toLocaleDateString("en-IN", {
                                     day: "numeric",
                                     month: "short",
@@ -470,7 +473,8 @@ const PostCard = ({ post, index, author }) => {
                                       <AppImage
                                         src={reply.avatar}
                                         alt={reply.user}
-                                        className="w-full h-full rounded-full object-cover"
+                                        className="w-full h-full rounded-full "
+                                        imgClassName="object-cover"
                                         fallbackType="avatar"
                                         name={reply.user}
                                       />
@@ -478,7 +482,7 @@ const PostCard = ({ post, index, author }) => {
                                     <div className="flex-1 bg-tan/5 border border-tan/5 rounded-xl px-3 py-1.5">
                                       <div className="flex justify-between items-center mb-0.5">
                                         <span className="text-xs font-bold text-cream">{reply.user}</span>
-                                        <span className="text-[10px] text-cream/50">
+                                        <span className="text-[11px] text-cream/50">
                                           {new Date(reply.date).toLocaleDateString("en-IN", {
                                             day: "numeric",
                                             month: "short",
@@ -513,7 +517,8 @@ const PostCard = ({ post, index, author }) => {
                       <AppImage
                         src={userData?.profilePic || "https://img.freepik.com/premium-vector/human-icon_970584-3.jpg?semt=ais_hybrid&w=740&q=80"}
                         alt="You"
-                        className="object-cover w-full h-full"
+                        className=" w-full h-full"
+                        imgClassName="object-cover"
                         fallbackType="avatar"
                         name={userData?.name}
                       />

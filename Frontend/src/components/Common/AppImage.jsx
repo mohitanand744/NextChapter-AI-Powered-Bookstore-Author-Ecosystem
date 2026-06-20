@@ -15,6 +15,7 @@ const AppImage = ({
   imgClassName = '',
   imgStyle = {},
   onError,
+  onLoad,
   ...props
 }) => {
   const [status, setStatus] = useState('loading'); // 'loading' | 'loaded' | 'error'
@@ -100,9 +101,10 @@ const AppImage = ({
       <img
         src={src}
         alt={alt}
-        onLoad={() => {
+        onLoad={(e) => {
           setStatus('loaded');
           setHasLoadedOnce(true);
+          if (onLoad) onLoad(e);
         }}
         onError={() => {
           setStatus('error');

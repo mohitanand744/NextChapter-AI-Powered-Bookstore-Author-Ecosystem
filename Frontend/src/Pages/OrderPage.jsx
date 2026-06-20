@@ -25,6 +25,7 @@ import { ordersApis } from "../utils/apis/ordersApis";
 import { useEffect } from "react";
 import { useLoader } from "../Hooks/useLoader";
 import BooksLoader from "../components/Loaders/BooksLoader";
+import OrdersPageSkeleton from "../components/Loaders/Skeleton/OrdersPageSkeleton";
 import SubNavbar from "../components/Common/Navbars/SubNavbar";
 import Button from "../components/Buttons/Button";
 import NoData from "../components/EmptyData/noData";
@@ -178,6 +179,10 @@ const OrdersPage = () => {
     );
   }) || [];
 
+  if (loading) {
+    return <OrdersPageSkeleton />;
+  }
+
   return (
     <>
       <Banners
@@ -212,11 +217,8 @@ const OrdersPage = () => {
           </SectionHeading>
 
           <div className="space-y-4">
-            {loading ? (
-              <BooksLoader />
-            ) : (
-              orders.length === 0 ? (
-                <NoData
+            {orders.length === 0 ? (
+              <NoData
                   title="No Orders Found"
                   message="You have not placed any orders yet."
                   icon="cart"
@@ -490,7 +492,7 @@ const OrdersPage = () => {
                   );
                 })
               )
-            )}
+            }
 
           </div>
         </div>

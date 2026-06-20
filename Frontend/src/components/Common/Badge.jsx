@@ -1,6 +1,6 @@
 import React from "react";
 
-const Badge = ({ text, icon, variant = "primary", className = "" }) => {
+const Badge = ({ text, icon, variant = "primary", className = "", textFontSize }) => {
   const baseClasses = "inline-flex items-center justify-center gap-1.5 py-0.5 px-2.5 rounded-full font-bold uppercase tracking-wider shadow-sm transition-all duration-300";
 
   const variants = {
@@ -23,7 +23,7 @@ const Badge = ({ text, icon, variant = "primary", className = "" }) => {
   return (
     <span className={`${baseClasses} ${variantClasses} ${className}`}>
       {renderIcon()}
-      <span>{text}</span>
+      <span className={textFontSize}>{text}</span>
     </span>
   );
 };

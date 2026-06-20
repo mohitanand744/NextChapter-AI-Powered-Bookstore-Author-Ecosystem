@@ -8,6 +8,7 @@ import { categoryApis } from "../../utils/apis/categoryApis";
 import { FaCheckCircle } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
 import AppImage from "../Common/AppImage";
+import CategorySliderSkeleton from "../Loaders/Skeleton/CategorySliderSkeleton";
 
 const categories = [
   {
@@ -89,9 +90,11 @@ const categories = [
 
 const CategorySlider = ({ filters, setFilters }) => {
   const [categoriesList, setCategoriesList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getAllCategoriesLists = async () => {
     try {
+      setLoading(true);
       const response = await categoryApis.getAllCategories();
 
       if (response?.success) {
@@ -99,6 +102,8 @@ const CategorySlider = ({ filters, setFilters }) => {
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -125,7 +130,9 @@ const CategorySlider = ({ filters, setFilters }) => {
     }));
   };
 
-  console.log(categoriesList);
+  if (loading) {
+    return <CategorySliderSkeleton />;
+  }
 
   return (
     <motion.div

@@ -28,6 +28,7 @@ import {
 import useAuth from "../Hooks/useAuth";
 import NoData from "../components/EmptyData/noData";
 import AddressModal from "../components/Modal/AddressModal";
+import UserProfileSkeleton from "../components/Loaders/Skeleton/UserProfileSkeleton";
 import { userApis } from "../utils/apis/userApis";
 import { useProfileImage } from "../store/Context/ProfileImageContext";
 import BooksLoader from "../components/Loaders/BooksLoader";
@@ -42,6 +43,7 @@ import SwiperNavButtons from "../components/Buttons/SwiperNavButtons";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import SectionHeading from "../components/Headings/SectionHeading";
 import AppImage from "../components/Common/AppImage";
+import Badge from "../components/Common/Badge";
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("activity");
   const navigate = useNavigate();
@@ -76,6 +78,7 @@ const UserProfile = () => {
     userData,
     setUpdateUserData,
     getUserUpdatedDetails,
+    loading,
   } = useAuth();
   const [user, setUser] = useState(userData);
   const [showAddressModal, setShowAddressModal] = useState(false);
@@ -178,7 +181,11 @@ const UserProfile = () => {
     }, 400);
   };
 
-  console.log("UserData", userData);
+  console.log("UserData", loading, userData);
+
+  if (loading || !userData) {
+    return <UserProfileSkeleton />;
+  }
 
   return (
     <div className="relative min-h-screen px-4 py-8">
@@ -820,7 +827,7 @@ const ModernProfileDetail = ({
           {/* VALUE */}
           <div className="flex-1 min-w-0">
             {Array.isArray(value) ? (
-              <div className="relative w-full">
+              <div className="relative w-full ml-[-10px] my-[-10px]">
                 {value.length > 0 ? (
                   <Swiper
                     modules={[Navigation, FreeMode, Autoplay]}
@@ -831,24 +838,11 @@ const ModernProfileDetail = ({
                     onSwiper={(swiper) => {
                       swiperRef.current = swiper;
                     }}
-                    className="w-full "
+                    className="w-full"
                   >
                     {value.map((item, index) => (
                       <SwiperSlide key={index} className="!w-auto">
-                        <span
-                          className="px-4 py-1.5
-                    rounded-full
-                    text-sm
-                    font-semibold
-                    text-cream
-                    bg-gradient-to-r
-                    from-coffee/80
-                    to-coffee/60
-                    shadow-md
-                    tanspace-nowrap"
-                        >
-                          {item}
-                        </span>
+                        <Badge text={item} textFontSize="text-[11px] p-1" className="" />
                       </SwiperSlide>
                     ))}
                   </Swiper>

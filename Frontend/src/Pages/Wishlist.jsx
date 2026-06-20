@@ -12,6 +12,7 @@ import AnimatedItemCount from "../components/UI/AnimatedItemCount";
 import { GiBookPile } from "react-icons/gi";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { useComingSoon } from "../store/Context/ComingSoonContext";
+import WishlistPageSkeleton from "../components/Loaders/Skeleton/WishlistPageSkeleton";
 
 const Wishlist = () => {
   const dispatch = useDispatch();
@@ -34,6 +35,10 @@ const Wishlist = () => {
       ) || []
     );
   }, [wishlists?.data, searchTerm]);
+
+  if (loading) {
+    return <WishlistPageSkeleton />;
+  }
 
   return (
     <motion.div

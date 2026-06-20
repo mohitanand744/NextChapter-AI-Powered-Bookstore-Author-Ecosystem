@@ -52,6 +52,7 @@ import { useComingSoon } from "../store/Context/ComingSoonContext";
 import Ratings from "../components/RatingsReviews/Ratings";
 import TestimonialCard from "../components/Cards/TestimonialCard";
 import AppImage from "../components/Common/AppImage";
+import AuthorProfileSkeleton from "../components/Loaders/Skeleton/AuthorProfileSkeleton";
 const initialPosts = [
   {
     id: 1,
@@ -273,11 +274,7 @@ const AuthorProfile = () => {
   const { openPreview } = useImagePreview();
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-pulse text-2xl text-coffee">Loading...</div>
-      </div>
-    );
+    return <AuthorProfileSkeleton />;
   }
 
   if (!loading && !author) {
@@ -848,7 +845,7 @@ const AuthorProfile = () => {
                     />
                     <div className="relative z-10">
                       <h3 className="text-tan font-bold mb-5 flex items-center gap-2 text-lg">
-                        <FaUsers className="text-sepia text-3xl" /> Profiles for you
+                        <FaUsers className="text-tan/80 text-3xl" /> Profiles for you
                       </h3>
                       <div className="flex flex-col gap-5">
                         {uniqueAuthors.slice(0, 3).map((uAuthor, idx) => (
@@ -862,7 +859,8 @@ const AuthorProfile = () => {
                                 <AppImage
                                   src={uAuthor.author_image}
                                   alt={uAuthor.author_name}
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full "
+                                  imgClassName="object-cover"
                                   fallbackType="author"
                                   name={uAuthor.author_name}
                                 />
@@ -898,8 +896,8 @@ const AuthorProfile = () => {
                         ))}
                       </div>
                       <Button
-                        variant="ghost"
-                        className="w-full mt-4 !text-tan/60 hover:!text-tan text-xs"
+                        variant="outline"
+                        className="w-full mt-5 !text-tan/60 hover:!text-tan text-sm"
                         onClick={() => navigate("/nextChapter/authors")}
                       >
                         Show more authors

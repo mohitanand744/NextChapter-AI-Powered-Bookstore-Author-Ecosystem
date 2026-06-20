@@ -19,8 +19,7 @@ const Layout = () => {
   }, [pathName]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-tan">
-
+    <div className="flex flex-col selection:text-cream selection:bg-coffee min-h-screen bg-tan">
       <DiscountHeader />
       <Navbar isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen} />
       <div className="search md:hidden flex gap-2 items-center px-4 py-2 bg-coffee border-b border-tan/20 shadow-sm relative z-40">
