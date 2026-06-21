@@ -26,7 +26,8 @@ const ResetPasswordModal = ({
   resetToken,
   countdown,
   setCountdown,
-  isAuthenticated, forgotPasswordEmail,
+  isAuthenticated,
+  forgotPasswordEmail,
   setLinkSent,
   setResetToken,
   afterExitingUserResettingPasswordPopup,
@@ -50,6 +51,8 @@ const ResetPasswordModal = ({
   const newPassword = watch("newPassword");
   const emailValue = watch("email");
   const { userData } = useAuth();
+
+  forgotPasswordEmail = forgotPasswordEmail || localStorage.getItem("forgotPasswordEmail") || "";
 
   useEffect(() => {
     if (forgotPasswordEmail) {

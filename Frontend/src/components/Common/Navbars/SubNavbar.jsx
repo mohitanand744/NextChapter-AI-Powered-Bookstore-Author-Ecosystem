@@ -17,6 +17,7 @@ const SubNavbar = ({
   onSelectSuggestion,
   extraActions = null,
   className = "",
+  nav = false,
 }) => {
   return (
     <div className={`sticky top-[4.8rem] z-[100] shadow-2xl flex flex-col md:flex-row -mt-16 mb-10 w-full justify-between items-center gap-4 p-4 md:p-6 rounded-2xl bg-coffee/95 backdrop-blur-md border border-tan/20 ${className}`}>
@@ -58,7 +59,7 @@ const SubNavbar = ({
             enableSuggestions={enableSuggestions}
             suggestions={suggestions}
             onSelectSuggestion={onSelectSuggestion}
-            nav={false}
+            nav={nav}
           />
         </div>
         {extraActions}

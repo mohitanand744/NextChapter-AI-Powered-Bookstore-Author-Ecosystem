@@ -12,7 +12,7 @@ import {
 import { ordersApis } from "../utils/apis/ordersApis";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useLoader } from "../Hooks/useLoader";
+
 import BooksLoader from "../components/Loaders/BooksLoader";
 import AppImage from "../components/Common/AppImage";
 import BackButton from "../components/Buttons/BackButton";
@@ -27,7 +27,7 @@ import { useComingSoon } from "../store/Context/ComingSoonContext";
 const TrackingPage = () => {
   const { trackingId, itemId } = useParams();
   const navigate = useNavigate();
-  const { loading } = useLoader();
+  const [loading, setLoading] = useState(true);
   const [itemTrackingData, setItemTrackingData] = useState(null);
 
   const dispatch = useDispatch();
@@ -63,12 +63,15 @@ const TrackingPage = () => {
 
   const getTrackingInfo = async (itemId, trackingId) => {
     try {
+      setLoading(true);
       const response = await ordersApis.getTrackingItem(itemId, trackingId);
 
       setItemTrackingData(response.data);
     } catch (error) {
       console.log(error);
       setItemTrackingData(null);
+    } finally {
+      setLoading(false);
     }
   };
 

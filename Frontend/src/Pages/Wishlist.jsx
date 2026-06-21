@@ -12,7 +12,7 @@ import AnimatedItemCount from "../components/UI/AnimatedItemCount";
 import { GiBookPile } from "react-icons/gi";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import { useComingSoon } from "../store/Context/ComingSoonContext";
-import WishlistPageSkeleton from "../components/Loaders/Skeleton/WishlistPageSkeleton";
+import BookCardSkeleton from "../components/Loaders/Skeleton/BookCardSkeleton";
 
 const Wishlist = () => {
   const dispatch = useDispatch();
@@ -35,10 +35,6 @@ const Wishlist = () => {
       ) || []
     );
   }, [wishlists?.data, searchTerm]);
-
-  if (loading) {
-    return <WishlistPageSkeleton />;
-  }
 
   return (
     <motion.div
@@ -65,7 +61,7 @@ const Wishlist = () => {
           backLabel="Back to Profile"
           backTo="/nextChapter/user/profile"
           registryLabel="Reading List"
-          registryCount={`${wishlists?.data?.length ?? 0} ${wishlists?.data?.length === 1 ? 'Book' : 'Books'} Saved`}
+          registryCount={loading ? "Loading..." : `${wishlists?.data?.length ?? 0} ${wishlists?.data?.length === 1 ? 'Book' : 'Books'} Saved`}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           searchPlaceholder="Search your wishlist..."
@@ -81,20 +77,26 @@ const Wishlist = () => {
 
         {/* Book List */}
         <div className="grid grid-cols-1 gap-6 pb-6 md:grid-cols-2 lg:grid-cols-4">
-          <AnimatePresence>
-            {filteredBooks.map((book, i) => (
-              <motion.div
-                key={book.book_id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-              >
-                <BookCard book={book} index={i} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          {loading ? (
+            [...Array(4)].map((_, i) => (
+              <BookCardSkeleton key={i} />
+            ))
+          ) : (
+            <AnimatePresence>
+              {filteredBooks.map((book, i) => (
+                <motion.div
+                  key={book.book_id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <BookCard book={book} index={i} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          )}
         </div>
 
         {/* Empty State */}

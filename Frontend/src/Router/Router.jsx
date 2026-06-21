@@ -1,13 +1,11 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Loading from "../components/Loaders/Loading";
+import ListingPageSkeleton from "../components/Loaders/Skeleton/ListingPageSkeleton";
 import SignUp from "../Pages/Auth/SignUp";
-import UserProfile from "../Pages/UserProfile";
-import OrdersPage from "../Pages/OrderPage";
 import { Toaster } from "sonner";
-import Wishlist from "../Pages/Wishlist";
-import CheckoutPage from "../Pages/CheckoutPage";
 import ProtectedRoute from "./ProtectedRoute";
+import CheckoutPage from "../Pages/CheckoutPage";
 import TrackingPage from "../Pages/TrackingPage";
 import { validateToken } from "../store/Redux/Slices/authSlice";
 import { useDispatch } from "react-redux";
@@ -22,6 +20,9 @@ const AboutUs = lazy(() => import("../Pages/AboutUs"));
 const ContactUs = lazy(() => import("../Pages/ContactUs"));
 const AuthorProfile = lazy(() => import("../Pages/AuthorProfile"));
 const AllAuthors = lazy(() => import("../Pages/AllAuthors"));
+const UserProfile = lazy(() => import("../Pages/UserProfile"));
+const OrdersPage = lazy(() => import("../Pages/OrderPage"));
+const Wishlist = lazy(() => import("../Pages/Wishlist"));
 import DevelopmentBanner from "../components/Common/DevelopmentBanner";
 import { ComingSoonProvider } from "../store/Context/ComingSoonContext";
 
@@ -86,17 +87,47 @@ const Router = () => {
               {/* Public routes */}
               <Route path="aboutUs" element={<AboutUs />} />
               <Route path="contact" element={<ContactUs />} />
-              <Route path="books" element={<AllBooks />} />
-              <Route path="authors" element={<AllAuthors />} />
-              <Route path="book/:id" element={<SingleBooks />} />
-              <Route path="author/:authorId" element={<AuthorProfile />} />
+              <Route
+                path="books"
+                element={
+                  <Suspense fallback={<ListingPageSkeleton page="books" />}>
+                    <AllBooks />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="authors"
+                element={
+                  <Suspense fallback={<ListingPageSkeleton page="authors" />}>
+                    <AllAuthors />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="book/:id"
+                element={
+                  <Suspense fallback={<ListingPageSkeleton page="bookDetail" />} >
+                    <SingleBooks />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="author/:authorId"
+                element={
+                  <Suspense fallback={<ListingPageSkeleton page="authorProfile" />}>
+                    <AuthorProfile />
+                  </Suspense>
+                }
+              />
 
               {/* Protected routes */}
               <Route
                 path="user/profile"
                 element={
                   <ProtectedRoute>
-                    <UserProfile />
+                    <Suspense fallback={<ListingPageSkeleton page="profile" />}>
+                      <UserProfile />
+                    </Suspense>
                   </ProtectedRoute>
                 }
               />
@@ -112,7 +143,9 @@ const Router = () => {
                 path="orders"
                 element={
                   <ProtectedRoute>
-                    <OrdersPage />
+                    <Suspense fallback={<ListingPageSkeleton page="orders" />}>
+                      <OrdersPage />
+                    </Suspense>
                   </ProtectedRoute>
                 }
               />
@@ -120,7 +153,9 @@ const Router = () => {
                 path="wishlist"
                 element={
                   <ProtectedRoute>
-                    <Wishlist />
+                    <Suspense fallback={<ListingPageSkeleton page="wishlist" />}>
+                      <Wishlist />
+                    </Suspense>
                   </ProtectedRoute>
                 }
               />

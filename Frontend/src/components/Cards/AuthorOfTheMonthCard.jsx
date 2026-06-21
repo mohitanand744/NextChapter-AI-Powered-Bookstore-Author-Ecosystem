@@ -16,7 +16,7 @@ const AuthorOfTheMonthCard = ({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="mb-20 relative overflow-hidden rounded-[2.5rem] sm:rounded-[3rem] bg-gradient-to-br from-[#2D241E] to-[#1A1511] p-8 sm:p-12 border border-sepia/20 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col xl:flex-row items-center gap-12 group"
+      className="mb-10 relative overflow-hidden rounded-[2.5rem] sm:rounded-[3rem] bg-gradient-to-br from-[#2D241E] to-[#1A1511] p-8 sm:p-12 border border-sepia/20 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col xl:flex-row items-center gap-12 group"
     >
       <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-20 pointer-events-none" />
       <div className="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-sepia/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-sepia/20 transition-all duration-1000" />

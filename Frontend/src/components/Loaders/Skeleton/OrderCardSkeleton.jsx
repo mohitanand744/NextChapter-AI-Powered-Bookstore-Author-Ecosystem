@@ -72,14 +72,24 @@ const OrderCardSkeleton = () => {
         </div>
       </div>
 
-      {/* Simulated Opened Order Item Section */}
-      <div className="relative z-10 px-5 py-4 border-t border-tan/10 bg-tan/5">
+
+    </div>
+  );
+};
+
+export default OrderCardSkeleton;
+
+
+
+{/* Simulated Opened Order Item Section */ }
+/* 
+
+<div className="relative z-10 px-5 py-4 border-t border-tan/10 bg-tan/5">
         <div className="space-y-4">
           <div className="flex flex-row gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg border-tan/5 bg-tan/5">
-            {/* Book Cover Placeholder */}
+            {/* Book Cover Placeholder 
             <div className="shrink-0 w-16 h-20 sm:w-20 sm:h-24 bg-tan/10 rounded-lg" />
             
-            {/* Book Details Placeholder */}
             <div className="flex flex-col flex-1 space-y-2">
               <div className="h-4 w-1/3 bg-tan/15 rounded" />
               <div className="h-3 w-full bg-tan/5 rounded" />
@@ -96,8 +106,5 @@ const OrderCardSkeleton = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
-};
 
-export default OrderCardSkeleton;
+*/

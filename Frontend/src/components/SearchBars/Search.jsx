@@ -97,20 +97,24 @@ const Search = ({
   }, []);
 
   const handleSearch = () => {
-    if (onSearch) {
-      onSearch(searchTerm);
-      return;
-    }
-    if (onChange && !onSearch) {
-      return;
-    }
-
     if (nav) {
       if (searchTerm.trim()) {
         navigate(`/nextChapter/books?search=${encodeURIComponent(searchTerm)}`);
       } else {
         navigate(`/nextChapter/books`);
       }
+      if (onSearch) {
+        onSearch(searchTerm);
+      }
+      return;
+    }
+
+    if (onSearch) {
+      onSearch(searchTerm);
+      return;
+    }
+    if (onChange && !onSearch) {
+      return;
     }
   };
 
@@ -141,9 +145,17 @@ const Search = ({
         type="text"
         value={searchTerm}
         onChange={(e) => {
-          setSearchTerm(e.target.value);
+          const val = e.target.value;
+          setSearchTerm(val);
 
-          if (onChange) onChange(e.target.value);
+          if (onChange) {
+            if (!nav) {
+              onChange(val);
+            } else if (val.trim() === "") {
+              navigate(`/nextChapter/books`);
+              onChange("");
+            }
+          }
         }}
         onFocus={() => {
           if (blurTimeoutRef.current) {

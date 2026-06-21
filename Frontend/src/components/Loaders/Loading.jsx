@@ -2,10 +2,15 @@ import React from "react";
 
 const Loading = () => {
   return (
-    <div className="min-h-[100vh] flex items-center justify-center">
+    <div className="h-screen w-full flex items-center justify-center bg-coffee">
       <img
-        className="w-52"
-        src="https://cdn.edu.buncee.com/assets/078a119584cab22db51dcbf98bc8eaff/animation-library-magicbook-022120.gif?timestamp=1582320667"
+        className="w-full h-full hidden md:block object-contain"
+        src="/images/website_Loader.gif"
+        alt=""
+      />
+      <img
+        className="w-full h-full block md:hidden object-contain"
+        src="/images/website_Loader_mobile.gif"
         alt=""
       />
     </div>

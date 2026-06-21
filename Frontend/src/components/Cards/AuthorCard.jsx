@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Ratings from "../RatingsReviews/Ratings";
 import Button from "../Buttons/Button";
@@ -12,10 +12,14 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
   const navigate = useNavigate();
   const { openPreview } = useImagePreview();
 
-  const authorImage = author?.author_image ||
-    author?.author?.author_image ||
-    "https://cdn.vectorstock.com/i/500p/40/53/accurate-silhouette-of-a-man-for-profile-picture-vector-14714053.jpg";
+  const realImage = author?.author_image || author?.author?.author_image;
+  const [imageError, setImageError] = useState(false);
+  const hasImage = !!realImage && !imageError;
   const authorName = author?.author_name || author?.author?.author_name || "Author";
+
+  useEffect(() => {
+    setImageError(false);
+  }, [realImage]);
 
   return (
     <motion.div
@@ -41,20 +45,21 @@ const AuthorCard = ({ author, onComingSoonClick }) => {
       <div className="relative flex flex-col items-center px-5 pt-10 h-full">
         {/* Author Avatar */}
         <div
-          onClick={(e) => {
+          onClick={hasImage ? (e) => {
             e.stopPropagation();
-            openPreview(authorImage, authorName);
-          }}
-          className="relative w-16 h-16 md:w-20 md:h-20 p-1 mb-2 md:mb-4 bg-tan/20 rounded-full shadow-lg z-10 transition-transform duration-500 ease-out group-hover:-translate-y-2 border border-tan/30 cursor-zoom-in"
+            openPreview(realImage, authorName);
+          } : undefined}
+          className={`relative w-16 h-16 md:w-20 md:h-20 p-1 mb-2 md:mb-4 bg-tan/20 rounded-full shadow-lg z-10 transition-transform duration-500 ease-out group-hover:-translate-y-2 border border-tan/30 ${hasImage ? "cursor-zoom-in" : "cursor-default"}`}
         >
           <div className="w-full h-full overflow-hidden rounded-full">
             <AppImage
               className="w-full h-full"
               imgClassName="object-cover w-full h-full !transition-all !duration-500 group-hover:scale-110"
-              src={authorImage}
+              src={realImage || ""}
               alt={authorName}
               fallbackType="author"
               name={authorName}
+              onError={() => setImageError(true)}
             />
           </div>
           {/* Verified Badge */}

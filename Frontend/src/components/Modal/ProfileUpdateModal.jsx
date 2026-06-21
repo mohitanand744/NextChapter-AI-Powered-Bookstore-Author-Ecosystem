@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Modal from "./ModalContainer";
 import { Controller, useForm } from "react-hook-form";
 import ModelsHeading from "../Headings/ModelsHeading";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Input from "../Inputs/Input";
 import Button from "../Buttons/Button";
 import { categoryApis } from "../../utils/apis/categoryApis";
@@ -43,23 +43,27 @@ const ProfileUpdateModal = ({
   setShowAddressModal,
   type = "complete",
   user,
+  profileDraft,
+  setProfileDraft,
 }) => {
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
     reset,
     watch,
     setValue,
     setError,
     clearErrors,
+    getValues,
   } = useForm();
   const [categoriesList, setCategoriesList] = useState([]);
   const [userAddresses, setUserAddresses] = useState([]);
   const { loading } = useLoader();
   const [selectedId, setSelectedId] = useState(null);
   const [viewAddressDetails, setViewAddressDetails] = useState(false);
+  const [showUnsavedPopup, setShowUnsavedPopup] = useState(false);
   const { handleKeyDown, handleInput } = useInputHandlers(
     setError,
     clearErrors,
@@ -67,6 +71,46 @@ const ProfileUpdateModal = ({
   const [isDefaultAddress, setIsDefaultAddress] = useState(null)
   const { userData, getUserUpdatedDetails } = useAuth();
   const swiperRef = useRef(null);
+
+  const [isPulsing, setIsPulsing] = useState(false);
+  const pulseTimeoutRef = useRef(null);
+
+  const triggerPulse = () => {
+    setIsPulsing(false);
+    if (pulseTimeoutRef.current) {
+      clearTimeout(pulseTimeoutRef.current);
+    }
+    setTimeout(() => {
+      setIsPulsing(true);
+      pulseTimeoutRef.current = setTimeout(() => {
+        setIsPulsing(false);
+      }, 500);
+    }, 10);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (pulseTimeoutRef.current) {
+        clearTimeout(pulseTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleClose = () => {
+    setProfileDraft(null);
+    setShowProfileUpdateModal(false);
+  };
+  const handleCloseAttempt = () => {
+    if (showUnsavedPopup) {
+      triggerPulse();
+      return;
+    }
+    if (isDirty || !!profileDraft) {
+      setShowUnsavedPopup(true);
+    } else {
+      handleClose();
+    }
+  };
 
   const getAllCategoriesLists = async () => {
     try {
@@ -81,20 +125,24 @@ const ProfileUpdateModal = ({
   };
 
   useEffect(() => {
-    if (user?.name) {
-      const nameParts = user.name.trim().split(/\s+/);
-      const firstName = nameParts[0];
-      const lastName = nameParts.slice(1).join(" ");
+    if (showProfileUpdateModal) {
+      if (profileDraft) {
+        reset(profileDraft);
+      } else if (user?.name) {
+        const nameParts = user.name.trim().split(/\s+/);
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(" ");
 
-      reset({
-        firstName: firstName,
-        lastName: lastName,
-        phone: user?.phone,
-        gender: user?.gender,
-        favoriteGenres: user?.favoriteGenres?.map((genre) => genre.id) || [],
-      });
+        reset({
+          firstName: firstName,
+          lastName: lastName,
+          phone: user?.phone,
+          gender: user?.gender,
+          favoriteGenres: user?.favoriteGenres?.map((genre) => genre.id) || [],
+        });
+      }
     }
-  }, [user, showProfileUpdateModal]);
+  }, [user, showProfileUpdateModal, profileDraft]);
 
   const getUserAddressesList = async () => {
     try {
@@ -165,7 +213,7 @@ const ProfileUpdateModal = ({
 
       if (result?.success) {
         toast.success(result?.message);
-        setShowProfileUpdateModal(false);
+        handleClose();
       }
     } catch (error) {
       if (error.response?.status !== 401) {
@@ -191,7 +239,7 @@ const ProfileUpdateModal = ({
   return (
     <Modal
       isOpen={showProfileUpdateModal}
-      onClose={() => setShowProfileUpdateModal(false)}
+      onClose={handleCloseAttempt}
       loading={loading}
     >
       <motion.div
@@ -545,6 +593,7 @@ const ProfileUpdateModal = ({
                             variant="outline"
                             onClick={() => {
                               if (field.value?.id) {
+                                setProfileDraft(getValues());
                                 setShowAddressModal(field.value);
                               } else {
                                 setError("address", {
@@ -559,7 +608,10 @@ const ProfileUpdateModal = ({
 
                           <Button
                             type="button"
-                            onClick={() => setShowAddressModal("add")}
+                            onClick={() => {
+                              setProfileDraft(getValues());
+                              setShowAddressModal("add");
+                            }}
                             className="flex items-center justify-center w-full gap-2 text-sm"
                           >
                             <PlusCircleIcon className="w-6 h-6" /> Add
@@ -576,7 +628,10 @@ const ProfileUpdateModal = ({
                           titleClassName="text-md"
                           showAction={true}
                           actionText="Add Address"
-                          onActionClick={() => setShowAddressModal("add")}
+                          onActionClick={() => {
+                            setProfileDraft(getValues());
+                            setShowAddressModal("add");
+                          }}
                         />
 
                         {fieldState.error && (
@@ -596,7 +651,7 @@ const ProfileUpdateModal = ({
             <Button
               type="button"
               variant="outline"
-              onClick={() => setShowProfileUpdateModal(false)}
+              onClick={handleCloseAttempt}
             >
               Back
             </Button>
@@ -612,6 +667,65 @@ const ProfileUpdateModal = ({
         viewAddressDetails={viewAddressDetails}
         setViewAddressDetails={setViewAddressDetails}
       />
+
+      <AnimatePresence>
+        {showUnsavedPopup && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 rounded-3xl"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className={`w-full relative max-w-sm p-6 bg-coffee text-tan border border-tan/30 shadow-2xl rounded-3xl transition-all duration-300 ${isPulsing ? "animate-pulse border-b-[3px] mb-14 bg-coffee/80" : ""
+                }`}
+            >
+
+              <div
+                onClick={() => setShowUnsavedPopup(false)}
+                className="absolute top-2 right-2">
+                <Badge
+                  text="Check The Changes"
+                  textFontSize="text-[12px] cursor-pointer"
+                  variant="primary"
+                />
+              </div>
+              <h3 className="mb-2  text-xl font-bold text-tan">
+                Unsaved Changes
+              </h3>
+              <p className="mb-4 text-sm text-tan/70">
+                You have unsaved changes. Do you want to submit them or close without saving?
+              </p>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="primary"
+                  className="flex-1 text-sm !py-2"
+                  onClick={() => {
+                    setShowUnsavedPopup(false);
+                    handleSubmit(onSubmit)();
+                  }}
+                >
+                  Save & Submit
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => {
+                    setShowUnsavedPopup(false);
+                    handleClose();
+                  }}
+                >
+                  Discard
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Modal>
   );
 };

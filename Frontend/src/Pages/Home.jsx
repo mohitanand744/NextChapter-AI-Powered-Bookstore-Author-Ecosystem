@@ -19,7 +19,7 @@ import Button from "../components/Buttons/Button";
 import SectionHeading from "../components/Headings/SectionHeading";
 import NoData from "../components/EmptyData/noData";
 
-import { useLoader } from "../Hooks/useLoader";
+
 import { toast } from "sonner";
 
 const Home = () => {
@@ -55,7 +55,7 @@ const Home = () => {
   return (
     <>
       <HomeBanner />
-      <div className="mx-auto w-[97%]">
+      <div className="container mx-auto w-[97%]">
         {/* Deal of the day Section */}
         <div className="mb-14">
           <SectionHeading subtitle="Limited Time Offer">

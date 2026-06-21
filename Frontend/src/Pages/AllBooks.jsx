@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import BookCard from "../components/Cards/BookCard";
 import { fetchAllBooks } from "../store/Redux/Slices/BooksSlice";
 import BooksLoader from "../components/Loaders/BooksLoader";
-import BooksPageSkeleton from "../components/Loaders/Skeleton/BooksPageSkeleton";
+import BookCardSkeleton from "../components/Loaders/Skeleton/BookCardSkeleton";
 import BookListingFilter from "../components/BookListingFilter";
 import CategorySlider from "../components/ScrollingContainer/CategorySlider";
 import NoData from "../components/EmptyData/noData";
@@ -171,146 +171,149 @@ const AllBooks = () => {
         setShowFilters(false);
       }}
     >
-      {loading ? (
-        <BooksPageSkeleton />
-      ) : (
-        <>
-          <Banners
-            titleFirst="Explore"
-            titleSecond="Our Books"
-            description="Find your next favorite read among our extensive collection."
-            items={[
-              { label: "Home", path: "/nextChapter" },
-              { label: "Books", path: null },
-            ]}
-          />
+      <Banners
+        titleFirst="Explore"
+        titleSecond="Our Books"
+        description="Find your next favorite read among our extensive collection."
+        items={[
+          { label: "Home", path: "/nextChapter" },
+          { label: "Books", path: null },
+        ]}
+      />
 
-          <div className="container px-4 pb-8 pt-0 mx-auto sm:px-6 lg:px-8">
-            <SubNavbar
-              showBackButton={false}
-              registryLabel="Library Catalog"
-              registryCount={`${books?.length ?? 0} ${books?.length === 1 ? "Book" : "Books"} Loaded`}
-              searchTerm={filters.search}
-              setSearchTerm={(val) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  search: val,
-                  cursor: "",
-                }))
-              }
-              searchPlaceholder="Search by title, author, or genre..."
-              enableSuggestions={true}
-              suggestions={books}
-              extraActions={
-                <div className="flex items-center gap-2">
-                  <motion.button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowFilters(!showFilters);
-                    }}
-                    whileTap={{ scale: 0.9 }}
-                    className="relative flex items-center justify-center transition-all duration-300 border shadow-sm w-11 h-11 rounded-2xl bg-tan/10 border-tan/20 text-cream hover:bg-tan/20"
-                  >
-                    {appliedFiltersCount > 0 && (
-                      <span className="px-2 absolute -top-1 -right-1 bg-opacity-50 backdrop-blur-sm py-0.5 text-sm font-semibold rounded-full bg-sepia text-tan">
-                        {appliedFiltersCount}
-                      </span>
-                    )}
+      <div className="container px-4 pb-8 pt-0 mx-auto sm:px-6 lg:px-8">
+        <SubNavbar
+          showBackButton={false}
+          registryLabel="Library Catalog"
+          registryCount={loading ? "Loading..." : `${books?.length ?? 0} ${books?.length === 1 ? "Book" : "Books"} Loaded`}
+          searchTerm={filters.search}
+          setSearchTerm={(val) =>
+            setFilters((prev) => ({
+              ...prev,
+              search: val,
+              cursor: "",
+            }))
+          }
+          searchPlaceholder="Search by title, author, or genre..."
+          enableSuggestions={true}
+          suggestions={books}
+          nav={true}
+          extraActions={
+            <div className="flex items-center gap-2">
+              <motion.button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowFilters(!showFilters);
+                }}
+                whileTap={{ scale: 0.9 }}
+                className="relative flex items-center justify-center transition-all duration-300 border shadow-sm w-11 h-11 rounded-2xl bg-tan/10 border-tan/20 text-cream hover:bg-tan/20"
+              >
+                {appliedFiltersCount > 0 && (
+                  <span className="px-2 absolute -top-1 -right-1 bg-opacity-50 backdrop-blur-sm py-0.5 text-sm font-semibold rounded-full bg-sepia text-tan">
+                    {appliedFiltersCount}
+                  </span>
+                )}
 
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <AnimatePresence mode="wait">
-                        {showFilters ? (
-                          <motion.path
-                            key="close"
-                            initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 1 }}
-                            exit={{ pathLength: 0, opacity: 0 }}
-                            d="M6 18L18 6M6 6l12 12"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        ) : (
-                          <motion.path
-                            key="filter"
-                            initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 1 }}
-                            exit={{ pathLength: 0, opacity: 0 }}
-                            d="M3 6H21M6 12H18M10 18H14"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        )}
-                      </AnimatePresence>
-                    </svg>
-                  </motion.button>
-                </div>
-              }
-            />
-
-            <CategorySlider filters={filters} setFilters={setFilters} />
-
-            <SectionHeading
-              align="left"
-              className="!py-2 !pt-5 !mb-6"
-              subtitle="Explore our curated collection of masterfully crafted novels and anthologies"
-            >
-              The Book Gallery
-            </SectionHeading>
-
-            {books?.length === 0 ? (
-              <div className="my-20">
-                <NoData
-                  title="No Books Found"
-                  message="We couldn't find any books matching your current filters. Try adjusting your search or filters."
-                  icon="search"
-                  showAction={true}
-                  actionText="Clear All Filters"
-                  onActionClick={() => {
-                    navigate("/nextChapter/books");
-                    setFilters(defaultFilters);
-                  }}
-                />
-              </div>
-            ) : (
-              <div>
-                <div className="grid grid-cols-12 gap-3 my-10">
-                  {books?.map((book) => (
-                    <motion.div
-                      key={book.book_id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      transition={{ duration: 0.3 }}
-                      className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
-                    >
-                      <BookCard
-                        book={book}
-                        onComingSoonClick={(url) => openComingSoon({ exploreLink: url })}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <AnimatePresence mode="wait">
+                    {showFilters ? (
+                      <motion.path
+                        key="close"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ pathLength: 1, opacity: 1 }}
+                        exit={{ pathLength: 0, opacity: 0 }}
+                        d="M6 18L18 6M6 6l12 12"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
-                    </motion.div>
-                  ))}
-                </div>
+                    ) : (
+                      <motion.path
+                        key="filter"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ pathLength: 1, opacity: 1 }}
+                        exit={{ pathLength: 0, opacity: 0 }}
+                        d="M3 6H21M6 12H18M10 18H14"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    )}
+                  </AnimatePresence>
+                </svg>
+              </motion.button>
+            </div>
+          }
+        />
 
-                <div
-                  ref={sentinelRef}
-                  className="flex items-center justify-center w-full h-10 my-14"
-                >
-                  {fetchingMore && (
-                    <div className="flex items-center justify-center">
-                      <BooksLoader />
-                    </div>
-                  )}
-                </div>
+        <CategorySlider filters={filters} setFilters={setFilters} />
+
+        <SectionHeading
+          align="left"
+          className="!py-2 !pt-5 !mb-6"
+          subtitle="Explore our curated collection of masterfully crafted novels and anthologies"
+        >
+          The Book Gallery
+        </SectionHeading>
+
+        {loading ? (
+          <div className="grid grid-cols-12 gap-3 my-10">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+                <BookCardSkeleton />
               </div>
-            )}
+            ))}
           </div>
-        </>
-      )}
+        ) : books?.length === 0 ? (
+          <div className="my-20">
+            <NoData
+              title="No Books Found"
+              message="We couldn't find any books matching your current filters. Try adjusting your search or filters."
+              icon="search"
+              showAction={true}
+              actionText="Clear All Filters"
+              onActionClick={() => {
+                navigate("/nextChapter/books");
+                setFilters(defaultFilters);
+              }}
+            />
+          </div>
+        ) : (
+          <div>
+            <div className="grid grid-cols-12 gap-3 my-10">
+              {books?.map((book) => (
+                <motion.div
+                  key={book.book_id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.3 }}
+                  className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
+                >
+                  <BookCard
+                    book={book}
+                    onComingSoonClick={(url) => openComingSoon({ exploreLink: url })}
+                  />
+                </motion.div>
+              ))}
+            </div>
+
+            <div
+              ref={sentinelRef}
+              className="flex items-center justify-center w-full h-10 my-14"
+            >
+              {fetchingMore && (
+                <div className="flex items-center justify-center">
+                  <BooksLoader />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
 
       <AnimatePresence>
         {showFilters && (

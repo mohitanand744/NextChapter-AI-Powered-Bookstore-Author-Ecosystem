@@ -52,7 +52,8 @@ import { useComingSoon } from "../store/Context/ComingSoonContext";
 import Ratings from "../components/RatingsReviews/Ratings";
 import TestimonialCard from "../components/Cards/TestimonialCard";
 import AppImage from "../components/Common/AppImage";
-import AuthorProfileSkeleton from "../components/Loaders/Skeleton/AuthorProfileSkeleton";
+import BookCardSkeleton from "../components/Loaders/Skeleton/BookCardSkeleton";
+import TestimonialCardSkeleton from "../components/Loaders/Skeleton/TestimonialCardSkeleton";
 const initialPosts = [
   {
     id: 1,
@@ -272,10 +273,14 @@ const AuthorProfile = () => {
   const authorBooks = allBooks.filter((b) => b?.author?.author_id === id);
   const author = authorBooks.length > 0 ? authorBooks[0]?.author : null;
   const { openPreview } = useImagePreview();
+  const [imageError, setImageError] = useState(false);
+  const hasImage = !!author?.author_image && !imageError;
 
-  if (loading) {
-    return <AuthorProfileSkeleton />;
-  }
+  useEffect(() => {
+    setImageError(false);
+  }, [author?.author_image]);
+
+
 
   if (!loading && !author) {
     return (
@@ -409,56 +414,66 @@ const AuthorProfile = () => {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 200, damping: 18 }}
-                className="absolute left-0 right-0 z-10 mx-auto overflow-hidden border-4 border-tan shadow-2xl -top-28 md:-top-30 w-28 md:w-40 h-28 md:h-40 rounded-3xl cursor-zoom-in"
-                onClick={() => openPreview(author?.author_image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", author?.author_name)}
+                className={`absolute left-0 right-0 z-10 mx-auto overflow-hidden border-4 border-tan shadow-2xl -top-28 md:-top-30 w-28 md:w-40 h-28 md:h-40 rounded-3xl ${hasImage ? "cursor-zoom-in" : "cursor-default"}`}
+                onClick={hasImage && !loading ? () => openPreview(author.author_image, author.author_name) : undefined}
               >
-                <AppImage
-                  src={
-                    author?.author_image ||
-                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                  }
-                  alt={author?.author_name}
-                  imgClassName="object-cover"
-                  className="object-cover object-top w-full h-full"
-                  fallbackType="author"
-                  name={author?.author_name}
-                />
+                {loading ? (
+                  <div className="w-full h-full bg-tan/10 animate-pulse" />
+                ) : (
+                  <AppImage
+                    src={author?.author_image || ""}
+                    alt={author?.author_name}
+                    imgClassName="object-cover"
+                    className="object-cover object-top w-full h-full"
+                    fallbackType="author"
+                    name={author?.author_name}
+                    onError={() => setImageError(true)}
+                  />
+                )}
               </motion.div>
 
-
-
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="text-center sm:text-left">
-                  <h1 className="text-3xl md:text-4xl font-bold text-tan">
-                    {author?.author_name}
-                  </h1>
-                  <p className="text-base text-tan/60 mt-0.5 font-medium">
-                    Professional Author &amp; Storyteller
-                  </p>
+                <div className="text-center sm:text-left w-full">
+                  {loading ? (
+                    <div className="space-y-2 animate-pulse mx-auto sm:mx-0 w-fit">
+                      <div className="h-8 w-48 bg-tan/20 rounded" />
+                      <div className="h-4 w-64 bg-tan/10 rounded" />
+                      <div className="h-3 w-80 bg-tan/5 rounded mt-2" />
+                    </div>
+                  ) : (
+                    <>
+                      <h1 className="text-3xl md:text-4xl font-bold text-tan">
+                        {author?.author_name}
+                      </h1>
+                      <p className="text-base text-tan/60 mt-0.5 font-medium">
+                        Professional Author &amp; Storyteller
+                      </p>
 
-                  <div className="flex flex-wrap justify-center mt-2 sm:justify-start gap-x-4 gap-y-1">
-                    <span className="flex items-center gap-1 text-sm text-tan">
-                      <FaMapMarkerAlt className="text-tan" /> {location}
-                    </span>
-                    <span className="flex items-center gap-1 text-sm text-tan">
-                      <FaGlobe className="text-tan" /> {website}
-                    </span>
-                    <span className="flex items-center gap-1 text-sm text-tan">
-                      <FaRegCalendarAlt className="text-tan" /> Member since{" "}
-                      {memberSince}
-                    </span>
-                  </div>
+                      <div className="flex flex-wrap justify-center mt-2 sm:justify-start gap-x-4 gap-y-1">
+                        <span className="flex items-center gap-1 text-sm text-tan">
+                          <FaMapMarkerAlt className="text-tan" /> {location}
+                        </span>
+                        <span className="flex items-center gap-1 text-sm text-tan">
+                          <FaGlobe className="text-tan" /> {website}
+                        </span>
+                        <span className="flex items-center gap-1 text-sm text-tan">
+                          <FaRegCalendarAlt className="text-tan" /> Member since{" "}
+                          {memberSince}
+                        </span>
+                      </div>
 
-                  <div className="flex flex-wrap justify-center sm:justify-start gap-1.5 mt-3">
-                    {genres.map((g) => (
-                      <span
-                        key={g}
-                        className="text-xs px-2.5 py-0.5 rounded-full bg-tan/20 text-tan font-medium border border-tan/20"
-                      >
-                        {g}
-                      </span>
-                    ))}
-                  </div>
+                      <div className="flex flex-wrap justify-center sm:justify-start gap-1.5 mt-3">
+                        {genres.map((g) => (
+                          <span
+                            key={g}
+                            className="text-xs px-2.5 py-0.5 rounded-full bg-tan/20 text-tan font-medium border border-tan/20"
+                          >
+                            {g}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Social links */}
@@ -483,13 +498,21 @@ const AuthorProfile = () => {
                 </Button>
               </div>
 
-              <p className="mt-4 text-wrap text-tan text-base leading-relaxed border-t-[3px] border-divider border-tan/50 pt-3 text-center  sm:text-left">
-                {author?.author_description ||
-                  "A passionate writer who breathes life into words and creates unforgettable stories that transcend time and culture."}{" "}
-                With over a decade of experience, this author has captivated
-                millions of readers worldwide and continues to push the boundaries
-                of storytelling.
-              </p>
+              {loading ? (
+                <div className="space-y-2 animate-pulse mt-6 border-t-[3px] border-tan/10 pt-3">
+                  <div className="h-4 w-full bg-tan/10 rounded" />
+                  <div className="h-4 w-5/6 bg-tan/10 rounded" />
+                  <div className="h-4 w-2/3 bg-tan/10 rounded" />
+                </div>
+              ) : (
+                <p className="mt-4 text-wrap text-tan text-base leading-relaxed border-t-[3px] border-divider border-tan/50 pt-3 text-center  sm:text-left">
+                  {author?.author_description ||
+                    "A passionate writer who breathes life into words and creates unforgettable stories that transcend time and culture."}{" "}
+                  With over a decade of experience, this author has captivated
+                  millions of readers worldwide and continues to push the boundaries
+                  of storytelling.
+                </p>
+              )}
 
               <div className="mt-5 pt-4 border-t border-tan/10">
                 <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-tan/10 rounded-2xl overflow-hidden border border-tan/10 bg-tan/5 shadow-inner">
@@ -511,9 +534,13 @@ const AuthorProfile = () => {
                       <div className="w-16 h-16 mb-1 rounded-2xl bg-gradient-to-br from-coffee via-coffee/90 to-sepia/30 border border-tan/20 flex items-center justify-center text-tan text-3xl shadow-lg group-hover:shadow-[0_0_15px_rgba(210,180,140,0.3)] group-hover:scale-110 transition-all duration-300">
                         {stat.icon}
                       </div>
-                      <span className="text-2xl font-black leading-none tracking-tight text-tan">
-                        {stat.value}
-                      </span>
+                      {loading ? (
+                        <div className="h-6 w-12 bg-tan/20 rounded animate-pulse" />
+                      ) : (
+                        <span className="text-2xl font-black leading-none tracking-tight text-tan">
+                          {stat.value}
+                        </span>
+                      )}
                       <span className="text-[14px] font-semibold uppercase tracking-widest text-center leading-tight text-tan/50">
                         {stat.label}
                       </span>
@@ -561,38 +588,46 @@ const AuthorProfile = () => {
                 prevButtonclassName="-left-2 md:-left-6 lg:-left-10"
                 nextButtonclassName="-right-2 md:-right-6 lg:-right-10"
               />
-              <Swiper
-                modules={[Navigation, Autoplay]}
-                autoplay={{
-                  delay: 4000,
-                  disableOnInteraction: false,
-                }}
-                spaceBetween={24}
-                onSwiper={(swiper) => {
-                  testimonialsSwiperRef.current = swiper;
-                }}
-                breakpoints={{
-                  320: { slidesPerView: 1, spaceBetween: 16 },
-                  640: { slidesPerView: 2, spaceBetween: 20 },
-                  1024: { slidesPerView: 3, spaceBetween: 24 },
-                }}
-                className="!pb-8 !px-4"
-              >
-                {testimonials.map((review, i) => (
-                  <SwiperSlide key={review.id} className="h-auto">
-                    <div className="h-full flex">
-                      <TestimonialCard
-                        data={{
-                          ...review,
-                          name: review.user,
-                          profile: review.avatar,
-                          review: review.text,
-                        }}
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              {loading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
+                  {[...Array(3)].map((_, i) => (
+                    <TestimonialCardSkeleton key={i} />
+                  ))}
+                </div>
+              ) : (
+                <Swiper
+                  modules={[Navigation, Autoplay]}
+                  autoplay={{
+                    delay: 4000,
+                    disableOnInteraction: false,
+                  }}
+                  spaceBetween={24}
+                  onSwiper={(swiper) => {
+                    testimonialsSwiperRef.current = swiper;
+                  }}
+                  breakpoints={{
+                    320: { slidesPerView: 1, spaceBetween: 16 },
+                    640: { slidesPerView: 2, spaceBetween: 20 },
+                    1024: { slidesPerView: 3, spaceBetween: 24 },
+                  }}
+                  className="!pb-8 !px-4"
+                >
+                  {testimonials.map((review, i) => (
+                    <SwiperSlide key={review.id} className="h-auto">
+                      <div className="h-full flex">
+                        <TestimonialCard
+                          data={{
+                            ...review,
+                            name: review.user,
+                            profile: review.avatar,
+                            review: review.text,
+                          }}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
             </div>
           </div>
         </motion.div>
@@ -632,7 +667,13 @@ const AuthorProfile = () => {
               transition={{ duration: 0.3 }}
               className="pb-16 mt-6"
             >
-              {authorBooks.length > 0 ? (
+              {loading ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                  {[...Array(4)].map((_, i) => (
+                    <BookCardSkeleton key={i} />
+                  ))}
+                </div>
+              ) : authorBooks.length > 0 ? (
                 <>
                   <div className="flex items-center justify-between mb-5">
                     <h2 className="text-xl font-bold text-coffee">

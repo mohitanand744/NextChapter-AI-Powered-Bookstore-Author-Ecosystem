@@ -9,7 +9,7 @@ import Banners from "../components/Banners/Banners";
 import Breadcrumb from "../components/Common/Breadcrumb";
 import AuthorCard from "../components/Cards/AuthorCard";
 import AuthorOfTheMonthCard from "../components/Cards/AuthorOfTheMonthCard";
-import AuthorsPageSkeleton from "../components/Loaders/Skeleton/AuthorsPageSkeleton";
+import AuthorCardSkeleton from "../components/Loaders/Skeleton/AuthorCardSkeleton";
 import { useComingSoon } from "../store/Context/ComingSoonContext";
 import Search from "../components/SearchBars/Search";
 import { fetchAllBooks } from "../store/Redux/Slices/BooksSlice";
@@ -20,11 +20,10 @@ import AppImage from "../components/Common/AppImage";
 
 import AuthorSlider from "../components/ScrollingContainer/AuthorSlider";
 import SectionHeading from "../components/Headings/SectionHeading";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Autoplay } from "swiper/modules";
 import CustomSelect from "../components/Inputs/CustomSelect";
 import Button from "../components/Buttons/Button";
 import AnimatedItemCount from "../components/UI/AnimatedItemCount";
+import CategorySlider from "../components/ScrollingContainer/CategorySlider";
 
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -37,7 +36,9 @@ const AllAuthors = () => {
   const { books, loading } = useSelector((state) => state.books);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
-  const [selectedGenre, setSelectedGenre] = useState("All");
+  const [filters, setFilters] = useState({
+    categories: []
+  });
   const [minRating, setMinRating] = useState(0);
   const [categoriesList, setCategoriesList] = useState([]);
 
@@ -93,8 +94,10 @@ const AllAuthors = () => {
     }
 
     // Filter by Genre
-    if (selectedGenre !== "All") {
-      list = list.filter((a) => a.genres.has(selectedGenre));
+    if (filters.categories && filters.categories.length > 0) {
+      list = list.filter((a) =>
+        filters.categories.some((cat) => a.genres.has(cat))
+      );
     }
 
     // Filter by Rating
@@ -111,7 +114,7 @@ const AllAuthors = () => {
     });
 
     return { authorsList: list, allGenres: Array.from(genresSet) };
-  }, [books, searchTerm, sortBy, selectedGenre, minRating, categoriesList]);
+  }, [books, searchTerm, sortBy, filters.categories, minRating, categoriesList]);
 
   const authorOfTheMonth = useMemo(() => {
     if (books.length === 0) return null;
@@ -155,10 +158,6 @@ const AllAuthors = () => {
 
   console.log("author", authorOfTheMonth);
 
-  if (loading) {
-    return <AuthorsPageSkeleton />;
-  }
-
   return (
     <div className="min-h-screen bg-tan">
       <Banners
@@ -171,9 +170,31 @@ const AllAuthors = () => {
         ]}
       />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto p-4">
         {/* Author of the Month Section */}
-        {authorOfTheMonth ? (
+        {loading ? (
+          <div className="mb-20 relative overflow-hidden rounded-[2.5rem] sm:rounded-[3rem] bg-coffee p-8 sm:p-12 border border-tan/20 flex flex-col xl:flex-row items-center gap-12 animate-pulse">
+            <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-5 pointer-events-none" />
+            <div className="relative shrink-0 w-56 h-56 sm:w-72 sm:h-72 rounded-full bg-tan/10 border-4 border-[#1A1511]" />
+            <div className="flex-1 w-full space-y-5">
+              <div className="h-9 w-44 bg-tan/15 rounded-full" />
+              <div className="h-12 w-64 md:w-80 bg-tan/20 rounded" />
+              <div className="flex gap-2">
+                <div className="h-6 w-20 bg-tan/10 rounded-full" />
+                <div className="h-6 w-24 bg-tan/10 rounded-full" />
+              </div>
+              <div className="space-y-2 border-l-2 border-tan/20 pl-6">
+                <div className="h-4 w-full bg-tan/5 rounded" />
+                <div className="h-4 w-5/6 bg-tan/5 rounded" />
+                <div className="h-4 w-2/3 bg-tan/5 rounded" />
+              </div>
+              <div className="flex flex-wrap gap-4">
+                <div className="h-16 w-36 bg-tan/10 rounded-2xl" />
+                <div className="h-16 w-36 bg-tan/10 rounded-2xl" />
+              </div>
+            </div>
+          </div>
+        ) : authorOfTheMonth ? (
           <AuthorOfTheMonthCard
             authorOfTheMonth={authorOfTheMonth}
             authorOfTheMonthBooks={authorOfTheMonthBooks}
@@ -196,10 +217,16 @@ const AllAuthors = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-20"
+          className="mb-24"
         >
           <SectionHeading subtitle="Curated Spotlight">Featured Authors</SectionHeading>
-          {books.length === 0 ? (
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-pulse">
+              {[...Array(4)].map((_, i) => (
+                <AuthorCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : books.length === 0 ? (
             <div className="py-8 flex justify-center">
               <NoData title="No Featured Authors" message="We're currently curating a list of featured authors. Stay tuned!" icon="search" />
             </div>
@@ -223,11 +250,11 @@ const AllAuthors = () => {
                   onSearch={(val) => setSearchTerm(val)}
                   styling="flex-1 bg-sepia rounded-full shadow-inner"
                 />
-                {(searchTerm || selectedGenre !== "All" || minRating > 0 || sortBy !== "name") && (
+                {(searchTerm || (filters.categories && filters.categories.length > 0) || minRating > 0 || sortBy !== "name") && (
                   <Button
                     onClick={() => {
                       setSearchTerm("");
-                      setSelectedGenre("All");
+                      setFilters({ categories: [] });
                       setMinRating(0);
                       setSortBy("name");
                     }}
@@ -288,46 +315,9 @@ const AllAuthors = () => {
               </div>
             </div>
 
-            {/* Genre Filter - Swiper Slider */}
+            {/* Category Slider for Genres */}
             <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-tan/10">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-                <span className="text-[14px] sm:text-[16px] uppercase tracking-widest text-tan/50 font-bold shrink-0">Genres:</span>
-                <div className="w-full overflow-hidden">
-                  <Swiper
-                    key={allGenres.length}
-                    slidesPerView="auto"
-                    spaceBetween={10}
-                    loop={true}
-                    speed={1500}
-                    autoplay={{
-                      delay: 0,
-                      pauseOnMouseEnter: true,
-                    }}
-
-                    freeMode={true}
-                    observer={true}
-                    observeParents={true}
-                    watchSlidesProgress={true}
-                    modules={[FreeMode, Autoplay]}
-                    className="genre-swiper"
-                  >
-
-                    {allGenres.map((genre) => (
-                      <SwiperSlide key={genre} className="!w-auto">
-                        <button
-                          onClick={() => setSelectedGenre(genre)}
-                          className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-[13px] sm:text-[15px] font-bold transition-all duration-300 border ${selectedGenre === genre
-                            ? "bg-tan text-coffee border-tan shadow-lg scale-105"
-                            : "bg-transparent text-tan/70 border-tan/20 hover:border-tan hover:text-tan"
-                            }`}
-                        >
-                          {genre}
-                        </button>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
-              </div>
+              <CategorySlider filters={filters} setFilters={setFilters} />
             </div>
           </div>
         </div>
@@ -335,14 +325,20 @@ const AllAuthors = () => {
         {/* Results Count Section */}
         <div className="mb-10 w-fit px-6">
           <AnimatedItemCount
-            count={authorsList.length}
+            count={loading ? 0 : authorsList.length}
             label="Author"
-            suffix="Found"
+            suffix={loading ? "Loading..." : "Found"}
             Icon={GiFeather}
           />
         </div>
 
-        {authorsList.length > 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {[...Array(8)].map((_, i) => (
+              <AuthorCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : authorsList.length > 0 ? (
           <motion.div
             layout
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"

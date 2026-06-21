@@ -24,9 +24,16 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
   const { isAuthenticated, userData } = useAuth();
   const { preview, isUploading, setPreview } = useProfileImage();
   const { openPreview } = useImagePreview();
+  const [imageError, setImageError] = useState(false);
+  const hasImage = !!preview && !imageError;
   const { books } = useSelector((state) => state.books);
   const navigate = useNavigate();
   const { openComingSoon } = useComingSoon();
+
+  useEffect(() => {
+    setImageError(false);
+  }, [preview]);
+
   console.log(isAuthenticated);
 
   console.log("pathName", pathName);
@@ -189,16 +196,32 @@ const Navbar = ({ isCartOpen, setIsCartOpen }) => {
                 <Link to="/nextChapter/user/profile">
                   <div className="w-12 h-12 relative cursor-pointer active:scale-95 bg-coffee transition-all duration-300  border-[2px] border-tan shadow-lg shadow-tan/30 rounded-full overflow-hidden">
                     <AppImage
-                      src={preview || "/images/loading.gif"}
+                      src={preview || ""}
                       alt="Profile"
-                      className="object-cover w-full h-full rounded-full text-sepia"
-                      onClick={() => {
-                        if (pathName === "nextChapteruserprofile") {
-                          openPreview(preview, "Profile Image");
-                        }
-                      }}
+                      className={`object-cover w-full h-full rounded-full text-sepia ${
+                        pathName === "nextChapteruserprofile"
+                          ? hasImage
+                            ? "cursor-zoom-in"
+                            : "cursor-default"
+                          : "cursor-pointer"
+                      }`}
+                      onClick={
+                        pathName === "nextChapteruserprofile"
+                          ? hasImage
+                            ? (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                openPreview(preview, "Profile Image");
+                              }
+                            : (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }
+                          : undefined
+                      }
                       fallbackType="avatar"
                       name={userData?.name}
+                      onError={() => setImageError(true)}
                     />
 
                     {isUploading && (

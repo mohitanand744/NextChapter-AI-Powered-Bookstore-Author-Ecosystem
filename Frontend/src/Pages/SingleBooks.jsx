@@ -141,7 +141,7 @@ const SingleBooks = () => {
 
   return (
     <div className="min-h-screen bg-tan text-coffee selection:bg-coffee selection:text-tan">
-      <div className="container mx-auto px-4 pt-10 max-w-7xl">
+      <div className="container md:block hidden mx-auto px-4 pt-10 max-w-7xl">
         <Breadcrumb
           items={[
             { label: "Home", path: "/nextChapter" },
@@ -620,7 +620,7 @@ const SingleBooks = () => {
         </div>
 
         {/* Recommended for You Section */}
-        <div className=" pt-24 border-t border-coffee/10">
+        <div className="pt-4 md:pt-24">
           <div className="flex items-end justify-between">
             <SectionHeading
               align="left"
@@ -629,9 +629,10 @@ const SingleBooks = () => {
               Recommended for You
             </SectionHeading>
           </div>
-          <div className="relative group/curations">
-            <div className="absolute -top-10 -bottom-10 left-0 right-0 bg-coffee/5 blur-3xl opacity-0 group-hover/curations:opacity-100 transition-opacity pointer-events-none" />
+          <div className="">
+
             <ScrollBooks autoScroll={false} books={books} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
+
           </div>
         </div>
 

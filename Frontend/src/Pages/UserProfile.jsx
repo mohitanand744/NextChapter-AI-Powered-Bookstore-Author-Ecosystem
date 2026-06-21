@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { MdOutlineMail } from "react-icons/md";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import {
+  FaCameraRetro,
   FaHeart,
   FaHistory,
   FaRegAddressCard,
@@ -28,7 +29,7 @@ import {
 import useAuth from "../Hooks/useAuth";
 import NoData from "../components/EmptyData/noData";
 import AddressModal from "../components/Modal/AddressModal";
-import UserProfileSkeleton from "../components/Loaders/Skeleton/UserProfileSkeleton";
+import BookCardSkeleton from "../components/Loaders/Skeleton/BookCardSkeleton";
 import { userApis } from "../utils/apis/userApis";
 import { useProfileImage } from "../store/Context/ProfileImageContext";
 import BooksLoader from "../components/Loaders/BooksLoader";
@@ -36,20 +37,42 @@ import { useImagePreview } from "../store/Context/ImagePreviewContext";
 import ProfileUpdateModal from "../components/Modal/ProfileUpdateModal";
 import Modal from "../components/Modal/ModalContainer";
 import { useComingSoon } from "../store/Context/ComingSoonContext";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay, FreeMode } from "swiper/modules";
-import "swiper/css";
-import SwiperNavButtons from "../components/Buttons/SwiperNavButtons";
-import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import SectionHeading from "../components/Headings/SectionHeading";
 import AppImage from "../components/Common/AppImage";
 import Badge from "../components/Common/Badge";
+import ModernProfileDetail from "../components/UserProfile/ModernProfileDetail";
+import StatCard from "../components/UserProfile/StatCard";
+import { ActivityItem, ActivityItemSkeleton } from "../components/UserProfile/ActivityItem";
+
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("activity");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { openComingSoon } = useComingSoon();
   const { books } = useSelector((state) => state.books);
+  const [dbStates, setDbStates] = useState([]);
+  const {
+    logoutStatusSuccess,
+    userData,
+    setUpdateUserData,
+    getUserUpdatedDetails,
+    loading,
+  } = useAuth();
+  const [user, setUser] = useState(userData);
+  const [showAddressModal, setShowAddressModal] = useState(false);
+  const [showProfileUpdateModal, setShowProfileUpdateModal] = useState(false);
+  const [profileDraft, setProfileDraft] = useState(null);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const { openPreview } = useImagePreview();
+  const fileInputRef = useRef(null);
+  const { preview, setPreview, isUploading, setIsUploading } = useProfileImage();
+  const [imageError, setImageError] = useState(false);
+  const hasImage = !!preview && !imageError;
+  const [defaultAddress, setDefaultAddress] = useState("No Address Selected");
+
+  useEffect(() => {
+    setImageError(false);
+  }, [preview]);
 
   useEffect(() => {
     if (books?.length === 0) {
@@ -71,23 +94,6 @@ const UserProfile = () => {
   };
 
   const uniqueBooks = books ? removeDuplicates(books) : [];
-
-  const [dbStates, setDbStates] = useState([]);
-  const {
-    logoutStatusSuccess,
-    userData,
-    setUpdateUserData,
-    getUserUpdatedDetails,
-    loading,
-  } = useAuth();
-  const [user, setUser] = useState(userData);
-  const [showAddressModal, setShowAddressModal] = useState(false);
-  const [showProfileUpdateModal, setShowProfileUpdateModal] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const { openPreview } = useImagePreview();
-  const fileInputRef = useRef(null);
-  const { preview, setPreview, isUploading, setIsUploading } = useProfileImage();
-  const [defaultAddress, setDefaultAddress] = useState("No Address Selected");
 
   const uploadProfilePic = async (file) => {
     setIsUploading(true);
@@ -183,9 +189,7 @@ const UserProfile = () => {
 
   console.log("UserData", loading, userData);
 
-  if (loading || !userData) {
-    return <UserProfileSkeleton />;
-  }
+  const isProfileLoading = !userData;
 
   return (
     <div className="relative min-h-screen px-4 py-8">
@@ -253,53 +257,66 @@ const UserProfile = () => {
                 transition={{ type: "spring", stiffness: 100 }}
                 className="relative w-32 h-32 rounded-full bg-coffee"
               >
-                <AppImage
-                  src={preview || "/images/loading.gif"}
-                  alt="Profile"
-                  className="object-cover w-full h-full border-4 rounded-full shadow-lg cursor-pointer border-tan"
-                  onClick={() => openPreview(preview, "Profile Image")}
-                  fallbackType="avatar"
-                  name={user?.name}
-                />
-
-                <img
-                  onClick={() => fileInputRef.current.click()}
-                  className="absolute bottom-0 bg-coffee border-2 border-coffee p-[0.7px] z-30 w-8 h-8 rounded-full cursor-pointer duration-200 active:scale-75 bottom-3 right-0"
-                  src="/images/camera.png"
-                  alt="Upload"
-                />
-
-                {isUploading ? (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40">
-                    <BooksLoader imgHeight="16" imgWidth="16" marginTop="0" />
-                  </div>
+                {isProfileLoading ? (
+                  <div className="w-full h-full rounded-full border-4 border-tan/30 bg-tan/10 animate-pulse" />
                 ) : (
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={(e) => handleFileChange(e)}
-                  />
+                  <>
+                    <AppImage
+                      src={preview || ""}
+                      alt="Profile"
+                      className={`object-cover w-full h-full border-4 rounded-full shadow-lg border-tan ${hasImage ? "cursor-zoom-in" : "cursor-default"}`}
+                      onClick={hasImage ? () => openPreview(preview, "Profile Image") : undefined}
+                      fallbackType="avatar"
+                      name={user?.name}
+                      onError={() => setImageError(true)}
+                    />
+
+                    <div className="absolute bottom-0 bg-coffee w-8 h-8 rounded-full border-2 border-tan cursor-pointer duration-200 flex justify-center items-center active:scale-75 bottom-3 right-0">
+                      <FaCameraRetro onClick={() => fileInputRef.current.click()} className=" w-6 h-6 rounded-full text-tan" />
+
+                    </div>
+
+
+                    {isUploading ? (
+                      <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40">
+                        <BooksLoader imgHeight="16" imgWidth="16" marginTop="0" />
+                      </div>
+                    ) : (
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={(e) => handleFileChange(e)}
+                      />
+                    )}
+                  </>
                 )}
               </motion.div>
             </div>
             {/* Profile Content */}
             <div className="relative z-10 px-6 pt-2 pb-6">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="mb-6 text-center"
-              >
-                <h2 className="text-2xl font-bold capitalize text-cream">
-                  {user?.name}
-                </h2>
-                <p className="flex items-center justify-center gap-1 mt-1 text-cream/90">
-                  <CalendarSvg />
-                  <b>Member since</b> {user?.joinDate}
-                </p>
-              </motion.div>
+              {isProfileLoading ? (
+                <div className="mb-6 text-center space-y-2 animate-pulse">
+                  <div className="h-6 w-36 bg-tan/15 rounded mx-auto" />
+                  <div className="h-4 w-44 bg-tan/10 rounded mx-auto" />
+                </div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="mb-6 text-center"
+                >
+                  <h2 className="text-2xl font-bold capitalize text-cream">
+                    {user?.name}
+                  </h2>
+                  <p className="flex items-center justify-center gap-1 mt-1 text-cream/90">
+                    <CalendarSvg />
+                    <b>Member since</b> {user?.joinDate}
+                  </p>
+                </motion.div>
+              )}
 
               {/* Profile Details */}
               <div className="space-y-5">
@@ -309,6 +326,7 @@ const UserProfile = () => {
                   value={user?.email}
                   delay={0.4}
                   isCopyable
+                  loading={isProfileLoading}
                 />
                 <ModernProfileDetail
                   icon={<FiPhone className="text-lg text-tan" />}
@@ -317,6 +335,7 @@ const UserProfile = () => {
                   notProvided={!user?.phone}
                   delay={0.5}
                   isCopyable
+                  loading={isProfileLoading}
                 />
                 <ModernProfileDetail
                   icon={<FaRegAddressCard className="text-lg text-tan" />}
@@ -325,6 +344,7 @@ const UserProfile = () => {
                   notProvided={!user?.default_address?.address}
                   setShowAddressModal={setShowAddressModal}
                   delay={0.6}
+                  loading={isProfileLoading}
                 />
                 <ModernProfileDetail
                   icon={<FaRegHeart className="text-lg text-tan" />}
@@ -336,6 +356,7 @@ const UserProfile = () => {
                   notProvided={!user?.favoriteGenres?.length}
                   delay={0.7}
                   setShowProfileUpdateModal={setShowProfileUpdateModal}
+                  loading={isProfileLoading}
                 />
               </div>
 
@@ -399,6 +420,7 @@ const UserProfile = () => {
                 delay={0.2}
                 icon={<BagSvg className="" />}
                 onClick={navigateToOrders}
+                loading={isProfileLoading}
               />
               <StatCard
                 title="Wishlist"
@@ -408,6 +430,7 @@ const UserProfile = () => {
                 delay={0.2}
                 icon={<HearthSvg className="" />}
                 onClick={navigateToWishlist}
+                loading={isProfileLoading}
               />
             </motion.div>
 
@@ -529,7 +552,13 @@ const UserProfile = () => {
             >
               <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
               <div className="relative z-10 h-full">
-                {activeTab === "activity" && (
+                {isProfileLoading ? (
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {[...Array(2)].map((_, index) => (
+                      <ActivityItemSkeleton key={index} />
+                    ))}
+                  </div>
+                ) : activeTab === "activity" ? (
                   <>
                     {user?.recentActivity?.length > 0 ? (
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -558,9 +587,7 @@ const UserProfile = () => {
                       />
                     )}
                   </>
-                )}
-
-                {activeTab === "orders" && (
+                ) : activeTab === "orders" ? (
                   <>
                     {user?.recentOrders?.length > 0 ? (
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -587,9 +614,7 @@ const UserProfile = () => {
                       />
                     )}
                   </>
-                )}
-
-                {activeTab === "wishlist" && (
+                ) : (
                   <>
                     {user?.wishlistItems?.length > 0 ? (
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -628,7 +653,6 @@ const UserProfile = () => {
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 1.1 }}
         className="container pt-4 mt-10 border-t border-tan/10"
       >
         <div className="mb-2">
@@ -640,7 +664,15 @@ const UserProfile = () => {
           </SectionHeading>
         </div>
         <div className="">
-          <ScrollBooks autoScroll={false} books={uniqueBooks?.slice(0, 10)} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
+          {isProfileLoading ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {[...Array(4)].map((_, i) => (
+                <BookCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <ScrollBooks autoScroll={false} books={uniqueBooks?.slice(0, 10)} onComingSoonClick={(url) => openComingSoon({ exploreLink: url })} />
+          )}
         </div>
       </motion.div>
 
@@ -658,6 +690,8 @@ const UserProfile = () => {
         user={user}
         setShowAddressModal={setShowAddressModal}
         type={user?.isComplete ? "update" : "complete"}
+        profileDraft={profileDraft}
+        setProfileDraft={setProfileDraft}
       />
 
       {/* Logout Confirmation Modal */}
@@ -695,207 +729,4 @@ const UserProfile = () => {
   );
 };
 
-const StatCard = ({ title, value, color, delay, icon, text, onClick }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay }}
-    onClick={onClick}
-    className={`${color} text-tan rounded-xl shadow-md p-6 cursor-pointer transition-all duration-200 hover:shadow-lg relative overflow-hidden`}
-  >
-    <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
-    <div className="relative z-10 flex items-start justify-between">
-      <div>
-        <p className="text-lg font-medium">{title}</p>
-        <p className="text-3xl font-bold">{value}</p>
-      </div>
-      <div className="flex items-center justify-center w-10 h-10 rounded-full text-tan bg-tan/10">
-        {icon}
-      </div>
-    </div>
-  </motion.div>
-);
-
-const ActivityItem = ({
-  title,
-  date,
-  description,
-  status,
-  delay,
-  imageUrl,
-}) => (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay, type: "spring", stiffness: 300 }}
-    whileHover={{ y: -3, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
-    className="relative overflow-hidden transition-all duration-200 border shadow-md bg-coffee text-tan rounded-xl border-tan/20 hover:shadow-lg"
-  >
-    <div className="absolute inset-0 bg-[url('/images/bgDesign.jpg')] bg-cover bg-center opacity-10 pointer-events-none" />
-    <div className="relative z-10 flex flex-col sm:flex-row">
-      {/* Product Image */}
-      <div className="relative flex items-center justify-center h-40 border-r rounded-r-2xl sm:w-1/4 sm:h-auto">
-        <AppImage
-          src={
-            imageUrl ||
-            "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQwm3sKSSsqSSqtZNE_Funcouaw8XHA885zkmvnK3MUH8RxvbPpyN72hQuAMbkzP-0Dm9xpJu9JVODLh4I8p9bWbAYlDoZZWscNXeRf58yOO0jV6qffaEtq8g"
-          }
-          alt={title}
-          className="object-contain w-full h-[9rem] p-4"
-          fallbackType="book"
-        />
-        {status && (
-          <span
-            className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${status === "Delivered"
-              ? "bg-green-100 text-green-800"
-              : status === "Shipped"
-                ? "bg-blue-100 text-blue-800"
-                : "bg-yellow-100 text-yellow-800"
-              }`}
-          >
-            {status}
-          </span>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="flex flex-col p-4 sm:w-3/4">
-        <div className="flex items-start justify-between mb-2">
-          <h4 className="text-lg font-semibold text-tan">{title}</h4>
-          <span className="text-sm text-tan opacity-70">{date}</span>
-        </div>
-
-        <p className="mb-4 text-tan opacity-90 line-clamp-2">{description}</p>
-
-        <div className="flex items-center justify-end mt-auto">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className=""
-          >
-            <div
-              type="button"
-              className=" bg-coffee w-10 h-10  rounded-[4rem] font-medium flex justify-center items-center"
-            >
-              <EyesSvg />
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </div>
-  </motion.div>
-);
 export default UserProfile;
-
-const ModernProfileDetail = ({
-  icon,
-  label,
-  value,
-  setShowAddressModal,
-  delay,
-  isCopyable,
-  notProvided, setShowProfileUpdateModal
-}) => {
-  const swiperRef = useRef(null);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay }}
-      className="flex items-start gap-3 p-3 border rounded-lg bg-tan/10 backdrop-blur-sm border-tan/20"
-    >
-      <span className="flex-shrink-0 text-xl text-tan">{icon}</span>
-
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between w-full">
-          <p className="text-xs font-medium tracking-wider uppercase text-cream/90">
-            {label}
-          </p>
-          {Array.isArray(value) && value.length > 3 && (
-            <SwiperNavButtons
-              swiperRef={swiperRef}
-              className="!relative !w-auto !h-auto justify-end gap-2"
-              position={{}}
-              prevButtonClass="!w-7 !h-7 pr-0.5 shadow-sm flex items-center justify-center scale-90"
-              nextButtonClass="!w-7 !h-7 pl-0.5 shadow-sm flex items-center justify-center scale-90"
-            />
-          )}
-        </div>
-
-        <div className="flex items-center flex-1 min-w-0 gap-2 mt-1">
-          {/* VALUE */}
-          <div className="flex-1 min-w-0">
-            {Array.isArray(value) ? (
-              <div className="relative w-full ml-[-10px] my-[-10px]">
-                {value.length > 0 ? (
-                  <Swiper
-                    modules={[Navigation, FreeMode, Autoplay]}
-                    slidesPerView="auto"
-                    spaceBetween={11}
-                    autoplay={{ delay: 1000, disableOnInteraction: false }}
-                    freeMode={true}
-                    onSwiper={(swiper) => {
-                      swiperRef.current = swiper;
-                    }}
-                    className="w-full"
-                  >
-                    {value.map((item, index) => (
-                      <SwiperSlide key={index} className="!w-auto">
-                        <Badge text={item} textFontSize="text-[11px] p-1" className="" />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                ) : (
-                  <p className={`text-sm font-semibold`}>
-                    Select Your Favorite Genres
-                  </p>
-                )}
-              </div>
-            ) : (
-              <p
-                className={`${notProvided ? "" : "text-cream"} text-sm font-semibold`}
-              >
-                {value}
-              </p>
-            )}
-          </div>
-
-          {/* COPY */}
-          {isCopyable && (
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => {
-                if (notProvided) {
-                  toast.error("Please Update Your Profile");
-                  return;
-                }
-                navigator.clipboard.writeText(value);
-                toast.success("Copied");
-              }}
-              className=" w-[32px] h-[32px] flex items-center justify-center rounded-full bg-coffee"
-            >
-              <CopyIcon />
-            </motion.button>
-          )}
-
-          {["Address", "Favorite Genres"].includes(label) && (
-            <div
-              onClick={() => {
-                if (label === "Address") {
-                  setShowAddressModal(true)
-                } else if (label === "Favorite Genres") {
-                  setShowProfileUpdateModal(true)
-                }
-              }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-coffee cursor-pointer"
-            >
-              <EllipsisHorizontalIcon className="w-5 h-5 text-tan" />
-            </div>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  );
-};
