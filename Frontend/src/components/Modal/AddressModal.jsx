@@ -10,7 +10,7 @@ import {
   XMarkIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Input from "../Inputs/Input";
 import Button from "../Buttons/Button";
@@ -26,6 +26,7 @@ import { EyesSvg } from "../SVGs/SVGs";
 import useInputHandlers from "../../Hooks/useInputHandlers";
 import ViewAddressDetailsModal from "./ViewAddressDetailsModal";
 import Badge from "../Common/Badge";
+import UnsavedChanges from "../Common/UnsavedChanges";
 
 const AddressModal = ({
   showAddress,
@@ -42,6 +43,29 @@ const AddressModal = ({
   const [addressToDelete, setAddressToDelete] = useState(null);
   const [showUnsavedPopup, setShowUnsavedPopup] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
+  const [isPulsing, setIsPulsing] = useState(false);
+  const pulseTimeoutRef = useRef(null);
+
+  const triggerPulse = () => {
+    setIsPulsing(false);
+    if (pulseTimeoutRef.current) {
+      clearTimeout(pulseTimeoutRef.current);
+    }
+    setTimeout(() => {
+      setIsPulsing(true);
+      pulseTimeoutRef.current = setTimeout(() => {
+        setIsPulsing(false);
+      }, 500);
+    }, 10);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (pulseTimeoutRef.current) {
+        clearTimeout(pulseTimeoutRef.current);
+      }
+    };
+  }, []);
   const { loading } = useLoader();
   const [viewAddressDetails, setViewAddressDetails] = useState(false);
   const {
@@ -132,6 +156,10 @@ const AddressModal = ({
   }, [showAddress]);
 
   const handleAttemptAction = (actionCallback) => {
+    if (showUnsavedPopup) {
+      triggerPulse();
+      return;
+    }
     if (activeTab === "add" && isDirty) {
       setShowUnsavedPopup(true);
       setPendingAction(() => actionCallback);
@@ -719,52 +747,25 @@ const AddressModal = ({
 
       <AnimatePresence>
         {showUnsavedPopup && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/60 rounded-xl"
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-sm p-6 bg-coffee text-tan border border-tan shadow-xl rounded-xl"
-            >
-              <h3 className="mb-2 text-xl font-bold text-tan">
-                Unsaved Changes
-              </h3>
-              <p className="mb-4 text-sm text-tan/70">
-                You have entered some details. Do you want to save it or go back without saving?
-              </p>
-
-              <div className="flex gap-3">
-                <Button
-                  variant="primary"
-                  className="flex-1"
-                  onClick={() => {
-                    setShowUnsavedPopup(false);
-                    handleSubmit(validateAndSubmit)();
-                  }}
-                >
-                  Save It
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => {
-                    setShowUnsavedPopup(false);
-                    if (pendingAction) {
-                      pendingAction();
-                      setPendingAction(null);
-                    }
-                  }}
-                >
-                  Go Back
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
+          <UnsavedChanges
+            onSave={() => {
+              setShowUnsavedPopup(false);
+              handleSubmit(validateAndSubmit)();
+            }}
+            onDiscard={() => {
+              setShowUnsavedPopup(false);
+              if (pendingAction) {
+                pendingAction();
+                setPendingAction(null);
+              }
+            }}
+            onClose={() => setShowUnsavedPopup(false)}
+            title="Unsaved Changes"
+            message="You have entered some details. Do you want to save it or go back without saving?"
+            isPulsing={isPulsing}
+            containerClassName="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/60 rounded-xl"
+            cardClassName="w-full max-w-sm p-6 bg-coffee text-tan border border-tan shadow-xl rounded-xl"
+          />
         )}
       </AnimatePresence>
 

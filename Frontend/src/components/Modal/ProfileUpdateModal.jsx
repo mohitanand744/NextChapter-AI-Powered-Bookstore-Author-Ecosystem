@@ -36,6 +36,7 @@ import SwiperNavButtons from "../Buttons/SwiperNavButtons";
 import { EyesSvg } from "../SVGs/SVGs";
 import ViewAddressDetailsModal from "./ViewAddressDetailsModal";
 import Badge from "../Common/Badge";
+import UnsavedChanges from "../Common/UnsavedChanges";
 
 const ProfileUpdateModal = ({
   showProfileUpdateModal,
@@ -179,7 +180,6 @@ const ProfileUpdateModal = ({
       const res = await addressApis.updateAddress(selectedId.id, updatedData);
 
       if (res.success) {
-        //toast.success("Default address updated successfully!");
         await getUserAddressesList();
 
         if (swiperRef.current) {
@@ -425,10 +425,15 @@ const ProfileUpdateModal = ({
 
                       <div className="bg-black/10 border border-tan/20 p-1 rounded-3xl">
                         {selectedGenres?.length > 0 ? (
-                          <div className="grid grid-cols-2 p-3 h-[180px] overflow-y-auto hideScroll gap-3">
+                          <div className="grid grid-cols-2 p-3 h-[140px] overflow-y-auto hideScroll gap-3">
                             {selectedGenres.map((genre) => (
-                              <div
+                              <motion.div
                                 key={genre.id}
+                                layout
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.3 }}
                                 className="relative flex items-center justify-between h-8 min-w-0"
                               >
                                 <Badge
@@ -448,11 +453,11 @@ const ProfileUpdateModal = ({
                                 >
                                   <TrashIcon className="w-4 h-4" />
                                 </div>
-                              </div>
+                              </motion.div>
                             ))}
                           </div>
                         ) : (
-                          <div className="p-2 h-[180px]">
+                          <div className="p-2 h-[140px]">
                             <NoData
                               icon="heart"
                               title="No favorite genres selected"
@@ -670,60 +675,19 @@ const ProfileUpdateModal = ({
 
       <AnimatePresence>
         {showUnsavedPopup && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 rounded-3xl"
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className={`w-full relative max-w-sm p-6 bg-coffee text-tan border border-tan/30 shadow-2xl rounded-3xl transition-all duration-300 ${isPulsing ? "animate-pulse border-b-[3px] mb-14 bg-coffee/80" : ""
-                }`}
-            >
-
-              <div
-                onClick={() => setShowUnsavedPopup(false)}
-                className="absolute top-2 right-2">
-                <Badge
-                  text="Check The Changes"
-                  textFontSize="text-[12px] cursor-pointer"
-                  variant="primary"
-                />
-              </div>
-              <h3 className="mb-2  text-xl font-bold text-tan">
-                Unsaved Changes
-              </h3>
-              <p className="mb-4 text-sm text-tan/70">
-                You have unsaved changes. Do you want to submit them or close without saving?
-              </p>
-
-              <div className="flex gap-3">
-                <Button
-                  variant="primary"
-                  className="flex-1 text-sm !py-2"
-                  onClick={() => {
-                    setShowUnsavedPopup(false);
-                    handleSubmit(onSubmit)();
-                  }}
-                >
-                  Save & Submit
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => {
-                    setShowUnsavedPopup(false);
-                    handleClose();
-                  }}
-                >
-                  Discard
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
+          <UnsavedChanges
+            onSave={() => {
+              setShowUnsavedPopup(false);
+              handleSubmit(onSubmit)();
+            }}
+            onDiscard={() => {
+              setShowUnsavedPopup(false);
+              handleClose();
+            }}
+            onClose={() => setShowUnsavedPopup(false)}
+            isPulsing={isPulsing}
+            showBadge={true}
+          />
         )}
       </AnimatePresence>
     </Modal>

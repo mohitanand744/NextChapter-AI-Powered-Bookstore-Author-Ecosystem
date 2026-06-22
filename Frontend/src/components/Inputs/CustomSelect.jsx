@@ -85,93 +85,98 @@ const CustomSelect = (
 
       <AnimatePresence>
         {isOpen && (
-          <motion.ul
-            className={`absolute  z-[999] w-full pb-2 px-2 mt-1 hideScroll overflow-auto bg-sepia backdrop-blur-xl text-tan rounded-2xl max-h-60 `}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={{ duration: 0.2 }}
-            role="listbox"
+            className="absolute z-[9999] w-full mt-2"
           >
-            {options.length > 8 && (
-              <div className="mb-4 bg-sepia pt-2 mb-2 sticky top-0 z-10 border-b border-b-tan/30 rounded-xl">
-                <Search
-                  styling="w-full !block"
-                  placeholder="Filter options..."
-                  onChange={(val) => setFilterQuery(val)}
-                />
-              </div>
-            )}
+            <ul
+              className="pb-2 px-2 hideScroll overflow-auto backdrop-blur-[5px] bg-coffee/95 text-tan rounded-2xl max-h-60"
 
-            {(() => {
-              const filteredOptions = options.filter((option) =>
-                option.label.toLowerCase().includes(filterQuery.toLowerCase()),
-              );
+            >
+              {options.length > 8 && (
+                <div className="mb-2 pt-2 sticky top-0 z-10">
+                  <Search
+                    styling="w-full !block bg-coffee border-t-2 border-sepia border-b-2 rounded-full"
+                    placeholder="Search options..."
+                    onChange={(val) => setFilterQuery(val)}
+                  />
+                </div>
+              )}
 
-              if (filteredOptions.length === 0) {
-                return (
-                  <div className="p-2 pt-1">
-                    <NoData
-                      title="No results found"
-                      icon="search"
-                      message="Try a different term"
-                      showAction={false}
-                      className="max-h-44"
-                      titleClassName="text-lg"
-                      messageClassName="text-[11px]"
-                    />
-                  </div>
+              {(() => {
+                const filteredOptions = options.filter((option) =>
+                  option.label.toLowerCase().includes(filterQuery.toLowerCase()),
                 );
-              }
 
-              return filteredOptions.map((option, idx) => (
-                <motion.li
-                  key={option.value}
-                  initial={{ opacity: 0, scale: 0.8, y: -10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 0.1, delay: 0.1 * idx }}
-                  //whileHover={{ scale: 1.03}}
-                  className={`px-4 py-1 border-b-2 hover:!scale-[1.03]  transition-all duration-500 rounded-2xl rounded-b-[3rem] relative cursor-pointer shadow-lg ${multiple
-                    ? value?.includes(option.value)
-                      ? "border-b-[3px] border-tan/50 bg-tan/10"
-                      : "hover:bg-tan/5 border-tan/30"
-                    : value === option.value
-                      ? "border-b-[3px] border-tan/50 bg-tan/10"
-                      : "hover:bg-tan/5 border-tan/30"
-                    }`}
-                  onClick={() => {
-                    if (multiple) {
-                      const currentValue = Array.isArray(value) ? value : [];
-                      if (currentValue.includes(option.value)) {
-                        onChange(
-                          currentValue.filter((val) => val !== option.value),
-                        );
-                      } else {
-                        onChange([...currentValue, option.value]);
-                      }
-                    } else {
-                      onChange(option.value);
-                      setIsOpen(false);
-                    }
-                  }}
-                  role="option"
-                  aria-selected={value === option.value}
-                >
-                  <span className="text-nowrap text-[13px]">
-                    {option.label}
-                  </span>
+                if (filteredOptions.length === 0) {
+                  return (
+                    <div className="h-[140px] pt-1">
+                      <NoData
+                        title="No results found"
+                        icon="search"
+                        message="Try a different term"
+                        showAction={false}
+                        className="!h-[140px]"
+                        titleClassName="text-lg"
+                        messageClassName="text-[11px]"
+                      />
+                    </div>
+                  );
+                }
 
-                  {(multiple
-                    ? value?.includes(option.value)
-                    : value === option.value) && (
-                      <span className="w-4 text-[12.4px] text-tan h-4 absolute top-2.5 right-1 bg-coffee/80 flex justify-center items-center rounded-full">
-                        ✓
+                return <div className="max-h-[212px] overflow-y-auto mt-3 hideScroll">
+                  {filteredOptions.map((option, idx) => (
+                    <motion.li
+                      key={option.value}
+                      initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      transition={{ duration: 0.1, delay: 0.1 * idx }}
+                      className={`px-4 py-1 border-b-2 hover:!scale-[1.01]  transition-all duration-500 rounded-2xl rounded-b-[3rem] relative cursor-pointer shadow-lg ${multiple
+                        ? value?.includes(option.value)
+                          ? "border-b-[3px] border-tan/50 bg-tan/10"
+                          : "hover:bg-tan/5 border-tan/30"
+                        : value === option.value
+                          ? "border-b-[3px] border-tan/50 bg-tan/10"
+                          : "hover:bg-tan/5 border-tan/30"
+                        }`}
+                      onClick={() => {
+                        if (multiple) {
+                          const currentValue = Array.isArray(value) ? value : [];
+                          if (currentValue.includes(option.value)) {
+                            onChange(
+                              currentValue.filter((val) => val !== option.value),
+                            );
+                          } else {
+                            onChange([...currentValue, option.value]);
+                          }
+                        } else {
+                          onChange(option.value);
+                          setIsOpen(false);
+                        }
+                      }}
+                      role="option"
+                      aria-selected={value === option.value}
+                    >
+                      <span className="text-nowrap text-[13px]">
+                        {option.label}
                       </span>
-                    )}
-                </motion.li>
-              ));
-            })()}
-          </motion.ul>
+
+                      {(multiple
+                        ? value?.includes(option.value)
+                        : value === option.value) && (
+                          <span className="w-4 text-[12.4px] text-tan h-4 absolute top-2.5 right-1 bg-coffee/80 flex justify-center items-center rounded-full">
+                            ✓
+                          </span>
+                        )}
+                    </motion.li>
+                  ))}
+                </div>
+              })()}
+            </ul>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
